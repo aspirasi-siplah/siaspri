@@ -1,7 +1,7 @@
 {
     "agents": [
-        "cursor",
-        "zed"
+        "copilot",
+        "opencode"
     ],
     "cloud": false,
     "guidelines": true,
@@ -13,7 +13,6 @@
         "laravel-best-practices",
         "wayfinder-development",
         "pest-testing",
-        "inertia-react-development",
         "tailwindcss-development"
     ]
 }
