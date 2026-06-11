@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 
 import QuillEditor from './quill-editor';
@@ -6,43 +6,91 @@ import FormInput from '../custom-components/FormInput';
 import FormTextArea from '../custom-components/FormTextArea';
 import ImageUploader from '../custom-components/ImageUploader';
 import FormSelect from '../custom-components/FormSelect';
+import NewsGalleryUpload from './news-gallery-upload';
+import Swal from 'sweetalert2';
+
+interface ExistingNewsDocument {
+    id: number;
+    name: string;
+    file_name: string;
+    file_path: string;
+    url: string;
+}
+
+interface NewsData {
+    id: number;
+    title: string;
+    excerpt: string;
+    content: string;
+    status: 'draft' | 'published' | 'archived';
+    thumbnail?: string | null;
+    documents?: ExistingNewsDocument[];
+}
+
+interface NewDocument {
+    name: string;
+    file: File;
+    preview: string;
+}
 
 interface Props {
-    news?: any;
+    news?: NewsData;
     submitUrl: string;
     method?: 'post' | 'put';
 }
 
-export default function NewsForm({ news, submitUrl, method = 'post' }: Props) {
-    const { data, setData, post, put, processing, errors } = useForm({
+export default function NewsForm({ news, submitUrl, method }: Props) {
+    const form = useForm({
         title: news?.title ?? '',
-        slug: news?.slug ?? '',
         excerpt: news?.excerpt ?? '',
         content: news?.content ?? '',
         status: news?.status ?? 'draft',
         thumbnail: null as File | null,
+        documents: [] as File[],
+        deleted_documents: [] as number[],
     });
-
-    useEffect(() => {
-        if (!data.title) return;
-
-        const slug = data.title
-            .toLowerCase()
-            .replace(/[^\w ]+/g, '')
-            .replace(/ +/g, '-');
-
-        setData('slug', slug);
-    }, [data.title]);
+    const [documents, setDocuments] = useState<NewDocument[]>([]);
+    const [deletedDocumentIds, setDeletedDocumentIds] = useState<number[]>([]);
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        form.transform((data) => ({
+            ...data,
+            documents: documents.map((item) => ({
+                name: item.name,
+                file: item.file,
+            })),
+            deleted_documents: deletedDocumentIds,
+        }));
+
+        const options = {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                form.reset('documents')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Berita berhasil disimpan.',
+                })
+            },
+            onError: () => {
+                form.reset('documents')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Berita gagal disimpan.',
+                })
+            },
+        };
+
         if (method === 'put') {
-            put(submitUrl);
+            form.put(submitUrl, options);
             return;
         }
 
-        post(submitUrl);
+        form.post(submitUrl, options);
     };
 
     return (
@@ -53,62 +101,97 @@ export default function NewsForm({ news, submitUrl, method = 'post' }: Props) {
                         name="thumbnail"
                         title="Thumbnail"
                         defaultImage={news?.thumbnail}
-                        onImageChange={(image: any) =>
-                            setData('thumbnail', image)
+                        onImageChange={(image) =>
+                            form.setData('thumbnail', image)
                         }
                     />
                 </div>
                 <div className="w-full space-y-4">
                     <FormInput
                         name="title"
-                        type="text"
                         label="Judul"
+                        type="text"
                         placeholder="Judul Berita"
-                        value={data.title}
+                        value={form.data.title}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setData('title', e.target.value)
+                            form.setData('title', e.target.value)
                         }
-                        error={errors.title}
+                        error={form.errors.title}
                     />
                     <FormSelect
                         name="status"
                         label="Status"
-                        value={data.status}
+                        value={form.data.status}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                            setData('status', e.target.value)
+                            form.setData(
+                                'status',
+                                e.target.value as
+                                    | 'draft'
+                                    | 'published'
+                                    | 'archived',
+                            )
                         }
-                        error={errors.status}
+                        error={form.errors.status}
                         options={[
-                            { label: 'Draft', value: 'draft' },
-                            { label: 'Terbit', value: 'published' },
-                            { label: 'Arsip', value: 'archived' },
+                            {
+                                label: 'Draft',
+                                value: 'draft',
+                            },
+                            {
+                                label: 'Terbit',
+                                value: 'published',
+                            },
+                            {
+                                label: 'Arsip',
+                                value: 'archived',
+                            },
                         ]}
                     />
                     <FormTextArea
                         name="excerpt"
-                        label="Ringkasan"
-                        placeholder="Ringkasan Berita"
+                        label="Kutipan"
+                        placeholder="Kutipan Berita"
                         rows={4}
-                        value={data.excerpt}
+                        value={form.data.excerpt}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                            setData('excerpt', e.target.value)
+                            form.setData('excerpt', e.target.value)
                         }
-                        error={errors.excerpt}
+                        error={form.errors.excerpt}
                     />
                 </div>
             </div>
             <div className="">
-                <label className="mb-2 block">Konten Berita</label>
-                <QuillEditor
-                    value={data.content}
-                    onChange={(value) => setData('content', value)}
+                <NewsGalleryUpload
+                    existingDocuments={news?.documents ?? []}
+                    documents={documents}
+                    deletedDocumentIds={deletedDocumentIds}
+                    onDocumentsChange={setDocuments}
+                    onDeletedDocumentsChange={setDeletedDocumentIds}
                 />
             </div>
+            <div className="">
+                <label className="mb-2 block">Konten Berita</label>
+                <QuillEditor
+                    value={form.data.content}
+                    onChange={(value) => form.setData('content', value)}
+                />
+
+                {form.errors.content && (
+                    <p className="mt-2 text-sm text-red-500">
+                        {form.errors.content}
+                    </p>
+                )}
+            </div>
             <button
-                disabled={processing}
-                className="rounded-xl bg-primary px-6 py-3 text-white"
+                type="submit"
+                disabled={form.processing}
+                className="rounded-xl bg-primary px-6 py-3 text-white disabled:opacity-50"
             >
-                Simpan Berita
+                {form.processing
+                    ? 'Menyimpan...'
+                    : method === 'put'
+                      ? 'Update Berita'
+                      : 'Simpan Berita'}
             </button>
         </form>
     );

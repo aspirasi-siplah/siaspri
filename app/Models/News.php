@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class News extends Model
 {
@@ -15,6 +17,7 @@ class News extends Model
         'slug',
         'thumbnail',
         'content',
+        'excerpt',
         'created_by',
         'published_at',
         'status',
@@ -33,5 +36,24 @@ class News extends Model
     public function documents()
     {
         return $this->hasMany(NewsDocuments::class);
+    }
+
+    public static function generateUniqueSlug(string $title): string
+    {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (self::where('slug', $slug)->exists()) {
+            $slug = "{$originalSlug}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    public function getThumbnailAttribute($value)
+    {
+        return $value ? Storage::url($value) : null;
     }
 }

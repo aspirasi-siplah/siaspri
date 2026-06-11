@@ -14,7 +14,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
-import newsManagement from '@/routes/news-management/news-management';
+import newsManagement from '@/routes/news-management';
 
 const mainNavItems: NavItem[] = [
     {

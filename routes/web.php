@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\BlacklistMerchantManagementController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NewsManagementController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,13 +22,23 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::prefix('news-management')->name('news-management.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\NewsManagementController::class, 'index'])->name('news-management.index');
-        Route::get('/create', [\App\Http\Controllers\NewsManagementController::class, 'create'])->name('news-management.create');
-        Route::post('/', [\App\Http\Controllers\NewsManagementController::class, 'store'])->name('news-management.store');
-        Route::get('/{news:slug}/edit', [\App\Http\Controllers\NewsManagementController::class, 'edit'])->name('news-management.edit');
-        Route::put('/{news:slug}', [\App\Http\Controllers\NewsManagementController::class, 'update'])->name('news-management.update');
-        Route::delete('/{news:slug}', [\App\Http\Controllers\NewsManagementController::class, 'destroy'])->name('news-management.destroy');
+    Route::prefix('news-management')->group(function () {
+        Route::get('/', [NewsManagementController::class, 'index'])->name('news-management.index');
+        Route::get('/{id}/show', [NewsManagementController::class, 'show'])->name('news-management.show');
+        Route::get('/create', [NewsManagementController::class, 'create'])->name('news-management.create');
+        Route::post('/', [NewsManagementController::class, 'store'])->name('news-management.store');
+        Route::get('/{id}/edit', [NewsManagementController::class, 'edit'])->name('news-management.edit');
+        Route::put('/{id}', [NewsManagementController::class, 'update'])->name('news-management.update');
+        Route::delete('/{id}/delete', [NewsManagementController::class, 'destroy'])->name('news-management.destroy');
+    });
+
+    Route::prefix('blacklist-merchants')->group(function () {
+        Route::get('/', [BlacklistMerchantManagementController::class, 'index'])->name('blacklist-merchants.index');
+        Route::get('/create', [BlacklistMerchantManagementController::class, 'create'])->name('blacklist-merchants.create');
+        Route::post('/', [BlacklistMerchantManagementController::class, 'store'])->name('blacklist-merchants.store');
+        Route::get('/{id}/edit', [BlacklistMerchantManagementController::class, 'edit'])->name('blacklist-merchants.edit');
+        Route::put('/{id}', [BlacklistMerchantManagementController::class, 'update'])->name('blacklist-merchants.update');
+        Route::delete('/{id}/delete', [BlacklistMerchantManagementController::class, 'destroy'])->name('blacklist-merchants.destroy');
     });
 });
 

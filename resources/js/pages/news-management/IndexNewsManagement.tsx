@@ -1,6 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { Plus, Pencil, Trash2, Newspaper, Image } from 'lucide-react';
+import { Plus, Pencil, Trash2, Newspaper, Image, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import Pagination from '@/components/custom-components/Pagination';
 
@@ -54,10 +54,16 @@ export default function NewsIndex({ news }: Props) {
             cancelButtonText: 'Batal',
         }).then((result: any) => {
             if (result.isConfirmed) {
-                router.delete(`news-management/${id}`, {
+                router.delete(`news-management/${id}/delete`, {
                     preserveState: true,
                     preserveScroll: true,
                 });
+
+                Swal.fire(
+                    'Berhasil!',
+                    'Berita berhasil dihapus.',
+                    'success'
+                );
             }
         })
     };
@@ -182,6 +188,12 @@ export default function NewsIndex({ news }: Props) {
                                                 </td>
                                                 <td className="p-4 text-center">
                                                     <div className="flex justify-center gap-2">
+                                                        <Link
+                                                            href={`news-management/${item.id}/show`}
+                                                            className="rounded-lg border p-2 text-blue-500"
+                                                        >
+                                                            <Eye size={16} />
+                                                        </Link>
                                                         <Link
                                                             href={`news-management/${item.id}/edit`}
                                                             className="rounded-lg border p-2"

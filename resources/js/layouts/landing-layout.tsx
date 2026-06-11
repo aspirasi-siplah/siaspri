@@ -10,7 +10,9 @@ export default function LandingLayout({ children }: Props) {
     return (
         <div className="min-h-screen bg-slate-50">
             <Navbar />
-            {children}
+            <div className="min-h-[calc(100vh-20px)]">
+                {children}
+            </div>
             <Footer />
         </div>
     );

@@ -4,7 +4,7 @@ import { Camera } from 'lucide-react';
 interface Props {
     title?: string;
     name: string;
-    defaultImage?: string;
+    defaultImage?: string | null;
     onImageChange: (image: any) => void;
 }
 
