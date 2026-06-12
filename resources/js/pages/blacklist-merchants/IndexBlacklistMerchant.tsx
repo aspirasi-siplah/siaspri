@@ -1,6 +1,10 @@
+import ModalForm from '@/components/blacklist-merchants/ModalForm';
+import CustomTable from '@/components/custom-components/CustomTable';
+import Pagination from '@/components/custom-components/Pagination';
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
-import { Eye, Pencil, Trash2, Plus } from 'lucide-react';
+import { Head, Link, router } from '@inertiajs/react';
+import { Eye, Pencil, Trash2, Plus, Store } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 interface BlacklistMerchant {
     id: number;
@@ -13,10 +17,42 @@ interface BlacklistMerchant {
 interface Props {
     merchants: {
         data: BlacklistMerchant[];
+        current_page: number;
+        next_page_url: string | null;
+        prev_page_url: string | null;
+        per_page: number;
+        from: number;
+        to: number;
     };
 }
 
 export default function Index({ merchants }: Props) {
+
+    const destroy = (id: number) => {
+        if (!confirm('Yakin ingin menghapus merchant ini?')) {
+            return;
+        }
+
+        router.delete(`blacklist-merchants/${id}/delete`, {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Merchant berhasil dihapus.',
+                });
+            },
+            onError: () => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Merchant gagal dihapus.',
+                });
+            },
+        });
+    };
+
     return (
         <>
             <Head title="Blacklist Merchant" />
@@ -38,114 +74,80 @@ export default function Index({ merchants }: Props) {
                                 Kelola daftar merchant yang masuk blacklist.
                             </p>
                         </div>
-                        <Link
-                            href={`/blacklist-merchants/create`}
-                            className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-white"
-                        >
-                            <Plus size={16} />
-                            Tambah Merchant
-                        </Link>
+                        <ModalForm />
                     </div>
-
-                    <div className="overflow-hidden rounded-2xl border bg-white">
-                        <table className="w-full">
-                            <thead className="bg-muted/50">
-                                <tr>
-                                    <th className="px-6 py-4 text-left">
-                                        Merchant
-                                    </th>
-
-                                    <th className="px-6 py-4 text-left">
-                                        Alasan
-                                    </th>
-
-                                    <th className="px-6 py-4 text-left">
-                                        Dibuat
-                                    </th>
-
-                                    <th className="px-6 py-4 text-center">
-                                        Aksi
-                                    </th>
+                    <CustomTable
+                        title="Daftar Merchant"
+                        icon={<Store size={20} className="text-muted-foreground" />}
+                        header={['Merchant', 'Alasan', 'Dibuat', 'Aksi']}
+                        headerAlign={[
+                            'text-left',
+                            'text-left',
+                            'text-left',
+                            'text-center',
+                        ]}
+                    >
+                        {merchants.data.length > 0 ? (
+                            merchants.data.map((merchant) => (
+                                <tr key={merchant.id} className="border-t">
+                                    <td className="px-6 py-1">
+                                        <div className="flex items-center gap-4">
+                                            {merchant.image ? (
+                                                <img
+                                                    src={merchant.image}
+                                                    alt={merchant.merchant_name}
+                                                    className="h-14 w-14 rounded-xl object-cover text-xs text-muted-foreground"
+                                                />
+                                            ) : (
+                                                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-muted">
+                                                    <Store
+                                                        size={20}
+                                                        className="text-muted-foreground"
+                                                    />
+                                                </div>
+                                            )}
+                                            <div>
+                                                <p className="font-medium text-sm">
+                                                    {merchant.merchant_name}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="max-w-sm px-6 py-1 w-2/5 text-wrap break-words text-sm text-gray-600">
+                                        {merchant.reason}
+                                    </td>
+                                    <td className="px-6 py-1">
+                                        {merchant.created_at}
+                                    </td>
+                                    <td className="px-6 py-1">
+                                        <div className="flex justify-center gap-2">
+                                            <ModalForm merchant={merchant} />
+                                            <button className="rounded-lg border border-red-200 p-2 text-red-500">
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
-                            </thead>
-
-                            <tbody>
-                                {merchants.data.length > 0 ? (
-                                    merchants.data.map((merchant) => (
-                                        <tr
-                                            key={merchant.id}
-                                            className="border-t"
-                                        >
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-4">
-                                                    {merchant.image ? (
-                                                        <img
-                                                            src={merchant.image}
-                                                            alt={
-                                                                merchant.merchant_name
-                                                            }
-                                                            className="h-14 w-14 rounded-xl object-cover"
-                                                        />
-                                                    ) : (
-                                                        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-muted">
-                                                            —
-                                                        </div>
-                                                    )}
-
-                                                    <div>
-                                                        <p className="font-medium">
-                                                            {
-                                                                merchant.merchant_name
-                                                            }
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            <td className="max-w-sm px-6 py-4">
-                                                {merchant.reason}
-                                            </td>
-
-                                            <td className="px-6 py-4">
-                                                {merchant.created_at}
-                                            </td>
-
-                                            <td className="px-6 py-4">
-                                                <div className="flex justify-center gap-2">
-                                                    <Link
-                                                        href={`/blacklist-merchants/${merchant.id}`}
-                                                        className="rounded-lg border p-2"
-                                                    >
-                                                        <Eye size={16} />
-                                                    </Link>
-
-                                                    <Link
-                                                        href={`/blacklist-merchants/${merchant.id}/edit`}
-                                                        className="rounded-lg border p-2"
-                                                    >
-                                                        <Pencil size={16} />
-                                                    </Link>
-
-                                                    <button className="rounded-lg border border-red-200 p-2 text-red-500">
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td
-                                            colSpan={4}
-                                            className="py-16 text-center text-muted-foreground"
-                                        >
-                                            Belum ada merchant yang diblacklist.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="py-16 text-center text-muted-foreground"
+                                >
+                                    Belum ada merchant yang diblacklist.
+                                </td>
+                            </tr>
+                        )}
+                    </CustomTable>
+                    <Pagination
+                        current_page={merchants.current_page}
+                        next_page_url={merchants.next_page_url}
+                        prev_page_url={merchants.prev_page_url}
+                        per_page={merchants.per_page}
+                        from={merchants.from}
+                        to={merchants.to}
+                    />
                 </div>
             </AppLayout>
         </>

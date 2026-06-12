@@ -1,8 +1,5 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import { dashboard, login } from '@/routes';
-import { register } from '@/routes';
+import { usePage } from '@inertiajs/react';
 import LandingLayout from '@/layouts/landing-layout';
-import Navbar from '@/components/landing/navbar';
 import Hero from '@/components/landing/hero';
 import Stats from '@/components/landing/stats';
 import LatestNews from '@/components/landing/LatestNews';

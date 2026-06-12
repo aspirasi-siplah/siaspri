@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { Ban, BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -15,12 +15,18 @@ import {
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
 import newsManagement from '@/routes/news-management';
+import blacklistMerchants from '@/routes/blacklist-merchants';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Manajemen Berita',
         href: newsManagement.index(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Blacklist Merchant',
+        href: blacklistMerchants.index(),
+        icon: Ban,
     },
 ];
 
@@ -57,7 +63,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

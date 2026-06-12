@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlacklistMerchantController;
 use App\Http\Controllers\BlacklistMerchantManagementController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsManagementController;
@@ -11,6 +12,11 @@ Route::inertia('/', 'welcome')->name('home');
 Route::prefix('news')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('news.index');
     Route::get('/{news:slug}', [NewsController::class, 'show'])->name('news.show');
+});
+
+Route::prefix('blacklist')->group(function () {
+    Route::get('/', [BlacklistMerchantController::class, 'index'])->name('blacklist.index');
+    Route::get('/{id}', [BlacklistMerchantController::class, 'show'])->name('blacklist.show');
 });
 
 Route::get('/about', function () {
@@ -34,9 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('blacklist-merchants')->group(function () {
         Route::get('/', [BlacklistMerchantManagementController::class, 'index'])->name('blacklist-merchants.index');
-        Route::get('/create', [BlacklistMerchantManagementController::class, 'create'])->name('blacklist-merchants.create');
         Route::post('/', [BlacklistMerchantManagementController::class, 'store'])->name('blacklist-merchants.store');
-        Route::get('/{id}/edit', [BlacklistMerchantManagementController::class, 'edit'])->name('blacklist-merchants.edit');
         Route::put('/{id}', [BlacklistMerchantManagementController::class, 'update'])->name('blacklist-merchants.update');
         Route::delete('/{id}/delete', [BlacklistMerchantManagementController::class, 'destroy'])->name('blacklist-merchants.destroy');
     });

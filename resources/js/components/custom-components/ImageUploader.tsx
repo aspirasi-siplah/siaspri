@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from 'react';
-import { Camera } from 'lucide-react';
+import { Camera, Image } from 'lucide-react';
 
 interface Props {
     title?: string;
@@ -31,10 +31,12 @@ export default function ImageUploader({ title = 'Gambar', name, defaultImage, on
                                 ? URL.createObjectURL(preview)
                                 : preview
                         }
-                        className="h-32 w-32 rounded-full border object-cover"
+                        className="h-32 w-32 rounded-lg border object-cover"
                     />
                 ) : (
-                    <div className="h-32 w-32 rounded-full bg-gray-200"></div>
+                    <div className="h-32 w-32 rounded-lg bg-gray-200 flex items-center justify-center">
+                        <Image size={32} strokeWidth={1.5} className="text-gray-300" />
+                    </div>
                 )}
 
                 <label className="absolute right-0 bottom-0 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white shadow">

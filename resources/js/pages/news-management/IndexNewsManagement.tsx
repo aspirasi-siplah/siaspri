@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Plus, Pencil, Trash2, Newspaper, Image, Eye } from 'lucide-react';
 import Swal from 'sweetalert2';
 import Pagination from '@/components/custom-components/Pagination';
+import CustomTable from '@/components/custom-components/CustomTable';
 
 export interface News {
     id: number;
@@ -96,136 +97,110 @@ export default function NewsIndex({ news }: Props) {
                             Tambah Berita
                         </Link>
                     </div>
-                    <div className="overflow-hidden rounded-2xl border bg-card">
-                        <div className="border-b p-5">
-                            <div className="flex items-center gap-3">
-                                <Newspaper
-                                    size={20}
-                                    className="text-muted-foreground"
-                                />
-                                <h2 className="font-semibold text-gray-900">
-                                    Daftar Berita
-                                </h2>
-                            </div>
-                        </div>
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="border-b">
-                                        <th className="p-4 text-left text-sm text-gray-700">
-                                            Thumbnail
-                                        </th>
-
-                                        <th className="p-4 text-left text-sm text-gray-700">
-                                            Judul
-                                        </th>
-
-                                        <th className="p-4 text-center text-sm text-gray-700">
-                                            Status
-                                        </th>
-
-                                        <th className="p-4 text-center text-sm text-gray-700">
-                                            Tanggal Terbit
-                                        </th>
-
-                                        <th className="p-4 text-center text-sm text-gray-700">
-                                            Aksi
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {news.data.length > 0 ? (
-                                        news.data.map((item) => (
-                                            <tr
-                                                key={item.id}
-                                                className="border-b"
+                    <CustomTable
+                        title="Daftar Berita"
+                        icon={
+                            <Newspaper
+                                size={20}
+                                className="text-muted-foreground"
+                            />
+                        }
+                        header={[
+                            'Thumbnail',
+                            'Judul',
+                            'Status',
+                            'Tanggal Terbit',
+                            'Aksi',
+                        ]}
+                        headerAlign={[
+                            'text-left',
+                            'text-left',
+                            'text-center',
+                            'text-center',
+                            'text-center',
+                        ]}
+                    >
+                        {news.data.length > 0 ? (
+                            news.data.map((item) => (
+                                <tr key={item.id} className="border-b">
+                                    <td className="p-4">
+                                        {item.thumbnail ? (
+                                            <img
+                                                src={
+                                                    item.thumbnail ??
+                                                    '/images/placeholder.png'
+                                                }
+                                                alt=""
+                                                className="h-14 w-20 rounded-lg object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-14 w-20 flex-col items-center justify-center rounded-lg bg-gray-100">
+                                                <Image
+                                                    size={20}
+                                                    className="text-gray-400"
+                                                />
+                                                <p className="text-[10px] font-medium text-gray-300">
+                                                    No Image
+                                                </p>
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td className="p-4">
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-900">
+                                                {item.title}
+                                            </p>
+                                            <p className="text-[13px] text-muted-foreground">
+                                                /{item.slug}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td className="p-4 text-center">
+                                        <span
+                                            className={`rounded-full px-3 py-1 text-xs font-medium ${statusLabels[item.status]?.color || statusLabels.draft.color}`}
+                                        >
+                                            {statusLabels[item.status]?.label ||
+                                                statusLabels.draft.label}
+                                        </span>
+                                    </td>
+                                    <td className="p-4 text-center text-sm font-medium text-gray-700">
+                                        {item.published_at}
+                                    </td>
+                                    <td className="p-4 text-center">
+                                        <div className="flex justify-center gap-2">
+                                            <Link
+                                                href={`news-management/${item.id}/show`}
+                                                className="rounded-lg border p-2 text-blue-500"
                                             >
-                                                <td className="p-4">
-                                                    {item.thumbnail ? (
-                                                        <img
-                                                            src={
-                                                                item.thumbnail ??
-                                                                '/images/placeholder.png'
-                                                            }
-                                                            alt=""
-                                                            className="h-14 w-20 rounded-lg object-cover"
-                                                        />
-                                                    ) : (
-                                                        <div className="flex h-14 w-20 flex-col items-center justify-center rounded-lg bg-gray-100">
-                                                            <Image
-                                                                size={20}
-                                                                className="text-gray-400"
-                                                            />
-                                                            <p className="text-[10px] font-medium text-gray-300">
-                                                                No Image
-                                                            </p>
-                                                        </div>
-                                                    )}
-                                                </td>
-                                                <td className="p-4">
-                                                    <div>
-                                                        <p className="text-sm font-medium text-gray-900">
-                                                            {item.title}
-                                                        </p>
-                                                        <p className="text-[13px] text-muted-foreground">
-                                                            /{item.slug}
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                                <td className="p-4 text-center">
-                                                    <span
-                                                        className={`rounded-full px-3 py-1 text-xs font-medium ${statusLabels[item.status]?.color || statusLabels.draft.color}`}
-                                                    >
-                                                        {statusLabels[
-                                                            item.status
-                                                        ]?.label ||
-                                                            statusLabels.draft
-                                                                .label}
-                                                    </span>
-                                                </td>
-                                                <td className="p-4 text-center text-sm font-medium text-gray-700">
-                                                    {item.published_at}
-                                                </td>
-                                                <td className="p-4 text-center">
-                                                    <div className="flex justify-center gap-2">
-                                                        <Link
-                                                            href={`news-management/${item.id}/show`}
-                                                            className="rounded-lg border p-2 text-blue-500"
-                                                        >
-                                                            <Eye size={16} />
-                                                        </Link>
-                                                        <Link
-                                                            href={`news-management/${item.id}/edit`}
-                                                            className="rounded-lg border p-2"
-                                                        >
-                                                            <Pencil size={16} />
-                                                        </Link>
-                                                        <button
-                                                            onClick={() =>
-                                                                destroy(item.id)
-                                                            }
-                                                            className="rounded-lg border p-2 text-red-500"
-                                                        >
-                                                            <Trash2 size={16} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td
-                                                colSpan={5}
-                                                className="p-4 text-center text-sm text-gray-700"
+                                                <Eye size={16} />
+                                            </Link>
+                                            <Link
+                                                href={`news-management/${item.id}/edit`}
+                                                className="rounded-lg border p-2"
                                             >
-                                                Tidak ada data
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                                <Pencil size={16} />
+                                            </Link>
+                                            <button
+                                                onClick={() => destroy(item.id)}
+                                                className="rounded-lg border p-2 text-red-500"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan={5}
+                                    className="py-16 text-center text-sm text-gray-700"
+                                >
+                                    Tidak ada data
+                                </td>
+                            </tr>
+                        )}
+                    </CustomTable>
                     <Pagination
                         current_page={news.current_page}
                         next_page_url={news.next_page_url}
