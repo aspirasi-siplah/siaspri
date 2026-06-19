@@ -14,7 +14,7 @@ export default function QuillEditor({ value, onChange }: Props) {
             [{ list: 'ordered' }],
             [{ list: 'bullet' }],
             ['blockquote'],
-            ['link'],
+            ['link', 'image'],
             ['clean'],
         ],
     };
@@ -29,3 +29,4 @@ export default function QuillEditor({ value, onChange }: Props) {
         />
     );
 }
+

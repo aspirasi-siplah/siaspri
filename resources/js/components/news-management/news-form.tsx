@@ -8,6 +8,7 @@ import ImageUploader from '../custom-components/ImageUploader';
 import FormSelect from '../custom-components/FormSelect';
 import NewsGalleryUpload from './news-gallery-upload';
 import Swal from 'sweetalert2';
+import TiptapEditor from './tiptap-editor';
 
 interface ExistingNewsDocument {
     id: number;
@@ -171,10 +172,14 @@ export default function NewsForm({ news, submitUrl, method }: Props) {
             </div>
             <div className="">
                 <label className="mb-2 block">Konten Berita</label>
-                <QuillEditor
+                <TiptapEditor
                     value={form.data.content}
                     onChange={(value) => form.setData('content', value)}
                 />
+                {/* <QuillEditor
+                    value={form.data.content}
+                    onChange={(value) => form.setData('content', value)}
+                /> */}
 
                 {form.errors.content && (
                     <p className="mt-2 text-sm text-red-500">

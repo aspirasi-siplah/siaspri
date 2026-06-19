@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class NewsController extends Controller
@@ -19,7 +18,7 @@ class NewsController extends Controller
                     'id' => $news->id,
                     'title' => $news->title,
                     'slug' => $news->slug,
-                    'thumbnail' => $news->thumbnail ? Storage::url($news->thumbnail) : null,
+                    'thumbnail' => $news->thumbnail,
                     'excerpt' => $news->excerpt,
                     'published_at' => $news->published_at?->translatedFormat('d F Y'),
                 ];
@@ -48,7 +47,7 @@ class NewsController extends Controller
                     'id' => $news->id,
                     'title' => $news->title,
                     'slug' => $news->slug,
-                    'thumbnail' => $news->thumbnail ? Storage::url($news->thumbnail) : null,
+                    'thumbnail' => $news->thumbnail,
                     'excerpt' => $news->excerpt,
                     'content' => $news->content,
                     'published_at' => $news->published_at?->translatedFormat('d F Y'),
@@ -58,9 +57,7 @@ class NewsController extends Controller
                         ->map(fn($document) => [
                             'id' => $document->id,
                             'name' => $document->name,
-                            'url' => Storage::url(
-                                $document->file_path
-                            ),
+                            'url' => $document->file_path,
                         ]),
                 ],
             ]

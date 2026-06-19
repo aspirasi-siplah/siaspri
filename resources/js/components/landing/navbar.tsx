@@ -6,9 +6,9 @@ export default function Navbar() {
 
     return (
         <header className="fixed top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur">
-            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+            <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-6">
                 <Link href="/" className="text-xl font-bold text-blue-600">
-                    SiAspri
+                    <img src="/images/logo.png" alt="" className="h-15" />
                 </Link>
                 <nav className="hidden gap-8 md:flex">
                     <NavLink label="Beranda" href="/" active={location === '/'}/>

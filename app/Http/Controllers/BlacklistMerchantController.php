@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\BlacklistMerchant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -21,9 +20,7 @@ class BlacklistMerchantController extends Controller
             ->through(fn($merchant) => [
                 'id' => $merchant->id,
                 'merchant_name' => $merchant->merchant_name,
-                'image' => $merchant->image
-                    ? Storage::url($merchant->image)
-                    : null,
+                'image' => $merchant->image,
                 'reason' => Str::limit(
                     strip_tags($merchant->reason),
                     140
@@ -58,7 +55,7 @@ class BlacklistMerchantController extends Controller
                 'merchant' => [
                     'id' => $blacklistMerchant->id,
                     'merchant_name' => $blacklistMerchant->merchant_name,
-                    'image' => $blacklistMerchant->image ? Storage::url($blacklistMerchant->image) : null,
+                    'image' => $blacklistMerchant->image,
                     'reason' => $blacklistMerchant->reason,
 
                     'created_at' => $blacklistMerchant

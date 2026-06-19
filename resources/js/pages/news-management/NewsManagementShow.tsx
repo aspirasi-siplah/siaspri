@@ -15,7 +15,7 @@ interface NewsDocument {
     id: number;
     name: string;
     file_name: string;
-    url: string;
+    file_path: string;
 }
 
 interface NewsShow {
@@ -43,6 +43,21 @@ interface Props {
 }
 
 export default function ShowNews({ news }: Props) {
+    const statusLabels = {
+        draft: {
+            label: 'Draf',
+            color: ' bg-yellow-100 text-yellow-700',
+        },
+        published: {
+            label: 'Diterbitkan',
+            color: ' bg-green-100 text-green-700',
+        },
+        archived: {
+            label: 'Arsip',
+            color: ' bg-gray-100 text-gray-700',
+        },
+    } as any;
+
     return (
         <>
             <Head title={news.title} />
@@ -66,13 +81,9 @@ export default function ShowNews({ news }: Props) {
 
                             <div className="mt-3 flex gap-3">
                                 <span
-                                    className={
-                                        news.status === 'published'
-                                            ? 'rounded-full bg-green-100 px-3 py-1 text-sm text-green-700'
-                                            : 'rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-700'
-                                    }
+                                    className={`rounded-full px-3 py-1 text-sm ${statusLabels[news.status].color ?? ''}`}
                                 >
-                                    {news.status}
+                                    {statusLabels[news.status].label ?? 'Draf'}
                                 </span>
                             </div>
                         </div>
@@ -138,7 +149,7 @@ export default function ShowNews({ news }: Props) {
                         </h2>
 
                         <div
-                            className="prose prose-img:rounded-xl max-w-none"
+                            className="prose max-w-none prose-img:rounded-xl"
                             dangerouslySetInnerHTML={{
                                 __html: news.content,
                             }}
@@ -158,17 +169,15 @@ export default function ShowNews({ news }: Props) {
                                         className="overflow-hidden rounded-xl border"
                                     >
                                         <img
-                                            src={document.url}
+                                            src={document.file_path}
                                             alt={document.name}
                                             className="h-48 w-full object-cover"
                                         />
-
                                         <div className="p-3">
                                             <p className="font-medium">
                                                 {document.name}
                                             </p>
-
-                                            <p className="text-xs text-muted-foreground">
+                                            <p className="text-xs text-wrap break-all text-muted-foreground">
                                                 {document.file_name}
                                             </p>
                                         </div>

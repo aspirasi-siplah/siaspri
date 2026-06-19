@@ -38,6 +38,14 @@ class News extends Model
         return $this->hasMany(NewsDocuments::class);
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(
+            Category::class,
+            'news_categories'
+        );
+    }
+
     public static function generateUniqueSlug(string $title): string
     {
         $slug = Str::slug($title);

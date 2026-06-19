@@ -78,7 +78,12 @@ export default function Index({ merchants }: Props) {
                     </div>
                     <CustomTable
                         title="Daftar Merchant"
-                        icon={<Store size={20} className="text-muted-foreground" />}
+                        icon={
+                            <Store
+                                size={20}
+                                className="text-muted-foreground"
+                            />
+                        }
                         header={['Merchant', 'Alasan', 'Dibuat', 'Aksi']}
                         headerAlign={[
                             'text-left',
@@ -107,13 +112,13 @@ export default function Index({ merchants }: Props) {
                                                 </div>
                                             )}
                                             <div>
-                                                <p className="font-medium text-sm">
+                                                <p className="text-sm font-medium">
                                                     {merchant.merchant_name}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="max-w-sm px-6 py-1 w-2/5 text-wrap break-words text-sm text-gray-600">
+                                    <td className="w-2/5 max-w-sm px-6 py-1 text-sm text-wrap break-words text-gray-600">
                                         {merchant.reason}
                                     </td>
                                     <td className="px-6 py-1">
@@ -133,9 +138,9 @@ export default function Index({ merchants }: Props) {
                             <tr>
                                 <td
                                     colSpan={4}
-                                    className="py-16 text-center text-muted-foreground"
+                                    className="py-16 text-center text-sm text-gray-700"
                                 >
-                                    Belum ada merchant yang diblacklist.
+                                    Tidak ada data
                                 </td>
                             </tr>
                         )}

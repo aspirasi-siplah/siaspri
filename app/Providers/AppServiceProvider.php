@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use App\Services\Analytics\{
+    AnalyticsServiceInterface,
+    FakeAnalyticsService,
+    GoogleAnalyticsService
+};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +20,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if (app()->environment('local')) {
+            $this->app->singleton(
+                AnalyticsServiceInterface::class,
+                FakeAnalyticsService::class
+            );
+        } else {
+            $this->app->singleton(
+                AnalyticsServiceInterface::class,
+                GoogleAnalyticsService::class
+            );
+        }
     }
 
     /**

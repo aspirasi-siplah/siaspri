@@ -38,7 +38,9 @@ class NewsManagementController extends Controller
                 ->with('error', 'Berita tidak ditemukan');
         }
 
-        return Inertia::render('news-management/NewsManagementShow', [
+        return Inertia::render(
+            'news-management/NewsManagementShow',
+            [
                 'news' => [
                     'id' => $news->id,
                     'title' => $news->title,
@@ -56,11 +58,11 @@ class NewsManagementController extends Controller
                         'email' => $news->creator?->email,
                     ],
                     'documents' => $news->documents->map(fn($document) => [
-                            'id' => $document->id,
-                            'name' => $document->name,
-                            'file_name' => $document->file_name,
-                            'file_path' => $document->file_path,
-                        ]),
+                        'id' => $document->id,
+                        'name' => $document->name,
+                        'file_name' => $document->file_name,
+                        'file_path' => $document->file_path,
+                    ]),
                 ],
             ]
         );
@@ -139,7 +141,8 @@ class NewsManagementController extends Controller
             ->with('success', 'Berita berhasil dibuat');
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $news = News::findOrFail($id);
 
         if (!$news) {
@@ -170,7 +173,8 @@ class NewsManagementController extends Controller
         );
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $validated = $request->validate([
             'title' => 'required|string',
             'thumbnail' => 'nullable|image|max:2048',
@@ -202,18 +206,6 @@ class NewsManagementController extends Controller
         }
 
         DB::transaction(function () use ($request, $validated, $news) {
-            $thumbnail = $news->thumbnail;
-
-            if ($request->hasFile('thumbnail')) {
-                if ($news->thumbnail) {
-                    Storage::disk('public')
-                        ->delete($news->thumbnail);
-                }
-                $thumbnail = $request
-                    ->file('thumbnail')
-                    ->store('news', 'public');
-            }
-
             $publishedAt = $news->published_at;
 
             if ($validated['status'] === News::STATUS_PUBLISHED && !$news->published_at) {
@@ -231,17 +223,30 @@ class NewsManagementController extends Controller
                         $validated['title']
                     )
                     : $news->slug,
-                'thumbnail' => $thumbnail,
                 'excerpt' => $validated['excerpt'] ?? null,
                 'content' => $validated['content'],
                 'status' => $validated['status'],
                 'published_at' => $publishedAt,
             ]);
 
+            if ($request->hasFile('thumbnail')) {
+                if ($news->thumbnail) {
+                    Storage::disk('public')
+                        ->delete($news->thumbnail);
+                }
+                $thumbnail = $request
+                    ->file('thumbnail')
+                    ->store('news', 'public');
+
+                $news->update([
+                    'thumbnail' => $thumbnail,
+                ]);
+            }
+
             if (!empty($validated['deleted_documents'])) {
                 $documents = $news
                     ->documents()
-                    ->whereIn( 'id', $validated['deleted_documents'])
+                    ->whereIn('id', $validated['deleted_documents'])
                     ->get();
 
                 foreach ($documents as $document) {
@@ -265,12 +270,13 @@ class NewsManagementController extends Controller
         });
 
         return redirect()->route('news-management.index')->with(
-                'success',
-                'Berita berhasil diperbarui'
-            );
+            'success',
+            'Berita berhasil diperbarui'
+        );
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $news = News::findOrFail($id);
 
         if (!$news) {

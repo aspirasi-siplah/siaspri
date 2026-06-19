@@ -4,15 +4,22 @@ import Hero from '@/components/landing/hero';
 import Stats from '@/components/landing/stats';
 import LatestNews from '@/components/landing/LatestNews';
 import { useState } from 'react';
+import PartnersSection from '@/components/landing/PartnersSection';
 
-export default function Welcome() {
-    const [latestNews, setLatestNews] = useState<any[]>([]);
+interface Props {
+    latestNews: any[];
+    stats: any[];
+}
+
+
+export default function Welcome({ latestNews, stats }: any) {
     const { auth } = usePage<any>().props;
 
     return (
         <LandingLayout>
             <Hero />
-            <Stats />
+            <Stats stats={stats} />
+            <PartnersSection />
             <LatestNews news={latestNews || []} />
         </LandingLayout>
     );

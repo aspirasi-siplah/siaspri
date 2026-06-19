@@ -58,36 +58,16 @@ export default function ContactUs() {
                             </div>
                             <div className="rounded-3xl border bg-white p-8">
                                 <h2 className="mb-6 text-2xl font-bold">
-                                    Kirim Pesan
+                                    Lokasi Kantor Pusat
                                 </h2>
-                                <form className="space-y-5">
-                                    <input
-                                        type="text"
-                                        placeholder="Nama"
-                                        className="w-full rounded-xl border p-3"
-                                    />
-                                    <input
-                                        type="email"
-                                        placeholder="Email"
-                                        className="w-full rounded-xl border p-3"
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="Subjek"
-                                        className="w-full rounded-xl border p-3"
-                                    />
-                                    <textarea
-                                        rows={5}
-                                        placeholder="Pesan"
-                                        className="w-full rounded-xl border p-3"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="w-full rounded-xl bg-blue-600 py-3 text-white"
-                                    >
-                                        Kirim Pesan
-                                    </button>
-                                </form>
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d31657.880344630386!2d112.75141119999999!3d-7.32747685!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sid!2sid!4v1781497465009!5m2!1sid!2sid"
+                                    width="100%"
+                                    height="450"
+                                    allowFullScreen
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                ></iframe>
                             </div>
                         </div>
                     </div>

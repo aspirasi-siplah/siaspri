@@ -39,7 +39,7 @@ class FortifyServiceProvider extends ServiceProvider
             new class implements LoginResponse {
                 public function toResponse($request)
                 {
-                    return redirect()->intended('news-management/');
+                    return redirect()->intended('dashboard/');
                 }
             }
         );

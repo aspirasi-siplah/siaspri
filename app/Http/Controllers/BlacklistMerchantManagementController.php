@@ -19,20 +19,10 @@ class BlacklistMerchantManagementController extends Controller
             ->through(function (BlacklistMerchant $merchant) {
                 return [
                     'id' => $merchant->id,
-
                     'merchant_name' => $merchant->merchant_name,
-
-                    'image' => $merchant->image
-                        ? Storage::url($merchant->image)
-                        : null,
-
-                    'reason' => Str::limit(
-                        strip_tags($merchant->reason),
-                        100
-                    ),
-
-                    'created_at' => $merchant->created_at
-                        ->translatedFormat('d M Y H:i'),
+                    'image' => $merchant->image,
+                    'reason' => Str::limit(strip_tags($merchant->reason), 100),
+                    'created_at' => $merchant->created_at->translatedFormat('d M Y H:i'),
                 ];
             });
 
@@ -98,19 +88,21 @@ class BlacklistMerchantManagementController extends Controller
         }
 
         DB::transaction(function () use ($request, $validated, $blacklistMerchant) {
-            $image = $blacklistMerchant->image;
+            $blacklistMerchant->update([
+                'merchant_name' => $validated['merchant_name'],
+                'reason' => $validated['reason'],
+            ]);
+            
             if ($request->hasFile('image')) {
                 if ($blacklistMerchant->image) {
                     Storage::disk('public')->delete($blacklistMerchant->image);
                 }
                 $image = $request->file('image')->store('blacklist-merchants', 'public');
-            }
 
-            $blacklistMerchant->update([
-                'merchant_name' => $validated['merchant_name'],
-                'image' => $image,
-                'reason' => $validated['reason'],
-            ]);
+                $blacklistMerchant->update([
+                    'image' => $image,
+                ]);
+            }
         });
 
         return redirect()->route('blacklist-merchants.index')->with(

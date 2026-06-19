@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Storage;
 
 class BlacklistMerchant extends Model
 {
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+
     protected $fillable = [
         'merchant_name',
         'image',

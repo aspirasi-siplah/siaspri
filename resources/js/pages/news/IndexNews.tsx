@@ -22,7 +22,6 @@ interface Props {
 
 export default function IndexNews({ listNews }: Props) {
     const featured = listNews.data[0];
-
     const remaining = listNews.data.slice(1);
 
     return (
@@ -49,7 +48,6 @@ export default function IndexNews({ listNews }: Props) {
                         </div>
                     </div>
                 </section>
-
                 <section className="pb-24">
                     <div className="mx-auto max-w-7xl px-6">
                         {featured && (
@@ -57,7 +55,6 @@ export default function IndexNews({ listNews }: Props) {
                                 <h2 className="mb-6 text-2xl font-bold">
                                     Berita Terbaru
                                 </h2>
-
                                 <Link
                                     href={news.show(featured.slug)}
                                     className="group grid overflow-hidden rounded-3xl border bg-white shadow-sm transition hover:shadow-xl lg:grid-cols-2"
@@ -66,10 +63,9 @@ export default function IndexNews({ listNews }: Props) {
                                         <img
                                             src={featured.thumbnail}
                                             alt={featured.title}
-                                            className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                                            className="h-full w-full max-h-120 object-cover transition duration-700 group-hover:scale-105"
                                         />
                                     </div>
-
                                     <div className="flex flex-col justify-center p-10">
                                         <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
                                             <CalendarDays size={16} />
@@ -94,17 +90,14 @@ export default function IndexNews({ listNews }: Props) {
                                 </Link>
                             </div>
                         )}
-
                         <div className="mb-8 flex items-center justify-between">
                             <h2 className="text-2xl font-bold">
                                 Berita Lainnya
                             </h2>
-
                             <span className="text-sm text-slate-500">
                                 {listNews.data.length} Artikel
                             </span>
                         </div>
-
                         {remaining.length > 0 ? (
                             <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
                                 {remaining.map((item) => (
