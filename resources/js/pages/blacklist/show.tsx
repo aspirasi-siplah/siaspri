@@ -28,7 +28,7 @@ export default function ShowPage({ merchant }: Props) {
 
             <LandingLayout>
                 <article className="pt-32 pb-24">
-                    <div className="mx-auto max-w-5xl px-6">
+                    <div className="mx-auto max-w-7xl px-6">
                         <Link
                             href="/blacklist"
                             className="mb-8 inline-flex items-center gap-2 text-sm text-primary"

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -12,7 +13,7 @@ class CategoryController extends Controller
     {
         $categories = Category::simplePaginate(15);
 
-        return Inertia::render('categories/IndexCategory', [
+        return Inertia::render('categories/index-category', [
             'categories' => $categories
         ]);
     }
@@ -30,19 +31,13 @@ class CategoryController extends Controller
             'description.string' => 'Deskripsi harus berupa teks.',
         ]);
 
-        dd($request->all());
+        Category::create([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name).'-'.Str::random(5),
+            'description' => $request->description ?? null
+        ]);
 
-        try {
-            Category::create([
-                'name' => $request->name,
-                'slug' => Category::generateUniqueSlug($request->name),
-                'description' => $request->description ?? null
-            ]);
-    
-            return redirect()->route('categories.index');
-        } catch (\Exception $e) {
-            return redirect()->route('categories.index')->with('error', $e->getMessage());
-        }
+        return redirect()->back()->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     public function update(Request $request, $id)
@@ -58,17 +53,22 @@ class CategoryController extends Controller
             'description.string' => 'Deskripsi harus berupa teks.',
         ]);
 
-        try {
-            $category = Category::findOrFail($id);
-            $category->update([
-                'name' => $request->name,
-                'slug' => Category::generateUniqueSlug($request->name),
-                'description' => $request->description ?? null
-            ]);
-    
-            return redirect()->route('categories.index');
-        } catch (\Exception $e) {
-            return redirect()->route('categories.index')->with('error', $e->getMessage());
-        }
+        $category = Category::findOrFail($id);
+
+        $category->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name).'-'.Str::random(5),
+            'description' => $request->description ?? null
+        ]);
+
+        return redirect()->back()->with('success', 'Kategori berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return redirect()->back()->with('success', 'Kategori berhasil dihapus.');
     }
 }

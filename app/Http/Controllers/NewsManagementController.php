@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreNewsRequest;
+use App\Http\Requests\UpdateNewsRequest;
+use App\Models\Category;
 use App\Models\News;
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +16,7 @@ class NewsManagementController extends Controller
 {
     public function index()
     {
-        return Inertia::render('news-management/IndexNewsManagement', [
+        return Inertia::render('news-management/index-news-management', [
             'news' => News::query()
                 ->latest()
                 ->paginate(10)
@@ -31,15 +34,10 @@ class NewsManagementController extends Controller
 
     public function show($id)
     {
-        $news = News::findOrFail($id);
-
-        if (!$news) {
-            return redirect()->route('news-management.index')
-                ->with('error', 'Berita tidak ditemukan');
-        }
+        $news = News::select('id', 'title', 'slug', 'thumbnail', 'excerpt', 'content', 'status', 'published_at', 'created_at', 'updated_at')->with(['documents:id,name,file_name,file_path'])->findOrFail($id);
 
         return Inertia::render(
-            'news-management/NewsManagementShow',
+            'news-management/news-management-show',
             [
                 'news' => [
                     'id' => $news->id,
@@ -52,17 +50,7 @@ class NewsManagementController extends Controller
                     'published_at' => $news->published_at?->format('d F Y H:i'),
                     'created_at' => $news->created_at->format('d F Y H:i'),
                     'updated_at' => $news->updated_at->format('d F Y H:i'),
-                    'author' => [
-                        'id' => $news->creator?->id,
-                        'name' => $news->creator?->name,
-                        'email' => $news->creator?->email,
-                    ],
-                    'documents' => $news->documents->map(fn($document) => [
-                        'id' => $document->id,
-                        'name' => $document->name,
-                        'file_name' => $document->file_name,
-                        'file_path' => $document->file_path,
-                    ]),
+                    'documents' => $news->documents->toArray(),
                 ],
             ]
         );
@@ -70,32 +58,16 @@ class NewsManagementController extends Controller
 
     public function create()
     {
-        return Inertia::render('news-management/NewsManagementFormPage');
+        $categories = Category::select('id', 'name')->get()->toArray();
+
+        return Inertia::render('news-management/news-management-form-page', [
+            'categories' => $categories
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreNewsRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'thumbnail' => 'nullable|image|max:2048',
-            'excerpt' => 'nullable|string',
-            'content' => 'required|string',
-            'status' => 'required|in:draft,published',
-            'documents' => 'nullable|array',
-            'documents.*.name' => 'nullable|string',
-            'documents.*.file' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-        ], [
-            'title.required' => 'Judul berita harus diisi',
-            'content.required' => 'Isi berita harus diisi',
-            'status.required' => 'Status berita harus diisi',
-            'status.in' => 'Status berita harus "draft" atau "published"',
-            'thumbnail.image' => 'Thumbnail harus berupa gambar',
-            'thumbnail.max' => 'Thumbnail maksimal berukuran 2MB',
-            'documents.*.file.image' => 'Dokumen harus berupa gambar',
-            'documents.*.file.mimes' => 'Dokumen harus berupa .jpeg, .png, .jpg, atau .webp',
-            'documents.*.file.max' => 'Dokumen maksimal berukuran 2MB',
-            'documents.*.name.string' => 'Nama dokumen harus berupa string',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] =
@@ -112,7 +84,7 @@ class NewsManagementController extends Controller
 
             $news = News::create([
                 'title' => $validated['title'],
-                'slug' => News::generateUniqueSlug($validated['title']),
+                'slug' => Str::slug($validated['title']).'-'.Str::random(5),
                 'thumbnail' => $validated['thumbnail'] ?? null,
                 'excerpt' => $validated['excerpt'] ?? null,
                 'content' => $validated['content'],
@@ -143,15 +115,11 @@ class NewsManagementController extends Controller
 
     public function edit($id)
     {
-        $news = News::findOrFail($id);
-
-        if (!$news) {
-            return redirect()->route('news-management.index')
-                ->with('error', 'Berita tidak ditemukan');
-        }
+        $news = News::select('id', 'title', 'excerpt', 'content', 'status', 'thumbnail')->with(['documents:id,name,file_name,file_path'])->findOrFail($id);
+        $categories = Category::select('id', 'name')->get()->toArray();
 
         return Inertia::render(
-            'news-management/NewsManagementFormPage',
+            'news-management/news-management-form-page',
             [
                 'news' => [
                     'id' => $news->id,
@@ -160,50 +128,18 @@ class NewsManagementController extends Controller
                     'content' => $news->content,
                     'status' => $news->status,
                     'thumbnail' => $news->thumbnail,
-                    'documents' => $news
-                        ->documents
-                        ->map(fn($doc) => [
-                            'id' => $doc->id,
-                            'name' => $doc->name,
-                            'file_name' => $doc->file_name,
-                            'file_path' => $doc->file_path
-                        ]),
+                    'documents' => $news->documents->toArray(),
                 ],
+                'categories' => $categories
             ]
         );
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateNewsRequest $request, $id)
     {
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'thumbnail' => 'nullable|image|max:2048',
-            'excerpt' => 'nullable|string',
-            'content' => 'required|string',
-            'status' => 'required|in:draft,published',
-            'documents' => 'nullable|array',
-            'documents.*.name' => 'nullable|string',
-            'documents.*.file' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-            'deleted_documents' => 'nullable|array',
-            'deleted_documents.*' => 'integer|exists:news_documents,id',
-        ], [
-            'title.required' => 'Judul berita harus diisi',
-            'content.required' => 'Isi berita harus diisi',
-            'status.required' => 'Status berita harus diisi',
-            'status.in' => 'Status berita harus "draft" atau "published"',
-            'thumbnail.image' => 'Thumbnail harus berupa gambar',
-            'thumbnail.max' => 'Thumbnail maksimal berukuran 2MB',
-            'documents.*.file.image' => 'Dokumen harus berupa gambar',
-            'documents.*.file.mimes' => 'Dokumen harus berupa .jpeg, .png, .jpg, atau .webp',
-            'documents.*.file.max' => 'Dokumen maksimal berukuran 2MB',
-        ]);
+        $validated = $request->validated();
 
         $news = News::findOrFail($id);
-
-        if (!$news) {
-            return redirect()->route('news-management.index')
-                ->with('error', 'Berita tidak ditemukan');
-        }
 
         DB::transaction(function () use ($request, $validated, $news) {
             $publishedAt = $news->published_at;
@@ -218,11 +154,7 @@ class NewsManagementController extends Controller
 
             $news->update([
                 'title' => $validated['title'],
-                'slug' => $news->title !== $validated['title']
-                    ? News::generateUniqueSlug(
-                        $validated['title']
-                    )
-                    : $news->slug,
+                'slug' => $news->title !== $validated['title'] ? Str::slug($validated['title']).'-'.Str::random(5) : $news->slug,
                 'excerpt' => $validated['excerpt'] ?? null,
                 'content' => $validated['content'],
                 'status' => $validated['status'],
@@ -279,11 +211,6 @@ class NewsManagementController extends Controller
     {
         $news = News::findOrFail($id);
 
-        if (!$news) {
-            return redirect()->route('news-management.index')
-                ->with('error', 'Berita tidak ditemukan');
-        }
-
         if ($news->thumbnail) {
             Storage::disk('public')
                 ->delete($news->thumbnail);
@@ -295,6 +222,7 @@ class NewsManagementController extends Controller
         }
 
         $news->delete();
+
         return redirect()->route('news-management.index')->with(
             'success',
             'Berita berhasil dihapus'

@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
     public function __invoke(AnalyticsServiceInterface $analytics) {
-        return Inertia::render('Dashboard',
+        return Inertia::render('dashboard',
             [
                 'analytics' => [
                     'stats' => $analytics->getDashboardStats(),

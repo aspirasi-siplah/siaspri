@@ -23,11 +23,12 @@ Route::prefix('blacklist')->group(function () {
     Route::get('/{id}', [BlacklistMerchantController::class, 'show'])->name('blacklist.show');
 });
 
-Route::get('/about', function () {return Inertia::render('AboutUs');
+Route::get('/about', function () {
+    return Inertia::render('about-us');
 })->name('about');
 
 Route::get('/contact', function () {
-    return Inertia::render('ContactUs');
+    return Inertia::render('contact-us');
 })->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {

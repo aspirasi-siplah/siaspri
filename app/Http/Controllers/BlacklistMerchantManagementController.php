@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBlacklistMerchantRequest;
+use App\Http\Requests\UpdateBlacklistMerchantRequest;
 use App\Models\BlacklistMerchant;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -27,25 +28,16 @@ class BlacklistMerchantManagementController extends Controller
             });
 
         return Inertia::render(
-            'blacklist-merchants/IndexBlacklistMerchant',
+            'blacklist-merchants/index-blacklist-merchant',
             [
                 'merchants' => $merchants,
             ]
         );
     }
 
-    public function store(Request $request)
+    public function store(StoreBlacklistMerchantRequest $request)
     {
-        $validated = $request->validate([
-            'merchant_name' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'reason' => ['required', 'string'],
-        ], [
-            'merchant_name.required' => 'Nama merchant wajib diisi.',
-            'image.image' => 'File harus berupa gambar.',
-            'image.max' => 'Ukuran gambar maksimal 2MB.',
-            'reason.required' => 'Alasan blacklist wajib diisi.',
-        ]);
+        $validated = $request->validated();
 
         DB::transaction(function () use ($request, $validated) {
             $merchant = BlacklistMerchant::create([
@@ -60,32 +52,16 @@ class BlacklistMerchantManagementController extends Controller
             }
         });
 
-        return redirect()->route('blacklist-merchants.index')->with(
+        return redirect()->back()->with(
                 'success',
                 'Merchant berhasil ditambahkan.'
             );
     }
 
-    public function update(Request $request, $id) {
-        $validated = $request->validate([
-            'merchant_name' => ['required', 'string', 'max:255',],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'reason' => ['required', 'string'],
-        ], [
-            'merchant_name.required' => 'Nama merchant wajib diisi.',
-            'image.image' => 'File harus berupa gambar.',
-            'image.max' => 'Ukuran gambar maksimal 2MB.',
-            'reason.required' => 'Alasan blacklist wajib diisi.',
-        ]);
+    public function update(UpdateBlacklistMerchantRequest $request, $id) {
+        $validated = $request->validated();
 
         $blacklistMerchant = BlacklistMerchant::findOrFail($id);
-
-        if (!$blacklistMerchant) {
-            return redirect()->route('blacklist-merchants.index')->with(
-                'error',
-                'Merchant tidak ditemukan.'
-            );
-        }
 
         DB::transaction(function () use ($request, $validated, $blacklistMerchant) {
             $blacklistMerchant->update([
@@ -105,7 +81,7 @@ class BlacklistMerchantManagementController extends Controller
             }
         });
 
-        return redirect()->route('blacklist-merchants.index')->with(
+        return redirect()->back()->with(
             'success',
             'Merchant berhasil diperbarui.'
         );
@@ -119,7 +95,7 @@ class BlacklistMerchantManagementController extends Controller
             $blacklistMerchant->delete();
         });
 
-        return redirect()->route('blacklist-merchants.index')->with(
+        return redirect()->back()->with(
             'success',
             'Merchant berhasil dihapus.'
         );

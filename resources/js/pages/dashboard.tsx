@@ -20,6 +20,7 @@ import {
     Tooltip,
     CartesianGrid,
 } from 'recharts';
+import { ChartAreaInteractive } from '@/components/chart-area-interactive';
 
 interface Props {
     analytics: {
@@ -90,16 +91,8 @@ export default function Dashboard({ analytics, newsCount }: Props) {
                         <h2 className="mb-6 text-lg font-semibold">
                             Kunjungan 30 Hari Terakhir
                         </h2>
-                        <div className="h-[350px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={analytics.chart}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Area type="monotone" dataKey="visitors" />
-                                </AreaChart>
-                            </ResponsiveContainer>
+                        <div className="">
+                            <ChartAreaInteractive chartData={analytics.chart} />
                         </div>
                     </div>
                     <div className="grid gap-6 xl:grid-cols-3">

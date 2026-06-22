@@ -46,20 +46,6 @@ class News extends Model
         );
     }
 
-    public static function generateUniqueSlug(string $title): string
-    {
-        $slug = Str::slug($title);
-        $originalSlug = $slug;
-        $counter = 1;
-
-        while (self::where('slug', $slug)->exists()) {
-            $slug = "{$originalSlug}-{$counter}";
-            $counter++;
-        }
-
-        return $slug;
-    }
-
     public function getThumbnailAttribute($value)
     {
         return $value ? Storage::url($value) : null;

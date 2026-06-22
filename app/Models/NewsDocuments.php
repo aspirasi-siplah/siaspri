@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,8 +20,10 @@ class NewsDocuments extends Model
         return $this->belongsTo(News::class);
     }
 
-    public function getFilePathAttribute($value)
+    public function filePath(): Attribute
     {
-        return $value ? Storage::url($value) : null;
+        return Attribute::make(
+            get: fn(string $value) => $value ? Storage::url($value) : null
+        );
     }
 }

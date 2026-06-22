@@ -25,7 +25,7 @@ class NewsController extends Controller
             });
 
         return Inertia::render(
-            'news/IndexNews',
+            'news/index-news',
             [
                 'listNews' => $listNews,
             ]
@@ -34,14 +34,12 @@ class NewsController extends Controller
 
     public function show(News $news)
     {
-        if ($news->status !== News::STATUS_PUBLISHED) {
-            return redirect()->route('news.index')->with('error', 'Berita tidak ditemukan');
-        }
+        abort_if($news->status !== News::STATUS_PUBLISHED, 404, 'Berita tidak ditemukan');
 
         $news->load([ 'documents', 'creator']);
 
         return Inertia::render(
-            'news/ShowNews',
+            'news/show-news',
             [
                 'news' => [
                     'id' => $news->id,

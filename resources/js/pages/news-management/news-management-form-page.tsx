@@ -24,9 +24,10 @@ export interface NewsData {
 
 interface Props {
     news?: NewsData;
+    categories?: any[];
 }
 
-export default function NewsManagementFormPage({ news }: Props) {
+export default function NewsManagementFormPage({ news, categories }: Props) {
     const isEdit = !!news;
 
     return (
@@ -75,6 +76,7 @@ export default function NewsManagementFormPage({ news }: Props) {
                                 ? `/news-management/${news.id}`
                                 : `/news-management`
                         }
+                        categories={categories ?? []}
                     />
                 </div>
             </AppLayout>

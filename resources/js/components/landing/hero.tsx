@@ -22,16 +22,16 @@ export default function Hero() {
                         </p>
                         <div className="mt-8 flex gap-4">
                             <Link
-                                href="/aspirasi"
+                                href="/news"
                                 className="rounded-xl bg-blue-600 px-6 py-3 text-white"
                             >
-                                Kirim Aspirasi
+                                Lihat Kegiatan
                             </Link>
                             <Link
-                                href="/news"
+                                href="/contact"
                                 className="rounded-xl border px-6 py-3"
                             >
-                                Lihat Kegiatan
+                                Kontak Kami
                             </Link>
                         </div>
                     </div>

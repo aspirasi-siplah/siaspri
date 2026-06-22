@@ -33,7 +33,7 @@ class BlacklistMerchantController extends Controller
             ]);
 
         return Inertia::render(
-            'blacklist/IndexPage',
+            'blacklist/index',
             [
                 'merchants' => $merchants,
             ]
@@ -43,14 +43,7 @@ class BlacklistMerchantController extends Controller
     public function show($id) {
         $blacklistMerchant = BlacklistMerchant::findOrFail($id);
 
-        if (!$blacklistMerchant) {
-            return redirect()->route('blacklist.index')->with(
-                'error',
-                'Merchant tidak ditemukan.'
-            );
-        }
-
-        return Inertia::render('blacklist/ShowPage',
+        return Inertia::render('blacklist/show',
             [
                 'merchant' => [
                     'id' => $blacklistMerchant->id,

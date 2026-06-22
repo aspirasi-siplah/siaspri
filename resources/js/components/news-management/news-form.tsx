@@ -9,6 +9,7 @@ import FormSelect from '../custom-components/FormSelect';
 import NewsGalleryUpload from './news-gallery-upload';
 import Swal from 'sweetalert2';
 import TiptapEditor from './tiptap-editor';
+import MultiSelect from '../custom-components/multi-select';
 
 interface ExistingNewsDocument {
     id: number;
@@ -38,9 +39,10 @@ interface Props {
     news?: NewsData;
     submitUrl: string;
     method?: 'post' | 'put';
+    categories: any[];
 }
 
-export default function NewsForm({ news, submitUrl, method }: Props) {
+export default function NewsForm({ news, submitUrl, method, categories }: Props) {
     const form = useForm({
         title: news?.title ?? '',
         excerpt: news?.excerpt ?? '',
@@ -49,13 +51,13 @@ export default function NewsForm({ news, submitUrl, method }: Props) {
         thumbnail: null as File | null,
         documents: [] as File[],
         deleted_documents: [] as number[],
+        category_ids: [] as number[],
     });
     const [documents, setDocuments] = useState<NewDocument[]>([]);
     const [deletedDocumentIds, setDeletedDocumentIds] = useState<number[]>([]);
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         form.transform((data) => ({
             ...data,
             documents: documents.map((item) => ({
@@ -64,7 +66,6 @@ export default function NewsForm({ news, submitUrl, method }: Props) {
             })),
             deleted_documents: deletedDocumentIds,
         }));
-
         const options = {
             forceFormData: true,
             preserveScroll: true,
@@ -119,6 +120,27 @@ export default function NewsForm({ news, submitUrl, method }: Props) {
                         }
                         error={form.errors.title}
                     />
+                    <MultiSelect
+                        label="Tambah Kategori"
+                        value={form.data.category_ids}
+                        onChange={(e: number[]) =>
+                            form.setData('category_ids', e)
+                        }
+                        error={form.errors.category_ids}
+                        options={categories}
+                    />
+                    {/* <FormSelect
+                        label="Tambah Kategori"
+                        name="Kategori"
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                            form.setData('category_ids', [
+                                ...form.data.category_ids,
+                                parseInt(e.target.value),
+                            ])
+                        }
+                        error={form.errors.category_ids}
+                        options={[]}
+                    /> */}
                     <FormSelect
                         name="status"
                         label="Status"
@@ -201,3 +223,4 @@ export default function NewsForm({ news, submitUrl, method }: Props) {
         </form>
     );
 }
+

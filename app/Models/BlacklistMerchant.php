@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,8 +17,9 @@ class BlacklistMerchant extends Model
         'reason',
     ];
 
-    public function getImageAttribute($value)
-    {
-        return $value ? Storage::url($value) : null;
+    public function image(): Attribute {
+        return Attribute::make(
+            get: fn (string $value) => $value ? Storage::url($value) : null
+        );
     }
 }

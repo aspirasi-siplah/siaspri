@@ -3,14 +3,31 @@ import CustomTable from "@/components/custom-components/CustomTable";
 import FormInput from "@/components/custom-components/FormInput";
 import Pagination from "@/components/custom-components/Pagination";
 import AppLayout from "@/layouts/app-layout";
-import { Head, Link, useForm } from "@inertiajs/react";
-import axios from "axios";
+import { Head, Link, router, useForm } from "@inertiajs/react";
 import { LayoutGrid, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
+interface Category {
+    data: {
+        id: number;
+        name: string;
+        slug: string;
+        description: string;
+    }[];
+    current_page: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+    per_page: number;
+    from: number;
+    to: number;
+}
 
-export default function IndexCategory({ categories }: any) {
+interface Props {
+    categories: Category;
+}
+
+export default function IndexCategory({ categories }: Props) {
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -32,14 +49,14 @@ export default function IndexCategory({ categories }: any) {
             reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                post(`categories/`, {
+                post(`categories`, {
                     onSuccess: () => {
                         setIsOpenModal(false);
                         reset();
                         Swal.fire({
-                            icon: "success",
-                            title: "Berhasil!",
-                            text: "Kategori berhasil disimpan.",
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Kategori berhasil disimpan.',
                         });
                     },
                 });
@@ -60,21 +77,22 @@ export default function IndexCategory({ categories }: any) {
             reverseButtons: true,
         }).then(async (result) => {
             if (result.isConfirmed) {
-                try {
-                    await axios.delete(`categories/${id}/delete`);
-                    Swal.fire({
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: "Kategori berhasil dihapus.",
-                    });
-                } catch (error) {
-                    console.log(error);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Gagal!",
-                        text: "Kategori gagal dihapus.",
-                    });
-                }
+                router.delete(`categories/${id}`, {
+                    onSuccess: () => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Kategori berhasil dihapus.',
+                        });
+                    },
+                    onError: () => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: 'Kategori gagal dihapus.',
+                        });
+                    },
+                })
             }
         });
     };
@@ -126,7 +144,7 @@ export default function IndexCategory({ categories }: any) {
                         ]}
                     >
                         {categories.data.length > 0 ? (
-                            categories.map((category: any, index: number) => (
+                            categories.data.map((category: any, index: number) => (
                                 <tr key={index} className="border-b">
                                     <td className="p-4 text-center">
                                         {index + 1}
