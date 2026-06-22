@@ -44,7 +44,7 @@ class BlacklistMerchantManagementController extends Controller
                 'merchant_name' => $validated['merchant_name'],
                 'reason' => $validated['reason'],
             ]);
-            
+
             if ($request->hasFile('image')) {
                 $merchant->update([
                     'image' => $request->file('image')->store('blacklist-merchants', 'public')
@@ -53,12 +53,13 @@ class BlacklistMerchantManagementController extends Controller
         });
 
         return redirect()->back()->with(
-                'success',
-                'Merchant berhasil ditambahkan.'
-            );
+            'success',
+            'Merchant berhasil ditambahkan.'
+        );
     }
 
-    public function update(UpdateBlacklistMerchantRequest $request, $id) {
+    public function update(UpdateBlacklistMerchantRequest $request, $id)
+    {
         $validated = $request->validated();
 
         $blacklistMerchant = BlacklistMerchant::findOrFail($id);
@@ -68,7 +69,7 @@ class BlacklistMerchantManagementController extends Controller
                 'merchant_name' => $validated['merchant_name'],
                 'reason' => $validated['reason'],
             ]);
-            
+
             if ($request->hasFile('image')) {
                 if ($blacklistMerchant->image) {
                     Storage::disk('public')->delete($blacklistMerchant->image);
@@ -87,7 +88,8 @@ class BlacklistMerchantManagementController extends Controller
         );
     }
 
-    public function destroy(BlacklistMerchant $blacklistMerchant) {
+    public function destroy(BlacklistMerchant $blacklistMerchant)
+    {
         DB::transaction(function () use ($blacklistMerchant) {
             if ($blacklistMerchant->image) {
                 Storage::disk('public')->delete($blacklistMerchant->image);

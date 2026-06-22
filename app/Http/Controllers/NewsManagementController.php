@@ -84,7 +84,7 @@ class NewsManagementController extends Controller
 
             $news = News::create([
                 'title' => $validated['title'],
-                'slug' => Str::slug($validated['title']).'-'.Str::random(5),
+                'slug' => Str::slug($validated['title']) . '-' . Str::random(5),
                 'thumbnail' => $validated['thumbnail'] ?? null,
                 'excerpt' => $validated['excerpt'] ?? null,
                 'content' => $validated['content'],
@@ -154,7 +154,7 @@ class NewsManagementController extends Controller
 
             $news->update([
                 'title' => $validated['title'],
-                'slug' => $news->title !== $validated['title'] ? Str::slug($validated['title']).'-'.Str::random(5) : $news->slug,
+                'slug' => $news->title !== $validated['title'] ? Str::slug($validated['title']) . '-' . Str::random(5) : $news->slug,
                 'excerpt' => $validated['excerpt'] ?? null,
                 'content' => $validated['content'],
                 'status' => $validated['status'],

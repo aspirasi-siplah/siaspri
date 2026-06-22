@@ -36,7 +36,7 @@ class NewsController extends Controller
     {
         abort_if($news->status !== News::STATUS_PUBLISHED, 404, 'Berita tidak ditemukan');
 
-        $news->load([ 'documents', 'creator']);
+        $news->load(['documents', 'creator']);
 
         return Inertia::render(
             'news/show-news',

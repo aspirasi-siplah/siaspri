@@ -33,7 +33,7 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $request->name,
-            'slug' => Str::slug($request->name).'-'.Str::random(5),
+            'slug' => Str::slug($request->name) . '-' . Str::random(5),
             'description' => $request->description ?? null
         ]);
 
@@ -57,7 +57,7 @@ class CategoryController extends Controller
 
         $category->update([
             'name' => $request->name,
-            'slug' => Str::slug($request->name).'-'.Str::random(5),
+            'slug' => Str::slug($request->name) . '-' . Str::random(5),
             'description' => $request->description ?? null
         ]);
 

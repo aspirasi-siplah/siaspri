@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class BlacklistMerchantController extends Controller
 {
     public function index(Request $request)
-    {    
+    {
         $merchants = BlacklistMerchant::query()
             ->latest()
             ->when($request->search, function ($query, $search) {
@@ -40,10 +40,12 @@ class BlacklistMerchantController extends Controller
         );
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $blacklistMerchant = BlacklistMerchant::findOrFail($id);
 
-        return Inertia::render('blacklist/show',
+        return Inertia::render(
+            'blacklist/show',
             [
                 'merchant' => [
                     'id' => $blacklistMerchant->id,
