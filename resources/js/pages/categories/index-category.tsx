@@ -77,7 +77,7 @@ export default function IndexCategory({ categories }: Props) {
             reverseButtons: true,
         }).then(async (result) => {
             if (result.isConfirmed) {
-                router.delete(`categories/${id}`, {
+                router.delete(`categories/${id}/delete`, {
                     onSuccess: () => {
                         Swal.fire({
                             icon: 'success',

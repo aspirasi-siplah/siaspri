@@ -34,6 +34,8 @@ class UpdateNewsRequest extends FormRequest
             'documents.*.file' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'deleted_documents' => 'nullable|array',
             'deleted_documents.*' => 'integer|exists:news_documents,id',
+            'category_ids' => 'required|array|min:1',
+            'category_ids.*' => 'integer|exists:categories,id',
         ];
     }
 
@@ -50,6 +52,9 @@ class UpdateNewsRequest extends FormRequest
             'documents.*.file.image' => 'Dokumen harus berupa gambar',
             'documents.*.file.mimes' => 'Dokumen harus berupa .jpeg, .png, .jpg, atau .webp',
             'documents.*.file.max' => 'Dokumen maksimal berukuran 2MB',
+            'documents.*.name.string' => 'Nama dokumen harus berupa string',
+            'category_ids.required' => 'Kategori berita harus diisi',
+            'category_ids.*.exists' => 'Kategori berita tidak valid',
         ];
     }
 }

@@ -88,13 +88,18 @@ class BlacklistMerchantManagementController extends Controller
         );
     }
 
-    public function destroy(BlacklistMerchant $blacklistMerchant)
+    public function destroy($id)
     {
+        $blacklistMerchant = BlacklistMerchant::findOrFail($id);
+
         DB::transaction(function () use ($blacklistMerchant) {
+
             if ($blacklistMerchant->image) {
                 Storage::disk('public')->delete($blacklistMerchant->image);
             }
+
             $blacklistMerchant->delete();
+
         });
 
         return redirect()->back()->with(

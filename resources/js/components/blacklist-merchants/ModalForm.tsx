@@ -65,7 +65,7 @@ export default function ModalForm({ merchant }: Props) {
             {isEdit ? (
                 <button
                     onClick={() => setOpen(true)}
-                    className="rounded-lg border p-2"
+                    className="cursor-pointer rounded-lg border p-2 hover:bg-gray-100"
                 >
                     <Pencil size={16} />
                 </button>
@@ -81,7 +81,7 @@ export default function ModalForm({ merchant }: Props) {
             <CustomModal
                 open={open}
                 onClose={() => setOpen(false)}
-                title="Tambah Merchant"
+                title={isEdit ? 'Ubah Merchant' : 'Tambah Merchant'}
                 size="lg"
             >
                 <form onSubmit={submit} className="space-y-6">

@@ -34,7 +34,7 @@ class NewsManagementController extends Controller
 
     public function show($id)
     {
-        $news = News::select('id', 'title', 'slug', 'thumbnail', 'excerpt', 'content', 'status', 'published_at', 'created_at', 'updated_at')->with(['documents:id,name,file_name,file_path'])->findOrFail($id);
+        $news = News::select('id', 'title', 'slug', 'thumbnail', 'excerpt', 'content', 'status', 'published_at', 'created_at', 'updated_at')->with(['documents:id,name,file_name,file_path', 'categories:id,name'])->findOrFail($id);
 
         return Inertia::render(
             'news-management/news-management-show',
@@ -51,6 +51,7 @@ class NewsManagementController extends Controller
                     'created_at' => $news->created_at->format('d F Y H:i'),
                     'updated_at' => $news->updated_at->format('d F Y H:i'),
                     'documents' => $news->documents->toArray(),
+                    'categories' => $news->categories->toArray(),
                 ],
             ]
         );
@@ -70,12 +71,10 @@ class NewsManagementController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
-            $validated['thumbnail'] =
-                $request->file('thumbnail')->store('news', 'public');
+            $validated['thumbnail'] = $request->file('thumbnail')->store('news', 'public');
         }
 
         $validated['created_by'] = Auth::id();
-
         if ($validated['status'] === News::STATUS_PUBLISHED) {
             $validated['published_at'] = now();
         }
@@ -107,6 +106,8 @@ class NewsManagementController extends Controller
                     ]);
                 }
             }
+
+            $news->categories()->sync($validated['category_ids']);
         });
 
         return redirect()->route('news-management.index')
@@ -199,6 +200,8 @@ class NewsManagementController extends Controller
                     ]);
                 }
             }
+
+            $news->categories()->sync($validated['category_ids']);
         });
 
         return redirect()->route('news-management.index')->with(

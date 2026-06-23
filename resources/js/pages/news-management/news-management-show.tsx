@@ -29,12 +29,8 @@ interface NewsShow {
     published_at: string | null;
     created_at: string;
     updated_at: string;
-    author: {
-        id: number;
-        name: string;
-        email: string;
-    };
     documents: NewsDocument[];
+    categories: any[];
 }
 
 
@@ -78,7 +74,6 @@ export default function ShowNews({ news }: Props) {
                     <div className="flex items-start justify-between">
                         <div>
                             <h1 className="text-3xl font-bold">{news.title}</h1>
-
                             <div className="mt-3 flex gap-3">
                                 <span
                                     className={`rounded-full px-3 py-1 text-sm ${statusLabels[news.status].color ?? ''}`}
@@ -87,7 +82,6 @@ export default function ShowNews({ news }: Props) {
                                 </span>
                             </div>
                         </div>
-
                         <div className="flex gap-3">
                             <Link
                                 href="/news-management"
@@ -103,7 +97,6 @@ export default function ShowNews({ news }: Props) {
                             </Link>
                         </div>
                     </div>
-
                     <div className="grid gap-6 lg:grid-cols-3">
                         <div className="lg:col-span-1">
                             {news.thumbnail ? (
@@ -118,23 +111,25 @@ export default function ShowNews({ news }: Props) {
                                 </div>
                             )}
                         </div>
-
                         <div className="space-y-4 rounded-2xl border p-6 lg:col-span-2">
                             <div className="flex items-center gap-3">
-                                <User size={18} />
-                                <span>{news.author?.name}</span>
+                                {news.categories.map((category) => (
+                                    <span
+                                        key={category.id}
+                                        className="rounded-full bg-muted text-gray-700 px-6 py-1.5 text-sm"
+                                    >
+                                        {category.name}
+                                    </span>
+                                ))}
                             </div>
-
                             <div className="flex items-center gap-3">
                                 <Calendar size={18} />
                                 <span>{news.published_at}</span>
                             </div>
-
                             <div className="flex items-center gap-3">
                                 <Link2 size={18} />
                                 <span>{news.slug}</span>
                             </div>
-
                             {news.excerpt && (
                                 <div className="rounded-xl bg-muted p-4">
                                     <p>{news.excerpt}</p>
@@ -142,12 +137,10 @@ export default function ShowNews({ news }: Props) {
                             )}
                         </div>
                     </div>
-
                     <div className="rounded-2xl border p-8">
                         <h2 className="mb-6 text-xl font-semibold">
                             Konten Berita
                         </h2>
-
                         <div
                             className="prose max-w-none prose-img:rounded-xl"
                             dangerouslySetInnerHTML={{
@@ -155,12 +148,10 @@ export default function ShowNews({ news }: Props) {
                             }}
                         />
                     </div>
-
                     <div className="rounded-2xl border p-8">
                         <h2 className="mb-6 text-xl font-semibold">
                             Dokumentasi Kegiatan
                         </h2>
-
                         {news.documents.length > 0 ? (
                             <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
                                 {news.documents.map((document) => (

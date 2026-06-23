@@ -28,29 +28,39 @@ interface Props {
 
 export default function Index({ merchants }: Props) {
 
-    const destroy = (id: number) => {
-        if (!confirm('Yakin ingin menghapus merchant ini?')) {
-            return;
-        }
-
-        router.delete(`blacklist-merchants/${id}/delete`, {
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Merchant berhasil dihapus.',
+    const destroy = (merchantId: number) => {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`blacklist-merchants/${merchantId}/delete`, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Merchant berhasil dihapus.',
+                        });
+                    },
+                    onError: () => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: 'Merchant gagal dihapus.',
+                        });
+                    },
                 });
-            },
-            onError: () => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: 'Merchant gagal dihapus.',
-                });
-            },
-        });
+            }
+        })
     };
 
     return (
@@ -95,7 +105,7 @@ export default function Index({ merchants }: Props) {
                         {merchants.data.length > 0 ? (
                             merchants.data.map((merchant) => (
                                 <tr key={merchant.id} className="border-t">
-                                    <td className="px-6 py-1">
+                                    <td className="px-4 py-1">
                                         <div className="flex items-center gap-4">
                                             {merchant.image ? (
                                                 <img
@@ -118,16 +128,16 @@ export default function Index({ merchants }: Props) {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="w-2/5 max-w-sm px-6 py-1 text-sm text-wrap break-words text-gray-600">
+                                    <td className="w-2/5 max-w-sm px-4 py-1 text-sm text-wrap break-words text-gray-600">
                                         {merchant.reason}
                                     </td>
-                                    <td className="px-6 py-1">
+                                    <td className="px-4 py-1 text-sm text-gray-700 font-medium">
                                         {merchant.created_at}
                                     </td>
-                                    <td className="px-6 py-1">
+                                    <td className="px-4 py-1">
                                         <div className="flex justify-center gap-2">
                                             <ModalForm merchant={merchant} />
-                                            <button className="rounded-lg border border-red-200 p-2 text-red-500">
+                                            <button onClick={() => destroy(merchant.id)} className="rounded-lg border border-red-200 p-2 text-red-500 hover:bg-red-50 cursor-pointer">
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>

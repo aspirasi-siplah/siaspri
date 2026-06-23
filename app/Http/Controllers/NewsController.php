@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\News;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $listNews = News::query()
             ->where('status', News::STATUS_PUBLISHED)
             ->latest('published_at')
-            ->paginate(9)
+            ->with(['categories:id,name'])
+            ->when($request->category, fn($query, $category) =>
+                $query->whereHas('categories', fn($query) => $query->where('slug', $category)))
+            ->paginate(12)
             ->through(function (News $news) {
                 return [
                     'id' => $news->id,
@@ -24,19 +29,17 @@ class NewsController extends Controller
                 ];
             });
 
-        return Inertia::render(
-            'news/index-news',
-            [
-                'listNews' => $listNews,
-            ]
-        );
+        return Inertia::render('news/index-news', [
+            'listNews' => $listNews,
+            'categories' => Category::all(),
+        ]);
     }
 
     public function show(News $news)
     {
         abort_if($news->status !== News::STATUS_PUBLISHED, 404, 'Berita tidak ditemukan');
 
-        $news->load(['documents', 'creator']);
+        $news->load(['documents', 'categories:id,name']);
 
         return Inertia::render(
             'news/show-news',
@@ -49,14 +52,13 @@ class NewsController extends Controller
                     'excerpt' => $news->excerpt,
                     'content' => $news->content,
                     'published_at' => $news->published_at?->translatedFormat('d F Y'),
-                    'author' => $news->creator?->name,
-                    'documents' => $news
-                        ->documents
+                    'documents' => $news->documents
                         ->map(fn($document) => [
                             'id' => $document->id,
                             'name' => $document->name,
                             'url' => $document->file_path,
                         ]),
+                    'categories' => $news->categories,
                 ],
             ]
         );

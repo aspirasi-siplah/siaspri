@@ -18,9 +18,13 @@ interface Props {
     listNews: {
         data: News[];
     };
+    categories: {
+        id: number;
+        name: string;
+    }[];
 }
 
-export default function IndexNews({ listNews }: Props) {
+export default function IndexNews({ listNews, categories }: Props) {
     const featured = listNews.data[0];
     const remaining = listNews.data.slice(1);
 
@@ -36,11 +40,9 @@ export default function IndexNews({ listNews }: Props) {
                                 <Newspaper size={16} />
                                 Pusat Informasi
                             </div>
-
                             <h1 className="mt-6 text-5xl leading-tight font-bold">
                                 Berita & Kegiatan
                             </h1>
-
                             <p className="mt-6 text-lg text-slate-600">
                                 Dokumentasi kegiatan, program, dan berbagai
                                 informasi terbaru yang telah kami laksanakan.
@@ -48,7 +50,26 @@ export default function IndexNews({ listNews }: Props) {
                         </div>
                     </div>
                 </section>
-                <section className="pb-24">
+                <section className="bg-blue-50 py-4">
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                        <Link
+                            href={news.index()}
+                            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition"
+                        >
+                            Semua
+                        </Link>
+                        {categories.map((category: any, index: number) => (
+                            <Link
+                                key={category.id}
+                                href={'news?category=' + category.slug}
+                                className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-700 transition hover:border-primary hover:text-primary"
+                            >
+                                {category.name}
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+                <section className="pt-16 pb-24">
                     <div className="mx-auto max-w-7xl px-6">
                         {featured && (
                             <div className="mb-16">
@@ -63,7 +84,7 @@ export default function IndexNews({ listNews }: Props) {
                                         <img
                                             src={featured.thumbnail}
                                             alt={featured.title}
-                                            className="h-full w-full max-h-120 object-cover transition duration-700 group-hover:scale-105"
+                                            className="h-full max-h-120 w-full object-cover transition duration-700 group-hover:scale-105"
                                         />
                                     </div>
                                     <div className="flex flex-col justify-center p-10">

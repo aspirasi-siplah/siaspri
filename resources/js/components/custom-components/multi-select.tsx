@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 
 type Option = {
-    value: number;
+    id: number;
     name: string;
 };
 
@@ -21,11 +21,11 @@ export default function MultiSelect({
     error,
 }: MultiSelectProps) {
     const selectedItems = options.filter((option) =>
-        value.includes(option.value),
+        value.includes(option.id),
     );
 
     const availableItems = options.filter(
-        (option) => !value.includes(option.value),
+        (option) => !value.includes(option.id),
     );
 
     const handleAdd = (itemId: number) => {
@@ -42,7 +42,7 @@ export default function MultiSelect({
             {label && <label className="text-sm font-medium">{label}</label>}
 
             <select
-                className="w-full rounded-lg border px-3 py-2"
+                className="w-full rounded-lg border px-3 text-sm py-2"
                 defaultValue=""
                 onChange={(e) => {
                     const itemId = parseInt(e.target.value);
@@ -52,8 +52,9 @@ export default function MultiSelect({
                     e.target.value = '';
                 }}
             >
+                <option value="">-- {label} --</option>
                 {availableItems.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <option key={option.id} value={option.id}>
                         {option.name}
                     </option>
                 ))}
@@ -62,13 +63,13 @@ export default function MultiSelect({
                 <div className="flex flex-wrap gap-2">
                     {selectedItems.map((item, index) => (
                         <div
-                            key={item.value}
+                            key={item.id}
                             className="flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm"
                         >
                             <span>{item.name}</span>
                             <button
                                 type="button"
-                                onClick={() => handleRemove(item.value)}
+                                onClick={() => handleRemove(item.id)}
                             >
                                 <X size={14} />
                             </button>

@@ -18,8 +18,11 @@ interface News {
     excerpt: string | null;
     content: string;
     published_at: string;
-    author?: string;
     documents: NewsDocument[];
+    categories: {
+        id: number;
+        name: string;
+    }[];
 }
 
 interface Props {
@@ -42,9 +45,19 @@ export default function ShowNews({ news }: Props) {
                             Kembali ke Berita
                         </Link>
                         <div className="mb-12">
-                            <div className="mb-4 inline-flex rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
-                                Berita Kegiatan
+                            <div className="mb-4 flex flex-wrap gap-2 md:gap-3">
+                                {news.categories.map((category, index) => (
+                                    <div
+                                        key={category.id}
+                                        className="rounded-full bg-primary/10 px-6 py-2 text-sm font-medium text-primary"
+                                    >
+                                        {category.name}
+                                    </div>
+                                ))}
                             </div>
+                            {/* <div className="mb-4 inline-flex rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+                                Berita Kegiatan
+                            </div> */}
                             <h1 className="text-4xl leading-tight font-bold md:text-5xl">
                                 {news.title}
                             </h1>
@@ -53,13 +66,6 @@ export default function ShowNews({ news }: Props) {
                                     <CalendarDays size={16} />
                                     {news.published_at}
                                 </div>
-
-                                {news.author && (
-                                    <div className="flex items-center gap-2">
-                                        <User size={16} />
-                                        {news.author}
-                                    </div>
-                                )}
                             </div>
                             {news.excerpt && (
                                 <p className="mt-8 border-l-4 border-primary pl-5 text-lg leading-relaxed text-slate-600">
