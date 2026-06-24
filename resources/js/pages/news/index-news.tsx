@@ -1,9 +1,10 @@
 import LandingLayout from '@/layouts/landing-layout';
 import news from '@/routes/news';
 
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 
 import { CalendarDays, ArrowRight, Newspaper } from 'lucide-react';
+import { useState } from 'react';
 
 interface News {
     id: number;
@@ -17,6 +18,8 @@ interface News {
 interface Props {
     listNews: {
         data: News[];
+        current_page: number;
+        last_page: number;
     };
     categories: {
         id: number;
@@ -25,8 +28,43 @@ interface Props {
 }
 
 export default function IndexNews({ listNews, categories }: Props) {
-    const featured = listNews.data[0];
-    const remaining = listNews.data.slice(1);
+    const params = new URLSearchParams(window.location.search);
+    const categoryParams = params.get('category');
+
+    const [items, setItems] = useState(listNews.data);
+    const [currentPage, setCurrentPage] = useState(listNews.current_page);
+    const [hasMore, setHasMore] = useState(
+        listNews.current_page < listNews.last_page,
+    );
+    const [loading, setLoading] = useState(false);
+
+    const featured = items[0];
+    const remaining = items.slice(1);
+
+    const loadMore = () => {
+        if (!hasMore || loading) return;
+
+        setLoading(true);
+
+        router.get(
+            'news',
+            {
+                page: currentPage + 1,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['listNews'],
+                onSuccess: (page) => {
+                    const newData = page.props.listNews as Props['listNews'];
+                    setItems((prev) => [...prev, ...newData.data]);
+                    setCurrentPage(newData.current_page);
+                    setHasMore(newData.current_page < newData.last_page);
+                },
+                onFinish: () => setLoading(false),
+            },
+        );
+    };
 
     return (
         <>
@@ -52,20 +90,14 @@ export default function IndexNews({ listNews, categories }: Props) {
                 </section>
                 <section className="bg-blue-50 py-4">
                     <div className="flex flex-wrap items-center justify-center gap-3">
-                        <Link
-                            href={news.index()}
-                            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition"
-                        >
-                            Semua
-                        </Link>
+                        <CategoryButton label="Semua" href={news.index()} active={!categoryParams} />
                         {categories.map((category: any, index: number) => (
-                            <Link
-                                key={category.id}
+                            <CategoryButton
+                                key={index}
+                                label={category.name}
                                 href={'news?category=' + category.slug}
-                                className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-700 transition hover:border-primary hover:text-primary"
-                            >
-                                {category.name}
-                            </Link>
+                                active={categoryParams === category.slug}
+                            />
                         ))}
                     </div>
                 </section>
@@ -120,45 +152,62 @@ export default function IndexNews({ listNews, categories }: Props) {
                             </span>
                         </div>
                         {remaining.length > 0 ? (
-                            <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-                                {remaining.map((item) => (
-                                    <article
-                                        key={item.id}
-                                        className="group overflow-hidden rounded-3xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-                                    >
-                                        <Link href={news.show(item.slug)}>
-                                            <div className="overflow-hidden">
-                                                <img
-                                                    src={item.thumbnail}
-                                                    alt={item.title}
-                                                    className="h-56 w-full object-cover transition duration-500 group-hover:scale-105"
-                                                />
-                                            </div>
-
-                                            <div className="p-6">
-                                                <div className="mb-3 flex items-center gap-2 text-sm text-slate-500">
-                                                    <CalendarDays size={14} />
-                                                    {item.published_at}
+                            <div className="">
+                                <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+                                    {remaining.map((item) => (
+                                        <article
+                                            key={item.id}
+                                            className="group overflow-hidden rounded-3xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                                        >
+                                            <Link href={news.show(item.slug)}>
+                                                <div className="overflow-hidden">
+                                                    <img
+                                                        src={item.thumbnail}
+                                                        alt={item.title}
+                                                        className="h-56 w-full object-cover transition duration-500 group-hover:scale-105"
+                                                    />
                                                 </div>
 
-                                                <h3 className="line-clamp-2 text-xl font-semibold">
-                                                    {item.title}
-                                                </h3>
+                                                <div className="p-6">
+                                                    <div className="mb-3 flex items-center gap-2 text-sm text-slate-500">
+                                                        <CalendarDays
+                                                            size={14}
+                                                        />
+                                                        {item.published_at}
+                                                    </div>
 
-                                                {item.excerpt && (
-                                                    <p className="mt-3 line-clamp-3 text-sm text-slate-600">
-                                                        {item.excerpt}
-                                                    </p>
-                                                )}
+                                                    <h3 className="line-clamp-2 text-xl font-semibold">
+                                                        {item.title}
+                                                    </h3>
 
-                                                <div className="mt-5 inline-flex items-center gap-2 text-primary">
-                                                    Baca Selengkapnya
-                                                    <ArrowRight size={16} />
+                                                    {item.excerpt && (
+                                                        <p className="mt-3 line-clamp-3 text-sm text-slate-600">
+                                                            {item.excerpt}
+                                                        </p>
+                                                    )}
+
+                                                    <div className="mt-5 inline-flex items-center gap-2 text-primary">
+                                                        Baca Selengkapnya
+                                                        <ArrowRight size={16} />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Link>
-                                    </article>
-                                ))}
+                                            </Link>
+                                        </article>
+                                    ))}
+                                </div>
+                                {hasMore && (
+                                    <div className="mt-10 flex justify-center">
+                                        <button
+                                            onClick={loadMore}
+                                            disabled={loading}
+                                            className="rounded-xl bg-primary px-6 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
+                                        >
+                                            {loading
+                                                ? 'Memuat...'
+                                                : 'Tampilkan Lebih Banyak'}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="rounded-3xl border border-dashed p-16 text-center">
@@ -178,3 +227,19 @@ export default function IndexNews({ listNews, categories }: Props) {
         </>
     );
 }
+
+const CategoryButton = ({ key, label, href, active }: { key?: any; label: string; href: string | any; active?: boolean }) => {
+    return (
+        <Link
+            key={key}
+            href={href}
+            className={`rounded-full border px-5 py-2 text-sm font-medium transition ${
+                active
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-primary hover:text-primary'
+            }`}
+        >
+            {label}
+        </Link>
+    );
+};

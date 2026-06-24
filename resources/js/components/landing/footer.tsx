@@ -7,7 +7,7 @@ export default function Footer() {
             <div className="mx-auto max-w-7xl px-6 py-16">
                 <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
                     <div>
-                        <h3 className="text-2xl font-bold">AspirasiKu</h3>
+                        <h3 className="text-2xl font-bold">Si E-Aspri</h3>
                         <p className="mt-4 text-sm leading-7 text-slate-400">
                             Platform Asosiasi Pasar Daring Mitra SIPLah
                             (Aspirasi) yang membantu masyarakat menyampaikan
@@ -61,11 +61,24 @@ export default function Footer() {
                     <div>
                         <h4 className="mb-4 text-lg font-semibold">Layanan</h4>
                         <ul className="space-y-3 text-slate-400">
-                            <li>Pengajuan Aspirasi</li>
-                            <li>Monitoring Aspirasi</li>
-                            <li>Informasi Kegiatan</li>
-                            <li>Verifikasi Merchant</li>
-                            <li>Transparansi Publik</li>
+                            <li>
+                                <a href="#">Siplah Tokoladang</a>
+                            </li>
+                            <li>
+                                <a href="#">Siplah Blibli</a>
+                            </li>
+                            <li>
+                                <a href="#">Siplah Telkom</a>
+                            </li>
+                            <li>
+                                <a href="#">Siplah Eureka</a>
+                            </li>
+                            <li>
+                                <a href="#">Siplah Gramedia</a>
+                            </li>
+                            <li>
+                                <a href="#">Siplah Intan Pariwara</a>
+                            </li>
                         </ul>
                     </div>
                     <div>
