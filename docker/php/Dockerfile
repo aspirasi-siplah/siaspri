@@ -67,6 +67,7 @@ COPY --from=vendor /var/www/resources/js/routes /var/www/resources/js/routes
 COPY --from=vendor /var/www/resources/js/actions /var/www/resources/js/actions
 COPY --from=vendor /var/www/resources/js/wayfinder /var/www/resources/js/wayfinder
 COPY --from=build /build/public/build /var/www/public/build
+RUN cp -r /var/www/public /opt/public
 
 RUN composer install \
     --no-dev \
