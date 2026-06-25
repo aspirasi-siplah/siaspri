@@ -9,7 +9,7 @@ class EditorController extends Controller
 {
     public function uploadImages(Request $request) {
         $request->validate([
-            'image' => 'required|image|max:4096',
+            'image' => 'required|image|max:2048',
         ]);
 
         $path = $request

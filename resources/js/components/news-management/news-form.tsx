@@ -27,6 +27,7 @@ interface NewsData {
     status: 'draft' | 'published' | 'archived';
     thumbnail?: string | null;
     documents?: ExistingNewsDocument[];
+    category_ids?: number[];
 }
 
 interface NewDocument {
@@ -51,7 +52,7 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
         thumbnail: null as File | null,
         documents: [] as File[],
         deleted_documents: [] as number[],
-        category_ids: [] as number[],
+        category_ids: news?.category_ids ?? [] as number[],
     });
     const [documents, setDocuments] = useState<NewDocument[]>([]);
     const [deletedDocumentIds, setDeletedDocumentIds] = useState<number[]>([]);
@@ -129,18 +130,6 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
                         error={form.errors.category_ids}
                         options={categories}
                     />
-                    {/* <FormSelect
-                        label="Tambah Kategori"
-                        name="Kategori"
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                            form.setData('category_ids', [
-                                ...form.data.category_ids,
-                                parseInt(e.target.value),
-                            ])
-                        }
-                        error={form.errors.category_ids}
-                        options={[]}
-                    /> */}
                     <FormSelect
                         name="status"
                         label="Status"
@@ -198,11 +187,6 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
                     value={form.data.content}
                     onChange={(value) => form.setData('content', value)}
                 />
-                {/* <QuillEditor
-                    value={form.data.content}
-                    onChange={(value) => form.setData('content', value)}
-                /> */}
-
                 {form.errors.content && (
                     <p className="mt-2 text-sm text-red-500">
                         {form.errors.content}

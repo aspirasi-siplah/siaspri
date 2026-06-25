@@ -34,7 +34,7 @@ class NewsManagementController extends Controller
 
     public function show($id)
     {
-        $news = News::select('id', 'title', 'slug', 'thumbnail', 'excerpt', 'content', 'status', 'published_at', 'created_at', 'updated_at')->with(['documents:id,name,file_name,file_path', 'categories:id,name'])->findOrFail($id);
+        $news = News::select('id', 'title', 'slug', 'thumbnail', 'excerpt', 'content', 'status', 'published_at', 'created_at', 'updated_at')->with(['documents:id,news_id,name,file_name,file_path', 'categories:id,name'])->findOrFail($id);
 
         return Inertia::render(
             'news-management/news-management-show',
@@ -116,7 +116,7 @@ class NewsManagementController extends Controller
 
     public function edit($id)
     {
-        $news = News::select('id', 'title', 'excerpt', 'content', 'status', 'thumbnail')->with(['documents:id,name,file_name,file_path'])->findOrFail($id);
+        $news = News::select('id', 'title', 'excerpt', 'content', 'status', 'thumbnail')->with(['documents:id,news_id,name,file_name,file_path', 'categories:id,name'])->findOrFail($id);
         $categories = Category::select('id', 'name')->get()->toArray();
 
         return Inertia::render(
@@ -130,6 +130,7 @@ class NewsManagementController extends Controller
                     'status' => $news->status,
                     'thumbnail' => $news->thumbnail,
                     'documents' => $news->documents->toArray(),
+                    'category_ids' => $news->categories ? $news->categories->map(fn($category) => $category->id)->toArray() : [],
                 ],
                 'categories' => $categories
             ]

@@ -175,7 +175,7 @@ export default function IndexNews({ listNews, categories }: Props) {
                                                         />
                                                         {item.published_at}
                                                     </div>
-
+``
                                                     <h3 className="line-clamp-2 text-xl font-semibold">
                                                         {item.title}
                                                     </h3>
