@@ -179,6 +179,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isBold}
                             icon={<Bold size={18} />}
+                            tooltip="Bold"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -186,6 +187,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isItalic}
                             icon={<Italic size={18} />}
+                            tooltip="Italic"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -193,6 +195,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isUnderline}
                             icon={<UnderlineIcon size={18} />}
+                            tooltip="Underline"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -204,6 +207,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isH1}
                             icon={<Heading1 size={18} />}
+                            tooltip="Heading 1"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -215,6 +219,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isH2}
                             icon={<Heading2 size={18} />}
+                            tooltip="Heading 2"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -226,6 +231,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isH3}
                             icon={<Heading3 size={18} />}
+                            tooltip="Heading 3"
                         />
                     </div>
                 </div>
@@ -244,6 +250,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isTextAlignLeft}
                             icon={<AlignLeft size={18} />}
+                            tooltip="Align Left"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -255,6 +262,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isTextAlignCenter}
                             icon={<AlignCenter size={18} />}
+                            tooltip="Align Center"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -266,6 +274,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isTextAlignRight}
                             icon={<AlignRight size={18} />}
+                            tooltip="Align Right"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -277,6 +286,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isTextAlignJustify}
                             icon={<AlignJustify size={18} />}
+                            tooltip="Align Justify"
                         />
                         <div className="w-[4px]"></div>
                         <ButtonToolbar
@@ -285,6 +295,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isBulletList}
                             icon={<List size={18} />}
+                            tooltip="Unordered List"
                         />
                         <ButtonToolbar
                             onClick={() => {
@@ -296,6 +307,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             }}
                             isActive={editorState.isOrderedList}
                             icon={<ListOrdered size={18} />}
+                            tooltip="Ordered List"
                         />
                     </div>
                 </div>
@@ -309,26 +321,31 @@ export default function TiptapEditor({ value, onChange }: Props) {
                                 editor.chain().focus().toggleBlockquote().run()
                             }
                             icon={<Quote size={18} />}
+                            tooltip="Quote"
                         />
                         <ButtonToolbar
                             onClick={() =>
                                 editor.chain().focus().toggleCode().run()
                             }
                             icon={<Braces size={18} />}
+                            tooltip="Code"
                         />
                         <ButtonToolbar
                             onClick={() =>
                                 editor.chain().focus().toggleCodeBlock().run()
                             }
                             icon={<CodeXml size={18} />}
+                            tooltip="Code Block"
                         />
                         <ButtonToolbar
                             onClick={selectImage}
                             icon={<ImageIcon size={18} />}
+                            tooltip="Image"
                         />
                         <ButtonToolbar
                             onClick={addLink}
                             icon={<LinkIcon size={18} />}
+                            tooltip="Link"
                         />
                         <ButtonToolbar
                             onClick={() =>
@@ -343,6 +360,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                                     .run()
                             }
                             icon={<Table2 size={18} />}
+                            tooltip="Table"
                         />
                     </div>
                 </div>
@@ -354,16 +372,18 @@ export default function TiptapEditor({ value, onChange }: Props) {
                         <ButtonToolbar
                             onClick={() => editor.chain().focus().undo().run()}
                             icon={<Undo2 size={18} />}
+                            tooltip="Undo"
                         />
                         <ButtonToolbar
                             onClick={() => editor.chain().focus().redo().run()}
                             icon={<Redo2 size={18} />}
+                            tooltip="Redo"
                         />
                     </div>
                 </div>
             </div>
-            <div className="flex flex-wrap gap-2 border-b p-3">
-                {editorState.imageSelected && (
+            {editorState.imageSelected && (
+                <div className="flex flex-wrap gap-2 border-b p-3">
                     <div className="flex divide-x divide-slate-200">
                         <div className="flex items-center gap-2 px-2">
                             <span className="text-[12px] font-medium text-gray-600">
@@ -491,8 +511,8 @@ export default function TiptapEditor({ value, onChange }: Props) {
                             />
                         </div>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
             <div className="h-[800px] overflow-y-auto">
                 <EditorContent
                     editor={editor}
