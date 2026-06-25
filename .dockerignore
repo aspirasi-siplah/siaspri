@@ -3,3 +3,5 @@ vendor
 .git
 .env
 bootstrap/cache/*.php
+public/build
+public/hot

@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install redis \
     && docker-php-ext-enable redis
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
@@ -56,7 +56,7 @@ RUN pecl install redis \
 
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
@@ -74,8 +74,12 @@ RUN composer install \
     --optimize-autoloader \
     --classmap-authoritative
 
+RUN mkdir -p /usr/local/etc/app \
+    && php -r 'file_put_contents("/usr/local/etc/app/default.env", "APP_KEY=base64:".base64_encode(random_bytes(32)).PHP_EOL);'
+
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY docker/php/docker-bootstrap.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-bootstrap.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]

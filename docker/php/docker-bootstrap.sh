@@ -10,19 +10,15 @@ fi
 
 mkdir -p /var/www/public /var/www/storage/app/public /var/www/bootstrap/cache
 
-chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-
 if [ -d /opt/public ]; then
     echo "Populating public volume..."
     cp -r /opt/public/. /var/www/public/
 fi
 
-if [ "${APP_ENV:-production}" = "production" ] || [ "${APP_ENV:-production}" = "staging" ]; then
-    echo "Refreshing Laravel caches..."
-    php artisan optimize:clear
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
-fi
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-exec "$@"
+echo "Running database migrations..."
+php artisan migrate --force --no-interaction
+
+echo "Creating storage symlink..."
+php artisan storage:link --force
