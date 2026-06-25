@@ -2,3 +2,4 @@ node_modules
 vendor
 .git
 .env
+bootstrap/cache/*.php
