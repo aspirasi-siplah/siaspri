@@ -10,6 +10,7 @@ test('docker compose uses checked-in defaults instead of requiring a local env f
         ->toContain('docker-bootstrap.sh')
         ->toContain('storage_data:/var/www/storage')
         ->toContain('./docker/nginx/ssl:/etc/nginx/ssl:ro')
+        ->toContain('127.0.0.1:${POSTGRES_PORT:-5433}:5432')
         ->not->toContain("nginx_ssl:\n");
 });
 
