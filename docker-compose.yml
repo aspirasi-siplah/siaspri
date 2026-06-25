@@ -1,4 +1,4 @@
-name: siaspri-service
+name: siaspri
 
 services:
     app:
