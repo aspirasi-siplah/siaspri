@@ -27,4 +27,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-/docker/nginx/ssl/
+docker/nginx/ssl/*
+!docker/nginx/ssl/.gitkeep
