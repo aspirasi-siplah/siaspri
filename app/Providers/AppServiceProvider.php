@@ -2,16 +2,14 @@
 
 namespace App\Providers;
 
+use App\Services\Analytics\AnalyticsServiceInterface;
+use App\Services\Analytics\FakeAnalyticsService;
+use App\Services\Analytics\GoogleAnalyticsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use App\Services\Analytics\{
-    AnalyticsServiceInterface,
-    FakeAnalyticsService,
-    GoogleAnalyticsService
-};
 
 class AppServiceProvider extends ServiceProvider
 {

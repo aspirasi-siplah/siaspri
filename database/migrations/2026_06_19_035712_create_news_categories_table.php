@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('news_id')->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->unique([ 'news_id', 'category_id' ]);
+            $table->unique(['news_id', 'category_id']);
 
         });
     }

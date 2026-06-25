@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
@@ -14,7 +14,7 @@ class CategoryController extends Controller
         $categories = Category::simplePaginate(15);
 
         return Inertia::render('categories/index-category', [
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -33,8 +33,8 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $request->name,
-            'slug' => Str::slug($request->name) . '-' . Str::random(5),
-            'description' => $request->description ?? null
+            'slug' => Str::slug($request->name).'-'.Str::random(5),
+            'description' => $request->description ?? null,
         ]);
 
         return redirect()->back()->with('success', 'Kategori berhasil ditambahkan.');
@@ -43,7 +43,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $id,
+            'name' => 'required|string|max:255|unique:categories,name,'.$id,
             'description' => 'nullable|string',
         ], [
             'name.required' => 'Nama kategori harus diisi.',
@@ -57,8 +57,8 @@ class CategoryController extends Controller
 
         $category->update([
             'name' => $request->name,
-            'slug' => Str::slug($request->name) . '-' . Str::random(5),
-            'description' => $request->description ?? null
+            'slug' => Str::slug($request->name).'-'.Str::random(5),
+            'description' => $request->description ?? null,
         ]);
 
         return redirect()->back()->with('success', 'Kategori berhasil diperbarui.');

@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Override;
 
 class UpdateNewsRequest extends FormRequest
 {
@@ -38,7 +37,6 @@ class UpdateNewsRequest extends FormRequest
             'category_ids.*' => 'integer|exists:categories,id',
         ];
     }
-
 
     public function messages(): array
     {

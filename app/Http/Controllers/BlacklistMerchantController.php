@@ -14,10 +14,10 @@ class BlacklistMerchantController extends Controller
         $merchants = BlacklistMerchant::query()
             ->latest()
             ->when($request->search, function ($query, $search) {
-                $query->where('merchant_name', 'ILIKE', '%' . $search . '%');
+                $query->where('merchant_name', 'ILIKE', '%'.$search.'%');
             })
             ->paginate(12)
-            ->through(fn($merchant) => [
+            ->through(fn ($merchant) => [
                 'id' => $merchant->id,
                 'merchant_name' => $merchant->merchant_name,
                 'image' => $merchant->image,

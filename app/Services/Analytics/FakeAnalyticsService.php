@@ -2,8 +2,7 @@
 
 namespace App\Services\Analytics;
 
-class FakeAnalyticsService
-implements AnalyticsServiceInterface
+class FakeAnalyticsService implements AnalyticsServiceInterface
 {
     public function getDashboardStats(): array
     {

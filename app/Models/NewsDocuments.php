@@ -23,7 +23,7 @@ class NewsDocuments extends Model
     public function filePath(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => $value ? Storage::url($value) : null
+            get: fn (string $value) => $value ? Storage::url($value) : null
         );
     }
 }

@@ -15,8 +15,7 @@ class NewsController extends Controller
             ->where('status', News::STATUS_PUBLISHED)
             ->latest('published_at')
             ->with(['categories:id,name'])
-            ->when($request->category, fn($query, $category) =>
-                $query->whereHas('categories', fn($query) => $query->where('slug', $category)))
+            ->when($request->category, fn ($query, $category) => $query->whereHas('categories', fn ($query) => $query->where('slug', $category)))
             ->paginate(12)
             ->through(function (News $news) {
                 return [
@@ -53,7 +52,7 @@ class NewsController extends Controller
                     'content' => $news->content,
                     'published_at' => $news->published_at?->translatedFormat('d F Y'),
                     'documents' => $news->documents
-                        ->map(fn($document) => [
+                        ->map(fn ($document) => [
                             'id' => $document->id,
                             'name' => $document->name,
                             'url' => $document->file_path,

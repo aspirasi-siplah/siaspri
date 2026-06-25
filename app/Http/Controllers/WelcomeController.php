@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\BlacklistMerchant;
 use App\Models\News;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class WelcomeController extends Controller
