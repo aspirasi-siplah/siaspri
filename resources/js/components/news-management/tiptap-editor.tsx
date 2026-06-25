@@ -508,24 +508,33 @@ const ButtonToolbar = ({
     icon,
     isActive = false,
     label,
+    tooltip,
 }: {
     onClick: () => void;
     icon?: React.ReactNode;
     isActive?: boolean;
     label?: string;
+    tooltip?: string;
 }) => {
     return (
-        <button
-            type="button"
-            onClick={onClick}
-            className={`cursor-pointer rounded-md p-1 ${
-                isActive
-                    ? 'bg-slate-400 text-white'
-                    : 'bg-slate-100 text-gray-800 hover:bg-blue-100'
-            }`}
-        >
-            {icon}
-            <h1 className="text-[12px] font-medium">{label}</h1>
-        </button>
+        <div className="group relative">
+            <button
+                type="button"
+                onClick={onClick}
+                className={`cursor-pointer rounded-md p-1 transition ${
+                    isActive
+                        ? 'bg-slate-400 text-white'
+                        : 'bg-slate-100 text-gray-800 hover:bg-blue-100'
+                }`}
+            >
+                {icon}
+                <h1 className="text-[12px] font-medium">{label}</h1>
+            </button>
+            {tooltip && (
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 rounded-md bg-slate-900 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 shadow-md transition-all duration-200 group-hover:opacity-100">
+                    {tooltip}
+                </div>
+            )}
+        </div>
     );
 };
