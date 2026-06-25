@@ -26,6 +26,9 @@ export default defineConfig({
         tailwindcss(),
         wayfinder({
             formVariants: true,
+            ...(process.env.WAYFINDER_COMMAND
+                ? { command: process.env.WAYFINDER_COMMAND }
+                : {}),
         }),
     ],
 });
