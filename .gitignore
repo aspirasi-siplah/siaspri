@@ -28,3 +28,4 @@ yarn-error.log
 /.vscode
 /.zed
 /docker/nginx/ssl/
+/storage/app/google/
