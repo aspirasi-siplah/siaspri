@@ -42,6 +42,13 @@ class GoogleAnalyticsService implements AnalyticsServiceInterface
     public function getVisitorsChart(
         int $days = 30
     ): array {
+
+        dd(
+            config('analytics.property_id'),
+            env('ANALYTICS_PROPERTY_ID'),
+            app('laravel-analytics')->getPropertyId(),
+        );
+
         return Analytics::fetchVisitorsAndPageViewsByDate(
             Period::days($days)
         )
