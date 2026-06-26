@@ -44,9 +44,9 @@ class GoogleAnalyticsService implements AnalyticsServiceInterface
     ): array {
 
         dd(
+            config('analytics'),
             config('analytics.property_id'),
             env('ANALYTICS_PROPERTY_ID'),
-            app('laravel-analytics')->getPropertyId(),
         );
 
         return Analytics::fetchVisitorsAndPageViewsByDate(
