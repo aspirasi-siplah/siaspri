@@ -103,7 +103,7 @@ services:
     restart: unless-stopped
     init: true
     env_file:
-      - .env.example
+      - .env
     environment:
       <<: *app-environment
     volumes:
