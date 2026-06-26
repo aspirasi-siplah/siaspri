@@ -6,10 +6,10 @@ use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
 use App\Models\Category;
 use App\Models\News;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class NewsManagementController extends Controller
@@ -20,7 +20,7 @@ class NewsManagementController extends Controller
             'news' => News::query()
                 ->latest()
                 ->paginate(10)
-                ->through(fn($item) => [
+                ->through(fn ($item) => [
                     'id' => $item->id,
                     'title' => $item->title,
                     'slug' => $item->slug,
@@ -62,7 +62,7 @@ class NewsManagementController extends Controller
         $categories = Category::select('id', 'name')->get()->toArray();
 
         return Inertia::render('news-management/news-management-form-page', [
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -83,7 +83,7 @@ class NewsManagementController extends Controller
 
             $news = News::create([
                 'title' => $validated['title'],
-                'slug' => Str::slug($validated['title']) . '-' . Str::random(5),
+                'slug' => Str::slug($validated['title']).'-'.Str::random(5),
                 'thumbnail' => $validated['thumbnail'] ?? null,
                 'excerpt' => $validated['excerpt'] ?? null,
                 'content' => $validated['content'],
@@ -130,9 +130,9 @@ class NewsManagementController extends Controller
                     'status' => $news->status,
                     'thumbnail' => $news->thumbnail,
                     'documents' => $news->documents->toArray(),
-                    'category_ids' => $news->categories ? $news->categories->map(fn($category) => $category->id)->toArray() : [],
+                    'category_ids' => $news->categories ? $news->categories->map(fn ($category) => $category->id)->toArray() : [],
                 ],
-                'categories' => $categories
+                'categories' => $categories,
             ]
         );
     }
@@ -146,7 +146,7 @@ class NewsManagementController extends Controller
         DB::transaction(function () use ($request, $validated, $news) {
             $publishedAt = $news->published_at;
 
-            if ($validated['status'] === News::STATUS_PUBLISHED && !$news->published_at) {
+            if ($validated['status'] === News::STATUS_PUBLISHED && ! $news->published_at) {
                 $publishedAt = now();
             }
 
@@ -156,7 +156,7 @@ class NewsManagementController extends Controller
 
             $news->update([
                 'title' => $validated['title'],
-                'slug' => $news->title !== $validated['title'] ? Str::slug($validated['title']) . '-' . Str::random(5) : $news->slug,
+                'slug' => $news->title !== $validated['title'] ? Str::slug($validated['title']).'-'.Str::random(5) : $news->slug,
                 'excerpt' => $validated['excerpt'] ?? null,
                 'content' => $validated['content'],
                 'status' => $validated['status'],
@@ -177,7 +177,7 @@ class NewsManagementController extends Controller
                 ]);
             }
 
-            if (!empty($validated['deleted_documents'])) {
+            if (! empty($validated['deleted_documents'])) {
                 $documents = $news
                     ->documents()
                     ->whereIn('id', $validated['deleted_documents'])

@@ -1,5 +1,6 @@
 /.phpunit.cache
 /bootstrap/ssr
+/.pnpm-store
 /node_modules
 /public/build
 /public/fonts-manifest.dev.json
@@ -27,5 +28,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-/docker/nginx/ssl/
+docker/nginx/ssl/*
+!docker/nginx/ssl/.gitkeep
+
 /storage/app/google/

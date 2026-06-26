@@ -5,8 +5,7 @@ namespace App\Services\Analytics;
 use Spatie\Analytics\Facades\Analytics;
 use Spatie\Analytics\Period;
 
-class GoogleAnalyticsService
-implements AnalyticsServiceInterface
+class GoogleAnalyticsService implements AnalyticsServiceInterface
 {
     public function getDashboardStats(): array
     {
@@ -22,10 +21,10 @@ implements AnalyticsServiceInterface
             );
 
             return [
-                'totalVisitors' =>collect($summary)->sum('visitors'),
-                'todayVisitors' =>collect($today)->sum('activeUsers'),
-                'pageViews' =>collect($summary)->sum('pageViews'),
-                'totalArticlesViews' =>collect($summary)->sum('pageViews'),
+                'totalVisitors' => collect($summary)->sum('visitors'),
+                'todayVisitors' => collect($today)->sum('activeUsers'),
+                'pageViews' => collect($summary)->sum('pageViews'),
+                'totalArticlesViews' => collect($summary)->sum('pageViews'),
             ];
         } catch (\Throwable $e) {
 
@@ -46,7 +45,7 @@ implements AnalyticsServiceInterface
         return Analytics::fetchVisitorsAndPageViewsByDate(
             Period::days($days)
         )
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'date' => $item['date'],
                 'visitors' => $item['activeUsers'],
             ])
@@ -61,13 +60,11 @@ implements AnalyticsServiceInterface
             Period::days(30),
             $limit
         )
-            ->map(fn($item) => [
-                'page' =>
-                $item['pageTitle']
+            ->map(fn ($item) => [
+                'page' => $item['pageTitle']
                     ?: $item['fullPageUrl'],
 
-                'views' =>
-                $item['screenPageViews'],
+                'views' => $item['screenPageViews'],
             ])
             ->values()
             ->toArray();

@@ -47,7 +47,7 @@ class BlacklistMerchantManagementController extends Controller
 
             if ($request->hasFile('image')) {
                 $merchant->update([
-                    'image' => $request->file('image')->store('blacklist-merchants', 'public')
+                    'image' => $request->file('image')->store('blacklist-merchants', 'public'),
                 ]);
             }
         });
