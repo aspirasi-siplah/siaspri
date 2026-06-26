@@ -42,17 +42,10 @@ class GoogleAnalyticsService implements AnalyticsServiceInterface
     public function getVisitorsChart(
         int $days = 30
     ): array {
-
-        dd(
-            config('analytics'),
-            config('analytics.property_id'),
-            env('ANALYTICS_PROPERTY_ID'),
-        );
-
         return Analytics::fetchVisitorsAndPageViewsByDate(
             Period::days($days)
         )
-            ->map(fn ($item) => [
+            ->map(fn($item) => [
                 'date' => $item['date'],
                 'visitors' => $item['activeUsers'],
             ])
@@ -67,7 +60,7 @@ class GoogleAnalyticsService implements AnalyticsServiceInterface
             Period::days(30),
             $limit
         )
-            ->map(fn ($item) => [
+            ->map(fn($item) => [
                 'page' => $item['pageTitle']
                     ?: $item['fullPageUrl'],
 
