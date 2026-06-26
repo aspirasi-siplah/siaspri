@@ -12,7 +12,7 @@ return [
      * to learn how to get this file. You can also pass the credentials as an array
      * instead of a file path.
      */
-    'service_account_credentials_json' => storage_path('app/google/analytics-key.json'),
+    'service_account_credentials_json' => json_decode(base64_decode(env('GOOGLE_ANALYTICS_CREDENTIALS_BASE64')), true),
 
     /*
      * The amount of minutes the Google API responses will be cached.
