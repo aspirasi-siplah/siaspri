@@ -40,7 +40,7 @@ services:
     restart: 'no'
     init: true
     env_file:
-      - .env.example
+      - .env
     environment:
       <<: *app-environment
     volumes:
@@ -59,7 +59,7 @@ services:
     working_dir: /var/www
     init: true
     env_file:
-      - .env.example
+      - .env
     environment:
       <<: *app-environment
     volumes:
@@ -84,7 +84,7 @@ services:
     init: true
     stop_signal: SIGTERM
     env_file:
-      - .env.example
+      - .env
     environment:
       <<: *app-environment
     volumes:
@@ -140,7 +140,7 @@ services:
     image: postgres:17
     restart: unless-stopped
     env_file:
-      - .env.example
+      - .env
     environment:
       POSTGRES_DB: ${DB_DATABASE:-siaspri}
       POSTGRES_USER: ${DB_USERNAME:-postgres}
