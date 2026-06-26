@@ -30,3 +30,5 @@ yarn-error.log
 /.zed
 docker/nginx/ssl/*
 !docker/nginx/ssl/.gitkeep
+
+/storage/app/google/
