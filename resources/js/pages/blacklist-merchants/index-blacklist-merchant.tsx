@@ -129,7 +129,10 @@ export default function Index({ merchants }: Props) {
                                         </div>
                                     </td>
                                     <td className="w-2/5 max-w-sm px-4 py-1 text-sm text-wrap break-words text-gray-600">
-                                        {merchant.reason}
+                                        {merchant.reason.length > 50
+                                            ? merchant.reason.substring(0, 50) + '... '
+                                            : merchant.reason
+                                        }
                                     </td>
                                     <td className="px-4 py-1 text-sm text-gray-700 font-medium">
                                         {merchant.created_at}

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 
-import QuillEditor from './quill-editor';
 import FormInput from '../custom-components/FormInput';
 import FormTextArea from '../custom-components/FormTextArea';
 import ImageUploader from '../custom-components/ImageUploader';

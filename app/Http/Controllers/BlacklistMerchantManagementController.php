@@ -22,7 +22,7 @@ class BlacklistMerchantManagementController extends Controller
                     'id' => $merchant->id,
                     'merchant_name' => $merchant->merchant_name,
                     'image' => $merchant->image,
-                    'reason' => Str::limit(strip_tags($merchant->reason), 100),
+                    'reason' => $merchant->reason,
                     'created_at' => $merchant->created_at->translatedFormat('d M Y H:i'),
                 ];
             });

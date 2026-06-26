@@ -28,6 +28,18 @@ export default function ModalForm({ merchant }: Props) {
         reason: merchant?.reason ?? '',
     });
 
+    const handleOpen = () => {
+        if (merchant) {
+            form.setData({
+                merchant_name: merchant.merchant_name,
+                image: null,
+                reason: merchant.reason,
+            });
+        }
+
+        setOpen(true);
+    };
+
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -64,14 +76,14 @@ export default function ModalForm({ merchant }: Props) {
         <>
             {isEdit ? (
                 <button
-                    onClick={() => setOpen(true)}
+                    onClick={handleOpen}
                     className="cursor-pointer rounded-lg border p-2 hover:bg-gray-100"
                 >
                     <Pencil size={16} />
                 </button>
             ) : (
                 <button
-                    onClick={() => setOpen(true)}
+                    onClick={handleOpen}
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white"
                 >
                     Tambah Merchant
@@ -140,7 +152,6 @@ export default function ModalForm({ merchant }: Props) {
                         </button>
                     </div>
                 </form>
-                ;
             </CustomModal>
         </>
     );
