@@ -2,6 +2,9 @@ FROM node:22-alpine AS build
 
 WORKDIR /build
 
+ARG VITE_GA_ID
+ENV VITE_GA_ID=${VITE_GA_ID}
+
 COPY package.json pnpm-lock.yaml .npmrc ./
 
 RUN corepack enable && corepack prepare pnpm@10.20.0 --activate && pnpm install --frozen-lockfile
@@ -32,6 +35,8 @@ COPY . .
 
 RUN composer install \
     --no-dev \
+    --prefer-source \
+    --no-interaction \
     --optimize-autoloader \
     --classmap-authoritative
 
@@ -71,6 +76,8 @@ RUN cp -r /var/www/public /opt/public
 
 RUN composer install \
     --no-dev \
+    --prefer-source \
+    --no-interaction \
     --optimize-autoloader \
     --classmap-authoritative
 
