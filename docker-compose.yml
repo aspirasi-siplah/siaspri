@@ -5,6 +5,8 @@ x-php-image: &php-image
   build:
     context: .
     dockerfile: docker/php/Dockerfile
+    args:
+      VITE_GA_ID: ${VITE_GA_ID:-}
 
 x-app-environment: &app-environment
   APP_NAME: ${APP_NAME:-Siaspri}
@@ -13,6 +15,7 @@ x-app-environment: &app-environment
   APP_DEBUG: ${APP_DEBUG:-false}
   APP_URL: ${APP_URL:-https://localhost}
   DB_CONNECTION: ${DB_CONNECTION:-pgsql}
+  GOOGLE_ANALYTICS_CREDENTIALS_PATH: ${GOOGLE_ANALYTICS_CREDENTIALS_PATH:-/var/www/secrets/google/analytics-key.json}
   DB_HOST: ${DB_HOST:-postgres}
   DB_PORT: ${DB_PORT:-5432}
   DB_DATABASE: ${DB_DATABASE:-siaspri}
@@ -65,7 +68,7 @@ services:
     volumes:
       - public_assets:/var/www/public
       - storage_data:/var/www/storage
-      - ./storage/app/google:/var/www/storage/app/google:ro
+      - ./storage/app/google:/var/www/secrets/google:ro
     depends_on:
       bootstrap:
         condition: service_completed_successfully
@@ -90,7 +93,7 @@ services:
       <<: *app-environment
     volumes:
       - storage_data:/var/www/storage
-      - ./storage/app/google:/var/www/storage/app/google:ro
+      - ./storage/app/google:/var/www/secrets/google:ro
     depends_on:
       bootstrap:
         condition: service_completed_successfully
@@ -110,7 +113,7 @@ services:
       <<: *app-environment
     volumes:
       - storage_data:/var/www/storage
-      - ./storage/app/google:/var/www/storage/app/google:ro
+      - ./storage/app/google:/var/www/secrets/google:ro
     depends_on:
       bootstrap:
         condition: service_completed_successfully
