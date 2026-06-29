@@ -8,8 +8,13 @@ declare global {
 }
 
 export default function GoogleAnalytics() {
+    console.log('GoogleAnalytics Render');
+
     useEffect(() => {
+        console.log('GoogleAnalytics Mounted');
         const measurementId = import.meta.env.VITE_GA_ID;
+
+        console.log(measurementId);
 
         if (!measurementId) return;
 
