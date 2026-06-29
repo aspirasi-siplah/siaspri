@@ -96,7 +96,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [],
+            "dont-discover": [
+                "spatie/laravel-analytics"
+            ],
             "installer": {
                 "post-create-project": []
             }

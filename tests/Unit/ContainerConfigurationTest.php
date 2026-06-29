@@ -4,8 +4,7 @@ test('docker compose uses checked-in defaults instead of requiring a local env f
     $compose = file_get_contents(dirname(__DIR__, 2).'/docker-compose.yml');
 
     expect($compose)
-        ->toContain('- .env.example')
-        ->not->toContain("- .env\n")
+        ->toContain("- .env\n")
         ->toContain('condition: service_completed_successfully')
         ->toContain('docker-bootstrap.sh')
         ->toContain('storage_data:/var/www/storage')

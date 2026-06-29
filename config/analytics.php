@@ -1,5 +1,19 @@
 <?php
 
+$analyticsCredentialsBase64 = env('GOOGLE_ANALYTICS_CREDENTIALS_BASE64');
+$analyticsCredentialsPath = env(
+    'GOOGLE_ANALYTICS_CREDENTIALS_PATH',
+    storage_path('app/google/analytics-key.json')
+);
+
+$analyticsCredentials = $analyticsCredentialsBase64
+    ? json_decode(base64_decode($analyticsCredentialsBase64), true)
+    : null;
+
+if (! is_array($analyticsCredentials) && is_string($analyticsCredentialsPath) && is_file($analyticsCredentialsPath)) {
+    $analyticsCredentials = $analyticsCredentialsPath;
+}
+
 return [
 
     /*
@@ -12,7 +26,7 @@ return [
      * to learn how to get this file. You can also pass the credentials as an array
      * instead of a file path.
      */
-    'service_account_credentials_json' => json_decode(base64_decode(env('GOOGLE_ANALYTICS_CREDENTIALS_BASE64')), true),
+    'service_account_credentials_json' => $analyticsCredentials,
 
     /*
      * The amount of minutes the Google API responses will be cached.

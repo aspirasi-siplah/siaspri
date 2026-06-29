@@ -5,11 +5,13 @@ namespace App\Providers;
 use App\Services\Analytics\AnalyticsServiceInterface;
 use App\Services\Analytics\FakeAnalyticsService;
 use App\Services\Analytics\GoogleAnalyticsService;
+use App\Services\Analytics\UnavailableAnalyticsService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Analytics\AnalyticsServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,10 +25,17 @@ class AppServiceProvider extends ServiceProvider
                 AnalyticsServiceInterface::class,
                 FakeAnalyticsService::class
             );
-        } else {
+        } elseif ($this->analyticsIsConfigured()) {
+            $this->app->register(AnalyticsServiceProvider::class);
+
             $this->app->singleton(
                 AnalyticsServiceInterface::class,
                 GoogleAnalyticsService::class
+            );
+        } else {
+            $this->app->singleton(
+                AnalyticsServiceInterface::class,
+                UnavailableAnalyticsService::class
             );
         }
     }
@@ -59,5 +68,21 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    protected function analyticsIsConfigured(): bool
+    {
+        $propertyId = config('analytics.property_id');
+        $credentials = config('analytics.service_account_credentials_json');
+
+        if (blank($propertyId)) {
+            return false;
+        }
+
+        if (is_array($credentials)) {
+            return $credentials !== [];
+        }
+
+        return is_string($credentials) && $credentials !== '' && is_file($credentials);
     }
 }
