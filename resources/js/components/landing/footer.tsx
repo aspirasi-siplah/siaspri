@@ -61,23 +61,45 @@ export default function Footer() {
                     <div>
                         <h4 className="mb-4 text-lg font-semibold">Layanan</h4>
                         <ul className="space-y-3 text-slate-400">
-                            <li>
-                                <a href="#">Siplah Tokoladang</a>
+                            <li className='hover:text-white'>
+                                <a href="https://siplah.tokoladang.co.id/">
+                                    Siplah Tokoladang
+                                </a>
                             </li>
-                            <li>
-                                <a href="#">Siplah Blibli</a>
+                            <li className='hover:text-white'>
+                                <a href="https://siplah.blibli.com/">
+                                    Siplah Blibli
+                                </a>
                             </li>
-                            <li>
-                                <a href="#">Siplah Telkom</a>
+                            <li className='hover:text-white'>
+                                <a href="https://siplahtelkom.com/">
+                                    Siplah Telkom
+                                </a>
                             </li>
-                            <li>
-                                <a href="#">Siplah Eureka</a>
+                            <li className='hover:text-white'>
+                                <a href="https://siplah.eurekabookhouse.co.id/">
+                                    Siplah Eureka
+                                </a>
                             </li>
-                            <li>
-                                <a href="#">Siplah Gramedia</a>
+                            <li className='hover:text-white'>
+                                <a href="https://siplahgramedia.id/">
+                                    Siplah Gramedia
+                                </a>
                             </li>
-                            <li>
-                                <a href="#">Siplah Intan Pariwara</a>
+                            <li className='hover:text-white'>
+                                <a href="https://siplahmasmedia.co.id/">
+                                    Siplah Masmedia
+                                </a>
+                            </li>
+                            <li className='hover:text-white'>
+                                <a href="https://siplah.intanonline.com/">
+                                    Siplah Intan Pariwara
+                                </a>
+                            </li>
+                            <li className='hover:text-white'>
+                                <a href="https://siplah.temprina.co.id/">
+                                    Siplah Temprina
+                                </a>
                             </li>
                         </ul>
                     </div>
