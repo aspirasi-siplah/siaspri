@@ -3,27 +3,35 @@
 const partners = [
     {
         name: 'Toko Ladang',
-        logo: '/images/partners/partner-1.jpg',
+        logo: '/images/siplah/tokoladang.png',
     },
     {
-        name: 'Eureka Digital',
-        logo: '/images/partners/partner-1.jpg',
+        name: 'Eureka Bookhouse',
+        logo: '/images/siplah/eureka.png',
     },
     {
         name: 'Telkom',
-        logo: '/images/partners/partner-1.jpg',
+        logo: '/images/siplah/telkom.png',
     },
     {
         name: 'Blibli',
-        logo: '/images/partners/partner-1.jpg',
+        logo: '/images/siplah/blibli.png',
     },
     {
         name: 'Gramedia',
-        logo: '/images/partners/partner-1.jpg',
+        logo: '/images/siplah/gramedia.png',
     },
     {
         name: 'Intan Pariwara',
-        logo: '/images/partners/partner-1.jpg',
+        logo: '/images/siplah/intan-pariwara.png',
+    },
+    {
+        name: 'Masmedia',
+        logo: '/images/siplah/masmedia.png',
+    },
+    {
+        name: 'Temprina',
+        logo: '/images/siplah/temprina.png',
     },
 ];
 
@@ -44,7 +52,7 @@ export default function PartnersSection() {
                         yang transparan dan bermanfaat bagi masyarakat.
                     </p>
                 </div>
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                     {partners.map((partner) => (
                         <div
                             key={partner.name}
@@ -53,7 +61,7 @@ export default function PartnersSection() {
                             <img
                                 src={partner.logo}
                                 alt={partner.name}
-                                className="max-h-16 w-auto object-contain grayscale transition-all duration-300 group-hover:grayscale-0"
+                                className="max-h-16 w-auto object-contain"
                             />
                             <p className="mt-4 text-[13px] font-medium text-slate-500">
                                 {partner.name}

@@ -35,4 +35,6 @@ return [
         ],
     ],
 
+    'measurement_id' => env('VITE_GA_ID'),
+
 ];
