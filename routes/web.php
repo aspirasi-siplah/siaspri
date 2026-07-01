@@ -10,8 +10,16 @@ use App\Http\Controllers\NewsManagementController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Spatie\Analytics\Facades\Analytics;
+use Spatie\Analytics\Period;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
+
+Route::get('/ga-test', function () {
+    return Analytics::fetchTotalVisitorsAndPageViews(
+        Period::days(30)
+    );
+});
 
 Route::prefix('news')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('news.index');
