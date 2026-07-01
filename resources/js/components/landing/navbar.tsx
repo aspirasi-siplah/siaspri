@@ -20,7 +20,7 @@ export default function Navbar() {
                 {auth.user ? (
                     <div className="flex items-center gap-4">
                         <Link
-                            href="/news-management"
+                            href="/dashboard"
                             className="rounded-lg bg-blue-600 px-6 py-1.5 text-[13px] font-medium text-white"
                         >
                             Dashboard
