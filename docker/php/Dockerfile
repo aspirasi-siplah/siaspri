@@ -4,6 +4,8 @@ WORKDIR /build
 
 ARG VITE_GA_ID
 ENV VITE_GA_ID=${VITE_GA_ID}
+ARG VITE_APP_NAME
+ENV VITE_APP_NAME=${VITE_APP_NAME}
 
 COPY package.json pnpm-lock.yaml .npmrc ./
 
