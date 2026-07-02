@@ -68,7 +68,7 @@ export function ChartAreaInteractive({ chartData }: { chartData: any[] }) {
                         Menampilkan grafik pengunjung selama 3 bulan terakhir
                     </CardDescription>
                 </div>
-                <Select value={timeRange} onValueChange={setTimeRange}>
+                {/* <Select value={timeRange} onValueChange={setTimeRange}>
                     <SelectTrigger
                         className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
                         aria-label="Select a value"
@@ -86,7 +86,7 @@ export function ChartAreaInteractive({ chartData }: { chartData: any[] }) {
                             7 hari terakhir
                         </SelectItem>
                     </SelectContent>
-                </Select>
+                </Select> */}
             </CardHeader>
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                 <ChartContainer

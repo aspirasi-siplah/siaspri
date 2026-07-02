@@ -99,7 +99,7 @@ export default function IndexCategory({ categories }: Props) {
 
     return (
         <>
-            <Head title="Categories" />
+            <Head title="Kategori Berita" />
             <AppLayout
                 breadcrumbs={[
                     {
