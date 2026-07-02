@@ -19,26 +19,36 @@ import blacklistMerchants from '@/routes/blacklist-merchants';
 import { dashboard } from '@/routes';
 import categories from '@/routes/categories';
 
-const mainNavItems: NavItem[] = [
+type ActiveKey = 'currentUrl' | 'startsWith' | 'includes';
+
+type ItemsProps = (NavItem & {
+    activeKey?: ActiveKey;
+})[];
+
+const mainNavItems: ItemsProps = [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: House,
+        activeKey: 'currentUrl',
     },
     {
         title: 'Kategori Berita',
         href: categories.index(),
         icon: LayoutGrid,
+        activeKey: 'startsWith',
     },
     {
         title: 'Manajemen Berita',
         href: newsManagement.index(),
         icon: Newspaper,
+        activeKey: 'startsWith',
     },
     {
         title: 'Blacklist Merchant',
         href: blacklistMerchants.index(),
         icon: Ban,
+        activeKey: 'startsWith',
     },
 ];
 
@@ -71,7 +81,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain label="Fitur Utama" items={mainNavItems} />
             </SidebarContent>
 
             <SidebarFooter>

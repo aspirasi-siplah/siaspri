@@ -32,7 +32,7 @@ export default function NewsManagementFormPage({ news, categories }: Props) {
 
     return (
         <>
-            <Head title={isEdit ? 'Edit Berita' : 'Tambah Berita'} />
+            <Head title={isEdit ? 'Perbarui Berita' : 'Tambah Berita'} />
 
             <AppLayout
                 breadcrumbs={[
@@ -41,7 +41,7 @@ export default function NewsManagementFormPage({ news, categories }: Props) {
                         href: '/news-management',
                     },
                     {
-                        title: isEdit ? 'Edit Berita' : 'Tambah Berita',
+                        title: isEdit ? 'Perbarui Berita' : 'Tambah Berita',
                         href: '',
                     },
                 ]}
@@ -50,7 +50,7 @@ export default function NewsManagementFormPage({ news, categories }: Props) {
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-2xl font-bold">
-                                {isEdit ? 'Edit Berita' : 'Tambah Berita'}
+                                {isEdit ? 'Perbarui Berita' : 'Tambah Berita'}
                             </h1>
 
                             <p className="mt-1 text-sm text-muted-foreground">
