@@ -1,6 +1,17 @@
 import { Link } from '@inertiajs/react';
 import { Mail, Phone, MapPin, MessageSquareText } from 'lucide-react';
 
+const marketplaceLinks = [
+    { name: 'Siplah Tokoladang', url: 'https://siplah.tokoladang.co.id/' },
+    { name: 'Siplah Blibli', url: 'https://siplah.blibli.com/' },
+    { name: 'Siplah Telkom', url: 'https://siplahtelkom.com/' },
+    { name: 'Siplah Eureka', url: 'https://siplah.eurekabookhouse.co.id/' },
+    { name: 'Siplah Gramedia', url: 'https://siplahgramedia.id/' },
+    { name: 'Siplah Masmedia', url: 'https://siplahmasmedia.co.id/' },
+    { name: 'Siplah Intan Pariwara', url: 'https://siplah.intanonline.com/' },
+    { name: 'Siplah Temprina', url: 'https://siplah.temprina.co.id/' },
+];
+
 export default function Footer() {
     return (
         <footer className="bg-slate-950 text-white">
@@ -61,46 +72,13 @@ export default function Footer() {
                     <div>
                         <h4 className="mb-4 text-lg font-semibold">Layanan</h4>
                         <ul className="space-y-3 text-slate-400">
-                            <li className='hover:text-white'>
-                                <a href="https://siplah.tokoladang.co.id/">
-                                    Siplah Tokoladang
-                                </a>
-                            </li>
-                            <li className='hover:text-white'>
-                                <a href="https://siplah.blibli.com/">
-                                    Siplah Blibli
-                                </a>
-                            </li>
-                            <li className='hover:text-white'>
-                                <a href="https://siplahtelkom.com/">
-                                    Siplah Telkom
-                                </a>
-                            </li>
-                            <li className='hover:text-white'>
-                                <a href="https://siplah.eurekabookhouse.co.id/">
-                                    Siplah Eureka
-                                </a>
-                            </li>
-                            <li className='hover:text-white'>
-                                <a href="https://siplahgramedia.id/">
-                                    Siplah Gramedia
-                                </a>
-                            </li>
-                            <li className='hover:text-white'>
-                                <a href="https://siplahmasmedia.co.id/">
-                                    Siplah Masmedia
-                                </a>
-                            </li>
-                            <li className='hover:text-white'>
-                                <a href="https://siplah.intanonline.com/">
-                                    Siplah Intan Pariwara
-                                </a>
-                            </li>
-                            <li className='hover:text-white'>
-                                <a href="https://siplah.temprina.co.id/">
-                                    Siplah Temprina
-                                </a>
-                            </li>
+                            {marketplaceLinks.map((link, idx) => (
+                                <li key={idx} className='hover:text-white'>
+                                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                                        {link.name}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                     <div>
