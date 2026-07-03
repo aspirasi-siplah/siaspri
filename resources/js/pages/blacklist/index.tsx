@@ -135,32 +135,36 @@ export default function IndexPage({ merchants }: Props) {
                                     {items.map((merchant) => (
                                         <article
                                             key={merchant.id}
-                                            className="group overflow-hidden rounded-3xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                                            className="group flex flex-col justify-between overflow-hidden rounded-3xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
                                         >
-                                            {merchant.image ? (
-                                                <img
-                                                    src={merchant.image}
-                                                    alt={merchant.merchant_name}
-                                                    className="h-56 w-full object-cover"
-                                                />
-                                            ) : (
-                                                <div className="flex h-56 items-center justify-center bg-slate-100">
-                                                    <ShieldAlert size={48} />
+                                            <div className="">
+                                                {merchant.image ? (
+                                                    <img
+                                                        src={merchant.image}
+                                                        alt={merchant.merchant_name}
+                                                        className="h-56 w-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-56 items-center justify-center bg-slate-100">
+                                                        <ShieldAlert size={48} />
+                                                    </div>
+                                                )}
+                                                <div className="p-6">
+                                                    <div className="mb-3 text-sm text-slate-500">
+                                                        {merchant.created_at}
+                                                    </div>
+                                                    <h2 className="text-xl font-bold">
+                                                        {merchant.merchant_name}
+                                                    </h2>
+                                                    <p className="mt-4 line-clamp-4 text-slate-600">
+                                                        {merchant.reason}
+                                                    </p>
                                                 </div>
-                                            )}
-                                            <div className="p-6">
-                                                <div className="mb-3 text-sm text-slate-500">
-                                                    {merchant.created_at}
-                                                </div>
-                                                <h2 className="text-xl font-bold">
-                                                    {merchant.merchant_name}
-                                                </h2>
-                                                <p className="mt-4 line-clamp-4 text-slate-600">
-                                                    {merchant.reason}
-                                                </p>
+                                            </div>
+                                            <div className="px-6 pb-6">
                                                 <Link
                                                     href={`/blacklist/${merchant.id}`}
-                                                    className="mt-6 inline-flex items-center gap-2 font-medium text-red-600"
+                                                    className="mt-6 inline-flex items-center gap-2 font-medium text-red-600 hover:text-red-700"
                                                 >
                                                     Lihat Detail
                                                     <ArrowRight size={16} />
