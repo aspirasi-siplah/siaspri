@@ -5,7 +5,7 @@ import { useForm } from "@inertiajs/react";
 import FormInput from "../custom-components/FormInput";
 import FormTextArea from "../custom-components/FormTextArea";
 import Swal from "sweetalert2";
-import { Pencil } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 interface Merchant {
     id: number;
@@ -84,8 +84,9 @@ export default function ModalForm({ merchant }: Props) {
             ) : (
                 <button
                     onClick={handleOpen}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white"
+                    className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-500 px-4 py-2 text-sm text-primary-foreground hover:bg-blue-600"
                 >
+                    <Plus size={16} />
                     Tambah Merchant
                 </button>
             )}
@@ -106,6 +107,8 @@ export default function ModalForm({ merchant }: Props) {
                                 onImageChange={(image) =>
                                     form.setData('image', image)
                                 }
+                                info="Ukuran file maksimal 2MB, format: jpg, jpeg, png"
+                                error={form.errors.image}
                             />
                         </div>
 

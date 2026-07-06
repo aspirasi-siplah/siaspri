@@ -42,6 +42,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 interface Props {
     value: string;
@@ -120,20 +121,45 @@ export default function TiptapEditor({ value, onChange }: Props) {
     if (!editor) return null;
 
     const uploadImage = async (file: File) => {
-        const formData = new FormData();
-        formData.append('image', file);
-        const response = await axios.post('/editors/upload-images', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        editor
-            .chain()
-            .focus()
-            .setImage({
-                src: response.data.url,
-            })
-            .run();
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            const response = await axios.post('/editors/upload-images', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            editor
+                .chain()
+                .focus()
+                .setImage({
+                    src: response.data.url,
+                })
+                .run();
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.errors) {
+                const errors = error.response.data.errors;
+                if (errors.image) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: errors.image[0],
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan saat mengunggah gambar.',
+                    });
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Terjadi kesalahan saat mengunggah gambar.',
+                });
+            }
+        }
     };
 
     const selectImage = () => {

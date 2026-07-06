@@ -164,7 +164,7 @@ export default function NewsIndex({ news }: Props) {
                                         </span>
                                     </td>
                                     <td className="p-4 text-center text-sm font-medium text-gray-700">
-                                        {item.published_at}
+                                        {item.published_at ?? 'Belum diterbitkan'}
                                     </td>
                                     <td className="p-4 text-center">
                                         <div className="flex justify-center gap-2">

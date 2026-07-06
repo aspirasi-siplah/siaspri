@@ -80,7 +80,7 @@ export default function Index({ merchants }: Props) {
                             <h1 className="text-2xl font-bold">
                                 Blacklist Merchant
                             </h1>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="mt-1 text-sm text-muted-foreground">
                                 Kelola daftar merchant yang masuk blacklist.
                             </p>
                         </div>
@@ -130,17 +130,22 @@ export default function Index({ merchants }: Props) {
                                     </td>
                                     <td className="w-2/5 max-w-sm px-4 py-1 text-sm text-wrap break-words text-gray-600">
                                         {merchant.reason.length > 50
-                                            ? merchant.reason.substring(0, 50) + '... '
-                                            : merchant.reason
-                                        }
+                                            ? merchant.reason.substring(0, 50) +
+                                              '... '
+                                            : merchant.reason}
                                     </td>
-                                    <td className="px-4 py-1 text-sm text-gray-700 font-medium">
+                                    <td className="px-4 py-1 text-sm font-medium text-gray-700">
                                         {merchant.created_at}
                                     </td>
                                     <td className="px-4 py-1">
                                         <div className="flex justify-center gap-2">
                                             <ModalForm merchant={merchant} />
-                                            <button onClick={() => destroy(merchant.id)} className="rounded-lg border border-red-200 p-2 text-red-500 hover:bg-red-50 cursor-pointer">
+                                            <button
+                                                onClick={() =>
+                                                    destroy(merchant.id)
+                                                }
+                                                className="cursor-pointer rounded-lg border border-red-200 p-2 text-red-500 hover:bg-red-50"
+                                            >
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
