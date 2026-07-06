@@ -40,13 +40,12 @@ COPY . .
 
 RUN composer install \
     --no-dev \
-    --prefer-source \
+    --prefer-dist \
     --no-interaction \
     --optimize-autoloader \
     --classmap-authoritative
 
-RUN rm -rf /var/www/bootstrap/cache/*.php \
-    && php -r 'file_put_contents("/var/www/.env", "APP_KEY=base64:".base64_encode(random_bytes(32))."\nAPP_ENV=production\n");' \
+RUN php -r 'file_put_contents("/var/www/.env", "APP_KEY=base64:".base64_encode(random_bytes(32))."\nAPP_ENV=production\n");' \
     && php artisan wayfinder:generate --with-form --no-interaction \
     && rm /var/www/.env
 
@@ -84,7 +83,7 @@ RUN cp -r /var/www/public /opt/public
 
 RUN composer install \
     --no-dev \
-    --prefer-source \
+    --prefer-dist \
     --no-interaction \
     --optimize-autoloader \
     --classmap-authoritative
