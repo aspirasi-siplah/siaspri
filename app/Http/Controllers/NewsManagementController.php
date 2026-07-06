@@ -71,7 +71,7 @@ class NewsManagementController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('thumbnail')) {
-            $validated['thumbnail'] = $request->file('thumbnail')->store('news', 'public');
+            $validated['thumbnail'] = $request->file('thumbnail')->store('news');
         }
 
         $validated['created_by'] = Auth::id();
@@ -95,10 +95,7 @@ class NewsManagementController extends Controller
             if ($request->filled('documents')) {
                 foreach ($request->documents as $document) {
                     $file = $document['file'];
-                    $path = $file->store(
-                        'news/gallery',
-                        'public'
-                    );
+                    $path = $file->store('news/gallery');
                     $news->documents()->create([
                         'name' => $document['name'] ?? null,
                         'file_name' => $file->getClientOriginalName(),
@@ -165,12 +162,11 @@ class NewsManagementController extends Controller
 
             if ($request->hasFile('thumbnail')) {
                 if ($news->thumbnail) {
-                    Storage::disk('public')
-                        ->delete($news->thumbnail);
+                    Storage::delete($news->thumbnail);
                 }
                 $thumbnail = $request
                     ->file('thumbnail')
-                    ->store('news', 'public');
+                    ->store('news');
 
                 $news->update([
                     'thumbnail' => $thumbnail,
@@ -184,7 +180,7 @@ class NewsManagementController extends Controller
                     ->get();
 
                 foreach ($documents as $document) {
-                    Storage::disk('public')->delete($document->file_path);
+                    Storage::delete($document->file_path);
                     $document->delete();
                 }
             }
@@ -192,7 +188,7 @@ class NewsManagementController extends Controller
             if ($request->filled('documents')) {
                 foreach ($request->documents as $document) {
                     $file = $document['file'];
-                    $path = $file->store('news/gallery', 'public');
+                    $path = $file->store('news/gallery');
 
                     $news->documents()->create([
                         'name' => $document['name'] ?? null,
@@ -216,12 +212,11 @@ class NewsManagementController extends Controller
         $news = News::findOrFail($id);
 
         if ($news->thumbnail) {
-            Storage::disk('public')
-                ->delete($news->thumbnail);
+            Storage::delete($news->thumbnail);
         }
 
         foreach ($news->documents as $document) {
-            Storage::disk('public')->delete($document->file_path);
+            Storage::delete($document->file_path);
             $document->delete();
         }
 
@@ -233,4 +228,3 @@ class NewsManagementController extends Controller
         );
     }
 }
-

@@ -15,10 +15,7 @@ class EditorController extends Controller
 
         $path = $request
             ->file('image')
-            ->store(
-                'news/content',
-                'public'
-            );
+            ->store('news/content');
 
         return response()->json([
             'url' => Storage::url($path),

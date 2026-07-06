@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateBlacklistMerchantRequest;
 use App\Models\BlacklistMerchant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class BlacklistMerchantManagementController extends Controller
@@ -47,7 +46,7 @@ class BlacklistMerchantManagementController extends Controller
 
             if ($request->hasFile('image')) {
                 $merchant->update([
-                    'image' => $request->file('image')->store('blacklist-merchants', 'public'),
+                    'image' => $request->file('image')->store('blacklist-merchants'),
                 ]);
             }
         });
@@ -72,9 +71,9 @@ class BlacklistMerchantManagementController extends Controller
 
             if ($request->hasFile('image')) {
                 if ($blacklistMerchant->image) {
-                    Storage::disk('public')->delete($blacklistMerchant->image);
+                    Storage::delete($blacklistMerchant->image);
                 }
-                $image = $request->file('image')->store('blacklist-merchants', 'public');
+                $image = $request->file('image')->store('blacklist-merchants');
 
                 $blacklistMerchant->update([
                     'image' => $image,
@@ -95,7 +94,7 @@ class BlacklistMerchantManagementController extends Controller
         DB::transaction(function () use ($blacklistMerchant) {
 
             if ($blacklistMerchant->image) {
-                Storage::disk('public')->delete($blacklistMerchant->image);
+                Storage::delete($blacklistMerchant->image);
             }
 
             $blacklistMerchant->delete();
