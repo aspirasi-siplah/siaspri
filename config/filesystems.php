@@ -63,7 +63,7 @@ return [
         'r2' => [
             'driver' => 's3',
             'key' => env('CLOUDFLARE_R2_ACCESS_KEY_ID'),
-            'secret' => env('CLOUDFLARE_R2_SECRET_ACCESS_KEY'),
+            'secret' => env('CLOUDFLARE_R2_ACCESS_KEY_SECRET'),
             'region' => env('CLOUDFLARE_R2_REGION', 'auto'),
             'bucket' => env('CLOUDFLARE_R2_BUCKET'),
             'url' => env('CLOUDFLARE_R2_URL'),
