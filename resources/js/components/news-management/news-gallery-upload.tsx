@@ -21,6 +21,7 @@ interface Props {
     deletedDocumentIds: number[];
     onDocumentsChange: (documents: NewDocument[]) => void;
     onDeletedDocumentsChange: (ids: number[]) => void;
+    errors?: Record<string, string>;
 }
 
 export default function NewsGalleryUpload({
@@ -29,7 +30,13 @@ export default function NewsGalleryUpload({
     deletedDocumentIds,
     onDocumentsChange,
     onDeletedDocumentsChange,
+    errors,
 }: Props) {
+    const getDocumentErrors = (index: number) => ({
+        file: errors?.[`documents.${index}.file`],
+        name: errors?.[`documents.${index}.name`],
+    });
+
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files || []);
         const mapped = files.map((file) => ({
@@ -53,7 +60,7 @@ export default function NewsGalleryUpload({
     return (
         <div className="space-y-6">
             <div>
-                <label className="mb-2 block text-sm font-medium">
+                <label className="mb-2 block text-base font-medium">
                     Galeri Foto
                 </label>
                 <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 transition hover:bg-muted/50">
@@ -61,6 +68,9 @@ export default function NewsGalleryUpload({
                     <span>Pilih Foto</span>
                     <span className="mt-1 text-xs text-muted-foreground">
                         JPG, PNG, WEBP
+                    </span>
+                    <span className="mt-1 text-xs text-muted-foreground">
+                        Ukuran maksimal 2MB per gambar
                     </span>
                     <input
                         hidden
@@ -121,7 +131,10 @@ export default function NewsGalleryUpload({
                 <div>
                     <h4 className="mb-4 font-medium">Foto Baru</h4>
                     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                        {documents.map((image, index) => (
+                        {documents.map((image, index) => {
+                        const documentErrors = getDocumentErrors(index);
+
+                        return (
                             <div
                                 key={index}
                                 className="relative overflow-hidden rounded-xl border"
@@ -131,9 +144,15 @@ export default function NewsGalleryUpload({
                                     alt=""
                                     className="h-40 w-full object-cover"
                                 />
-                                <p className="text-xs font-medium text-muted-foreground">
-                                    {image.file.name}
-                                </p>
+                                {documentErrors.file ? (
+                                    <p className="mt-1 text-xs text-red-500">
+                                        {documentErrors.file}
+                                    </p>
+                                ) : (
+                                    <p className="text-xs font-medium text-muted-foreground">
+                                        {image.file.name}
+                                    </p>
+                                )}
                                 <div className="p-3">
                                     <label
                                         htmlFor={`imgGallery-${index}`}
@@ -163,6 +182,11 @@ export default function NewsGalleryUpload({
                                         }}
                                         required
                                     />
+                                    {documentErrors.name && (
+                                        <p className="mt-1 text-xs text-red-500">
+                                            {documentErrors.name}
+                                        </p>
+                                    )}
                                 </div>
                                 <button
                                     type="button"
@@ -172,7 +196,8 @@ export default function NewsGalleryUpload({
                                     <Trash2 size={14} />
                                 </button>
                             </div>
-                        ))}
+                        );
+                    })}
                     </div>
                 </div>
             )}

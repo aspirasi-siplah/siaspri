@@ -107,16 +107,16 @@ export default function Footer() {
                 <div className="mt-12 border-t border-slate-800 pt-6">
                     <div className="flex flex-col items-center justify-between gap-4 text-sm text-slate-500 md:flex-row">
                         <p>
-                            © {new Date().getFullYear()} AspirasiKu. Seluruh hak
+                            © {new Date().getFullYear()} Si E-Aspri. Seluruh hak
                             cipta dilindungi.
                         </p>
                         <div className="flex gap-6">
                             <Link href="#" className="hover:text-white">
                                 Kebijakan Privasi
                             </Link>
-                            <Link href="#" className="hover:text-white">
+                            {/* <Link href="#" className="hover:text-white">
                                 Syarat & Ketentuan
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>

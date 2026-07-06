@@ -106,6 +106,8 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
                         onImageChange={(image) =>
                             form.setData('thumbnail', image)
                         }
+                        info="Maks. 2MB, format: jpg, jpeg, png"
+                        error={form.errors.thumbnail}
                     />
                 </div>
                 <div className="w-full space-y-4">
@@ -178,10 +180,11 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
                     deletedDocumentIds={deletedDocumentIds}
                     onDocumentsChange={setDocuments}
                     onDeletedDocumentsChange={setDeletedDocumentIds}
+                    errors={form.errors}
                 />
             </div>
             <div className="">
-                <label className="mb-2 block">Konten Berita</label>
+                <label className="mb-2 block text-base font-medium">Konten Berita</label>
                 <TiptapEditor
                     value={form.data.content}
                     onChange={(value) => form.setData('content', value)}
