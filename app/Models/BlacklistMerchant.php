@@ -21,7 +21,7 @@ class BlacklistMerchant extends Model
     public function image(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $value ? Storage::url($value) : null
+            get: fn (?string $value) => $value ? Storage::url($value) : null
         );
     }
 }
