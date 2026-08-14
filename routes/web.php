@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsManagementController;
+use App\Http\Controllers\PrincipalReferenceDocumentController;
+use App\Http\Controllers\PrincipalReferenceDocumentManagementController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +32,13 @@ Route::prefix('blacklist')->group(function () {
     Route::get('/', [BlacklistMerchantController::class, 'index'])->name('blacklist.index');
     Route::get('/{id}', [BlacklistMerchantController::class, 'show'])->name('blacklist.show');
 });
+
+Route::prefix('reference-documents')->group(function () {
+    Route::get('/', [PrincipalReferenceDocumentController::class, 'index'])->name('reference-documents.index');
+    Route::get('/{referenceId}', [PrincipalReferenceDocumentController::class, 'show'])->name('reference-documents.show');
+});
+
+Route::get('/verify/{referenceId}', [PrincipalReferenceDocumentController::class, 'verify'])->name('reference-documents.verify');
 
 Route::get('/about', function () {
     return Inertia::render('about-us');
@@ -64,6 +73,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [BlacklistMerchantManagementController::class, 'store'])->name('blacklist-merchants.store');
         Route::put('/{id}', [BlacklistMerchantManagementController::class, 'update'])->name('blacklist-merchants.update');
         Route::delete('/{id}/delete', [BlacklistMerchantManagementController::class, 'destroy'])->name('blacklist-merchants.destroy');
+    });
+
+    Route::prefix('reference-documents-management')->group(function () {
+        Route::get('/', [PrincipalReferenceDocumentManagementController::class, 'index'])->name('reference-documents-management.index');
+        Route::post('/', [PrincipalReferenceDocumentManagementController::class, 'store'])->name('reference-documents-management.store');
+        Route::put('/{id}', [PrincipalReferenceDocumentManagementController::class, 'update'])->name('reference-documents-management.update');
+        Route::delete('/{id}/delete', [PrincipalReferenceDocumentManagementController::class, 'destroy'])->name('reference-documents-management.destroy');
     });
 
     Route::prefix('editors')->group(function () {
