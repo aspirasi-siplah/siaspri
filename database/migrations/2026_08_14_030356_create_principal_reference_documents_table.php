@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('principal_name');
             $table->string('document_number');
             $table->string('program_name');
-            $table->string('category_name');
+            $table->string('category_name')->nullable();
             $table->string('status', 20)->default('active'); // active, inactive, expired
             $table->date('expired_date');
             $table->timestamps();

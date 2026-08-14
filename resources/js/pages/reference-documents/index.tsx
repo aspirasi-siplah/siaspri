@@ -168,9 +168,8 @@ export default function IndexPage({ documents }: Props) {
                                                             {status?.label}
                                                         </span>
                                                         <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
-                                                            {
-                                                                document.category_name
-                                                            }
+                                                            {document.category_name ??
+                                                                '-'}
                                                         </span>
                                                     </div>
                                                     <h2 className="text-xl font-bold">

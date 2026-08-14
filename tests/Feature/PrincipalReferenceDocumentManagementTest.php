@@ -45,9 +45,15 @@ test('admin can store a reference document with an auto generated reference id',
     $document = PrincipalReferenceDocument::first();
 
     expect($document)->not->toBeNull()
-        ->and($document->reference_id)->toMatch('/^ASPRI-BP-\d{5}$/')
+        ->and($document->reference_id)->toMatch('/^ASPRI-PK-\d{5}$/')
         ->and($document->principal_name)->toBe('PT Contoh Principal')
         ->and($document->status)->toBe('active');
+});
+
+test('reference id uses an abbreviation derived from the program name', function () {
+    $referenceId = PrincipalReferenceDocument::generateReferenceId('Program Pengembangan Bisnis');
+
+    expect($referenceId)->toMatch('/^ASPRI-PPB-\d{5}$/');
 });
 
 test('admin can update a reference document without changing the reference id', function () {

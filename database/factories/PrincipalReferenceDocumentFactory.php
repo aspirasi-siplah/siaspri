@@ -17,11 +17,13 @@ class PrincipalReferenceDocumentFactory extends Factory
      */
     public function definition(): array
     {
+        $programName = fake()->words(3, true);
+
         return [
-            'reference_id' => PrincipalReferenceDocument::generateReferenceId(),
+            'reference_id' => PrincipalReferenceDocument::generateReferenceId($programName),
             'principal_name' => fake()->company(),
             'document_number' => strtoupper(fake()->bothify('DOC-####-???')),
-            'program_name' => fake()->sentence(3),
+            'program_name' => $programName,
             'category_name' => fake()->word(),
             'status' => fake()->randomElement([
                 PrincipalReferenceDocument::STATUS_ACTIVE,

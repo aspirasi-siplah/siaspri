@@ -27,7 +27,7 @@ class UpdatePrincipalReferenceDocumentRequest extends FormRequest
             'principal_name' => 'required|string|max:255',
             'document_number' => 'required|string|max:255',
             'program_name' => 'required|string|max:255',
-            'category_name' => 'required|string|max:255',
+            'category_name' => 'nullable|string|max:255',
             'status' => 'required|string|in:'.implode(',', [
                 PrincipalReferenceDocument::STATUS_ACTIVE,
                 PrincipalReferenceDocument::STATUS_INACTIVE,
@@ -49,7 +49,6 @@ class UpdatePrincipalReferenceDocumentRequest extends FormRequest
             'program_name.required' => 'Nama program wajib diisi.',
             'program_name.string' => 'Nama program harus berupa teks.',
             'program_name.max' => 'Nama program maksimal berukuran 255 karakter.',
-            'category_name.required' => 'Nama kategori wajib diisi.',
             'category_name.string' => 'Nama kategori harus berupa teks.',
             'category_name.max' => 'Nama kategori maksimal berukuran 255 karakter.',
             'status.required' => 'Status wajib diisi.',

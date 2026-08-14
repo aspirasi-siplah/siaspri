@@ -14,7 +14,7 @@ export default function Navbar() {
                     <NavLink label="Beranda" href="/" active={location === '/'}/>
                     <NavLink label="Berita" href="/news" active={location.startsWith('/news')} />
                     <NavLink label="Blacklist" href="/blacklist" active={location.startsWith('/blacklist')} />
-                    <NavLink label="Reference" href="/reference-documents" active={location.startsWith('/reference-documents')} />
+                    <NavLink label="Dokumen" href="/reference-documents" active={location.startsWith('/reference-documents')} />
                     <NavLink label="Tentang" href="/about" active={location === '/about'} />
                     <NavLink label="Kontak" href="/contact" active={location === '/contact'} />
                 </nav>

@@ -31,7 +31,7 @@ export default function ModalForm({ document }: Props) {
                 principal_name: document.principal_name,
                 document_number: document.document_number,
                 program_name: document.program_name,
-                category_name: document.category_name,
+                category_name: document.category_name ?? '',
                 status: document.status,
                 expired_date: document.expired_date,
             });
@@ -161,7 +161,7 @@ export default function ModalForm({ document }: Props) {
                                 e: React.ChangeEvent<HTMLInputElement>,
                             ) => form.setData('category_name', e.target.value)}
                             error={form.errors.category_name}
-                            required
+                            info="Opsional"
                         />
                         <FormSelect
                             name="status"

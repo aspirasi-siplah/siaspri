@@ -40,7 +40,7 @@ class PrincipalReferenceDocumentManagementController extends Controller
     public function store(StorePrincipalReferenceDocumentRequest $request)
     {
         $validated = $request->validated();
-        $validated['reference_id'] = PrincipalReferenceDocument::generateReferenceId();
+        $validated['reference_id'] = PrincipalReferenceDocument::generateReferenceId($validated['program_name']);
 
         PrincipalReferenceDocument::create($validated);
 

@@ -7,7 +7,7 @@ export interface ReferenceDocument {
     principal_name: string;
     document_number: string;
     program_name: string;
-    category_name: string;
+    category_name: string | null;
     status: ReferenceDocumentStatus;
     expired_date: string;
     created_at?: string;

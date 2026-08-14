@@ -117,7 +117,7 @@ export default function ShowPage({ document }: Props) {
                                     <DetailRow
                                         icon={<ShieldCheck size={16} />}
                                         label="Kategori"
-                                        value={document.category_name}
+                                        value={document.category_name || '-'}
                                     />
                                     <DetailRow
                                         icon={<CalendarDays size={16} />}

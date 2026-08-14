@@ -1,5 +1,13 @@
 import { Link } from '@inertiajs/react';
-import { Ban, BookOpen, FileCheck2, FolderGit2, House, LayoutGrid, Newspaper } from 'lucide-react';
+import {
+    Ban,
+    BookOpen,
+    FileCheck2,
+    FolderGit2,
+    House,
+    LayoutGrid,
+    Newspaper,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -52,7 +60,7 @@ const mainNavItems: ItemsProps = [
         activeKey: 'startsWith',
     },
     {
-        title: 'Reference Document',
+        title: 'Dokumen Principal',
         href: referenceDocumentsManagement.index(),
         icon: FileCheck2,
         activeKey: 'startsWith',
