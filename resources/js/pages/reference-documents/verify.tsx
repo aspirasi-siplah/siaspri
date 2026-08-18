@@ -12,6 +12,7 @@ import {
     Link2,
     Copy,
     Check,
+    Download,
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { useClipboard } from '@/hooks/use-clipboard';
@@ -111,6 +112,11 @@ export default function VerifyPage({ document }: Props) {
                                         value={document.principal_name}
                                     />
                                     <DetailRow
+                                        icon={<Building2 size={16} />}
+                                        label="Perusahaan Toko"
+                                        value={document.company_name || '-'}
+                                    />
+                                    <DetailRow
                                         icon={<Tag size={16} />}
                                         label="Nomor Dokumen"
                                         value={document.document_number}
@@ -118,7 +124,7 @@ export default function VerifyPage({ document }: Props) {
                                     <DetailRow
                                         icon={<FileCheck2 size={16} />}
                                         label="Program"
-                                        value={document.program_name}
+                                        value={document.program_name || '-'}
                                     />
                                     <DetailRow
                                         icon={<ShieldCheck size={16} />}
@@ -128,9 +134,30 @@ export default function VerifyPage({ document }: Props) {
                                     <DetailRow
                                         icon={<CalendarDays size={16} />}
                                         label="Tanggal Kedaluwarsa"
-                                        value={document.expired_date}
+                                        value={document.expired_date || '-'}
                                     />
                                 </div>
+
+                                {document.file_name && document.file_path && (
+                                    <div className="mt-6 flex items-center gap-3 rounded-xl border border-gray-100 bg-slate-50 px-5 py-4">
+                                        <FileCheck2 size={16} className="shrink-0 text-blue-600" />
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm font-medium">File Dokumen</p>
+                                            <p className="truncate text-xs text-slate-500">
+                                                {document.file_name}
+                                            </p>
+                                        </div>
+                                        <a
+                                            href={document.file_path}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700"
+                                        >
+                                            <Download size={12} />
+                                            Unduh
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

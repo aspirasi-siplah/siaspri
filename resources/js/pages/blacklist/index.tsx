@@ -106,15 +106,15 @@ export default function IndexPage({ merchants }: Props) {
                                 <ShieldAlert size={16} />
                                 Transparansi Informasi
                             </div>
-                            <h1 className="mt-6 text-5xl leading-tight font-bold">
+                            <h1 className="mt-6 text-4xl leading-tight font-bold md:text-5xl">
                                 Daftar Blacklist Merchant
                             </h1>
-                            <p className="mt-6 text-lg text-slate-600">
-                                Informasi merchant yang masuk dalam daftar
-                                blacklist berdasarkan hasil verifikasi dan
-                                evaluasi yang telah dilakukan.
-                            </p>
                         </div>
+                        <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-600">
+                            Informasi merchant yang masuk dalam daftar
+                            blacklist berdasarkan hasil verifikasi dan
+                            evaluasi yang telah dilakukan.
+                        </p>
                     </div>
                 </section>
                 <section className="pb-24">

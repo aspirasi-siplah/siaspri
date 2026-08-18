@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePrincipalReferenceDocumentRequest;
 use App\Http\Requests\UpdatePrincipalReferenceDocumentRequest;
 use App\Models\PrincipalReferenceDocument;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PrincipalReferenceDocumentManagementController extends Controller
@@ -20,11 +21,14 @@ class PrincipalReferenceDocumentManagementController extends Controller
                     'reference_id' => $document->reference_id,
                     'reference_link' => $document->reference_link,
                     'principal_name' => $document->principal_name,
+                    'company_name' => $document->company_name,
                     'document_number' => $document->document_number,
+                    'file_name' => $document->file_name,
+                    'file_path' => $document->file_path ? Storage::url($document->file_path) : null,
                     'program_name' => $document->program_name,
                     'category_name' => $document->category_name,
                     'status' => $document->status,
-                    'expired_date' => $document->expired_date->format('Y-m-d'),
+                    'expired_date' => $document->expired_date ? $document->expired_date->format('Y-m-d') : null,
                     'created_at' => $document->created_at->translatedFormat('d M Y H:i'),
                 ];
             });
@@ -40,7 +44,15 @@ class PrincipalReferenceDocumentManagementController extends Controller
     public function store(StorePrincipalReferenceDocumentRequest $request)
     {
         $validated = $request->validated();
-        $validated['reference_id'] = PrincipalReferenceDocument::generateReferenceId($validated['program_name']);
+        $validated['reference_id'] = PrincipalReferenceDocument::generateReferenceId(
+            $validated['program_name'] ?? 'BP'
+        );
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('principal-documents');
+            $validated['file_name'] = $request->file('file')->getClientOriginalName();
+            $validated['file_path'] = $path;
+        }
 
         PrincipalReferenceDocument::create($validated);
 
@@ -54,7 +66,18 @@ class PrincipalReferenceDocumentManagementController extends Controller
     {
         $document = PrincipalReferenceDocument::findOrFail($id);
 
-        $document->update($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('file')) {
+            if ($document->file_path) {
+                Storage::delete($document->file_path);
+            }
+            $path = $request->file('file')->store('principal-documents');
+            $validated['file_name'] = $request->file('file')->getClientOriginalName();
+            $validated['file_path'] = $path;
+        }
+
+        $document->update($validated);
 
         return redirect()->back()->with(
             'success',
@@ -65,6 +88,10 @@ class PrincipalReferenceDocumentManagementController extends Controller
     public function destroy($id)
     {
         $document = PrincipalReferenceDocument::findOrFail($id);
+
+        if ($document->file_path) {
+            Storage::delete($document->file_path);
+        }
 
         $document->delete();
 

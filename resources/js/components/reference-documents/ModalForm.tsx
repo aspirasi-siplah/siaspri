@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { Pencil, Plus } from 'lucide-react';
+import { Pencil, Plus, Upload, X } from 'lucide-react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { statusOptions } from '@/lib/reference-documents';
@@ -14,13 +14,16 @@ interface Props {
 
 export default function ModalForm({ document }: Props) {
     const [open, setOpen] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const isEdit = !!document;
 
     const form = useForm({
         principal_name: document?.principal_name ?? '',
+        company_name: document?.company_name ?? '',
         document_number: document?.document_number ?? '',
         program_name: document?.program_name ?? '',
         category_name: document?.category_name ?? '',
+        file: null as File | null,
         status: document?.status ?? 'active',
         expired_date: document?.expired_date ?? '',
     });
@@ -29,15 +32,29 @@ export default function ModalForm({ document }: Props) {
         if (document) {
             form.setData({
                 principal_name: document.principal_name,
+                company_name: document.company_name,
                 document_number: document.document_number,
-                program_name: document.program_name,
+                program_name: document.program_name ?? '',
                 category_name: document.category_name ?? '',
+                file: null,
                 status: document.status,
-                expired_date: document.expired_date,
+                expired_date: document.expired_date ?? '',
             });
         }
 
+        setSelectedFile(null);
         setOpen(true);
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setSelectedFile(file);
+        form.setData('file', file);
+    };
+
+    const handleRemoveFile = () => {
+        setSelectedFile(null);
+        form.setData('file', null);
     };
 
     const submit = (e: React.FormEvent) => {
@@ -48,6 +65,7 @@ export default function ModalForm({ document }: Props) {
             onSuccess: () => {
                 setOpen(false);
                 form.reset();
+                setSelectedFile(null);
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
@@ -68,12 +86,18 @@ export default function ModalForm({ document }: Props) {
         };
 
         if (isEdit) {
-            form.put(`reference-documents-management/${document?.id}`, options);
+            form.post(`reference-documents-management/${document?.id}?_method=PUT`, {
+                ...options,
+                forceFormData: true,
+            });
 
             return;
         }
 
-        form.post('reference-documents-management', options);
+        form.post('reference-documents-management', {
+            ...options,
+            forceFormData: true,
+        });
     };
 
     return (
@@ -106,93 +130,149 @@ export default function ModalForm({ document }: Props) {
                 size="lg"
             >
                 <form onSubmit={submit} className="space-y-6">
-                    <div className="grid gap-6 md:grid-cols-2">
-                        {isEdit && (
+                    <div className="max-h-[50vh] space-y-6 overflow-y-auto">
+                        <div className="grid gap-6 md:grid-cols-2">
+                            {isEdit && (
+                                <FormInput
+                                    name="reference_id"
+                                    label="Reference ID"
+                                    type="text"
+                                    value={document?.reference_id ?? ''}
+                                    disabled
+                                    readOnly
+                                />
+                            )}
                             <FormInput
-                                name="reference_id"
-                                label="Reference ID"
+                                name="principal_name"
+                                label="Nama Principal"
                                 type="text"
-                                value={document?.reference_id ?? ''}
-                                disabled
-                                readOnly
+                                value={form.data.principal_name}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) => form.setData('principal_name', e.target.value)}
+                                error={form.errors.principal_name}
+                                required
                             />
-                        )}
-                        <FormInput
-                            name="principal_name"
-                            label="Nama Principal"
-                            type="text"
-                            value={form.data.principal_name}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => form.setData('principal_name', e.target.value)}
-                            error={form.errors.principal_name}
-                            required
-                        />
-                        <FormInput
-                            name="document_number"
-                            label="Nomor Dokumen"
-                            type="text"
-                            value={form.data.document_number}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) =>
-                                form.setData('document_number', e.target.value)
-                            }
-                            error={form.errors.document_number}
-                            required
-                        />
-                        <FormInput
-                            name="program_name"
-                            label="Nama Program"
-                            type="text"
-                            value={form.data.program_name}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => form.setData('program_name', e.target.value)}
-                            error={form.errors.program_name}
-                            required
-                        />
-                        <FormInput
-                            name="category_name"
-                            label="Nama Kategori"
-                            type="text"
-                            value={form.data.category_name}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => form.setData('category_name', e.target.value)}
-                            error={form.errors.category_name}
-                            info="Opsional"
-                        />
-                        <FormSelect
-                            name="status"
-                            label="Status"
-                            options={statusOptions}
-                            value={form.data.status}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLSelectElement>,
-                            ) =>
-                                form.setData(
-                                    'status',
-                                    e.target
-                                        .value as ReferenceDocument['status'],
-                                )
-                            }
-                            error={form.errors.status}
-                            required
-                        />
-                        <FormInput
-                            name="expired_date"
-                            label="Tanggal Kedaluwarsa"
-                            type="date"
-                            value={form.data.expired_date}
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => form.setData('expired_date', e.target.value)}
-                            error={form.errors.expired_date}
-                            required
-                        />
+                            <FormInput
+                                name="company_name"
+                                label="Nama Perusahaan Toko"
+                                type="text"
+                                value={form.data.company_name}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) => form.setData('company_name', e.target.value)}
+                                error={form.errors.company_name}
+                                required
+                            />
+                            <FormInput
+                                name="document_number"
+                                label="Nomor Dokumen"
+                                type="text"
+                                value={form.data.document_number}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) =>
+                                    form.setData('document_number', e.target.value)
+                                }
+                                error={form.errors.document_number}
+                                required
+                            />
+                            <FormInput
+                                name="program_name"
+                                label="Nama Program"
+                                type="text"
+                                value={form.data.program_name ?? ''}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) => form.setData('program_name', e.target.value)}
+                                error={form.errors.program_name}
+                                info="Opsional"
+                            />
+                            <FormInput
+                                name="category_name"
+                                label="Nama Kategori"
+                                type="text"
+                                value={form.data.category_name ?? ''}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) => form.setData('category_name', e.target.value)}
+                                error={form.errors.category_name}
+                                info="Opsional"
+                            />
+                            <FormSelect
+                                name="status"
+                                label="Status"
+                                options={statusOptions}
+                                value={form.data.status}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLSelectElement>,
+                                ) =>
+                                    form.setData(
+                                        'status',
+                                        e.target
+                                            .value as ReferenceDocument['status'],
+                                    )
+                                }
+                                error={form.errors.status}
+                                required
+                            />
+                            <FormInput
+                                name="expired_date"
+                                label="Tanggal Kedaluwarsa"
+                                type="date"
+                                value={form.data.expired_date ?? ''}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) => form.setData('expired_date', e.target.value)}
+                                error={form.errors.expired_date}
+                                info="Opsional"
+                            />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-600">
+                                File Dokumen{' '}
+                                <span className="text-xs text-gray-400">
+                                    (Opsional)
+                                </span>
+                            </label>
+                            {selectedFile || document?.file_name ? (
+                                <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                                    <Upload size={16} className="text-gray-400" />
+                                    <span className="flex-1 truncate text-sm text-gray-700">
+                                        {selectedFile?.name ?? document?.file_name}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveFile}
+                                        className="cursor-pointer text-gray-400 hover:text-red-500"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center transition hover:border-blue-400 hover:bg-blue-50">
+                                    <Upload
+                                        size={18}
+                                        className="mx-auto text-gray-400"
+                                    />
+                                    <span className="text-sm text-gray-500 w-full">
+                                        Klik untuk memilih file (PDF, JPG, PNG, DOC)
+                                    </span>
+                                    <input
+                                        type="file"
+                                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                        onChange={handleFileChange}
+                                        className="hidden"
+                                    />
+                                </label>
+                            )}
+                            {form.errors.file && (
+                                <span className="text-xs text-red-500">
+                                    {form.errors.file}
+                                </span>
+                            )}
+                        </div>
                     </div>
-
                     <div className="flex justify-end">
                         <button
                             type="submit"

@@ -125,15 +125,15 @@ export default function IndexPage({ documents }: Props) {
                                 <FileCheck2 size={16} />
                                 Dokumen Referensi
                             </div>
-                            <h1 className="mt-6 text-5xl leading-tight font-bold">
+                            <h1 className="mt-6 text-4xl leading-tight font-bold md:text-5xl">
                                 Principal Reference Document
                             </h1>
-                            <p className="mt-6 text-lg text-slate-600">
-                                Kumpulan dokumen referensi milik Principal yang
-                                telah tersimpan dalam sistem, lengkap dengan
-                                reference link untuk keperluan verifikasi.
-                            </p>
                         </div>
+                        <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-600">
+                            Kumpulan dokumen referensi milik Principal yang
+                            telah tersimpan dalam sistem, lengkap dengan
+                            reference link untuk keperluan verifikasi.
+                        </p>
                     </div>
                 </section>
                 <section className="pb-24">
@@ -177,8 +177,11 @@ export default function IndexPage({ documents }: Props) {
                                                             document.principal_name
                                                         }
                                                     </h2>
+                                                    <div className="mt-1 text-sm text-slate-400">
+                                                        {document.company_name}
+                                                    </div>
                                                     <div className="mt-3 text-sm text-slate-500">
-                                                        {document.program_name}
+                                                        {document.program_name || '-'}
                                                     </div>
                                                     <div className="mt-6 space-y-3 text-sm">
                                                         <div className="flex items-center gap-2 text-slate-600">
@@ -201,9 +204,7 @@ export default function IndexPage({ documents }: Props) {
                                                                 size={14}
                                                             />
                                                             Kedaluwarsa:{' '}
-                                                            {
-                                                                document.expired_date
-                                                            }
+                                                            {document.expired_date || '-'}
                                                         </div>
                                                     </div>
                                                     <div className="mt-5 flex items-center justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2">

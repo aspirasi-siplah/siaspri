@@ -78,14 +78,14 @@ export default function IndexNews({ listNews, categories }: Props) {
                                 <Newspaper size={16} />
                                 Pusat Informasi
                             </div>
-                            <h1 className="mt-6 text-5xl leading-tight font-bold">
+                            <h1 className="mt-6 text-4xl leading-tight font-bold md:text-5xl">
                                 Berita & Kegiatan
                             </h1>
-                            <p className="mt-6 text-lg text-slate-600">
-                                Dokumentasi kegiatan, program, dan berbagai
-                                informasi terbaru yang telah kami laksanakan.
-                            </p>
                         </div>
+                        <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-600">
+                            Dokumentasi kegiatan, program, dan berbagai
+                            informasi terbaru yang telah kami laksanakan.
+                        </p>
                     </div>
                 </section>
                 <section className="bg-blue-50 py-4">

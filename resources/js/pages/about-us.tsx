@@ -8,15 +8,17 @@ export default function AboutUs() {
             <Head title="Tentang Kami" />
             <LandingLayout>
                 <section className="pt-32 pb-20">
-                    <div className="mx-auto max-w-5xl px-6 text-center">
-                        <span className="rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
-                            Tentang Asosiasi
-                        </span>
-                        <h1 className="mt-16 text-5xl font-bold text-slate-900">
-                            Mewujudkan Ekosistem Marketplace yang Aman,
-                            Transparan, dan Terpercaya
-                        </h1>
-                        <p className="mt-32 text-lg text-slate-600">
+                    <div className="mx-auto max-w-5xl px-6">
+                        <div className="text-center">
+                            <span className="rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
+                                Tentang Asosiasi
+                            </span>
+                            <h1 className="mt-16 text-4xl font-bold text-slate-900 md:text-5xl">
+                                Mewujudkan Ekosistem Marketplace yang Aman,
+                                Transparan, dan Terpercaya
+                            </h1>
+                        </div>
+                        <p className="mt-10 text-lg text-slate-600 md:mt-32">
                             Asosiasi Marketplace Indonesia hadir sebagai wadah
                             informasi, edukasi, dan kolaborasi antar pelaku
                             marketplace, sekaligus menyediakan data merchant

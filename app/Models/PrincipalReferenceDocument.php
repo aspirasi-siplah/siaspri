@@ -20,7 +20,10 @@ class PrincipalReferenceDocument extends Model
     protected $fillable = [
         'reference_id',
         'principal_name',
+        'company_name',
         'document_number',
+        'file_name',
+        'file_path',
         'program_name',
         'category_name',
         'status',

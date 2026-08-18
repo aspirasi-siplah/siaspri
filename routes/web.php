@@ -36,9 +36,8 @@ Route::prefix('blacklist')->group(function () {
 Route::prefix('reference-documents')->group(function () {
     Route::get('/', [PrincipalReferenceDocumentController::class, 'index'])->name('reference-documents.index');
     Route::get('/{referenceId}', [PrincipalReferenceDocumentController::class, 'show'])->name('reference-documents.show');
+    Route::get('/{referenceId}/verify', [PrincipalReferenceDocumentController::class, 'verify'])->name('reference-documents.verify');
 });
-
-Route::get('/verify/{referenceId}', [PrincipalReferenceDocumentController::class, 'verify'])->name('reference-documents.verify');
 
 Route::get('/about', function () {
     return Inertia::render('about-us');
