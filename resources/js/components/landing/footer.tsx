@@ -39,14 +39,6 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link
-                                    href="/about"
-                                    className="hover:text-white"
-                                >
-                                    Tentang Kami
-                                </Link>
-                            </li>
-                            <li>
                                 <Link href="/news" className="hover:text-white">
                                     Berita Kegiatan
                                 </Link>
@@ -57,6 +49,22 @@ export default function Footer() {
                                     className="hover:text-white"
                                 >
                                     Blacklist Merchant
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/reference-documents"
+                                    className="hover:text-white"
+                                >
+                                    Dokumen Referensi
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/about"
+                                    className="hover:text-white"
+                                >
+                                    Tentang Kami
                                 </Link>
                             </li>
                             <li>

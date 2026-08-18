@@ -12,13 +12,12 @@ export default function ContactUs() {
                 <section className="pt-32 pb-20">
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="text-center">
-                            <h1 className="text-5xl font-bold">Hubungi Kami</h1>
-
-                            <p className="mt-4 text-lg text-slate-600">
-                                Kami siap menerima pertanyaan, masukan, maupun
-                                informasi lainnya.
-                            </p>
+                            <h1 className="text-4xl font-bold md:text-5xl">Hubungi Kami</h1>
                         </div>
+                        <p className="mt-4 text-center text-lg text-slate-600">
+                            Kami siap menerima pertanyaan, masukan, maupun
+                            informasi lainnya.
+                        </p>
                     </div>
                 </section>
                 <section className="pb-24">

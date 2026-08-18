@@ -93,7 +93,7 @@ export default function ShowPage({ merchant }: Props) {
                             </h2>
 
                             <div className="rounded-3xl border bg-white p-8 shadow-sm">
-                                <div className="prose prose-slate max-w-none">
+                                <div className="prose prose-slate max-w-none break-words text-gray-700">
                                     {merchant.reason}
                                 </div>
                             </div>

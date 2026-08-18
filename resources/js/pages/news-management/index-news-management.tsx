@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { Plus, Pencil, Trash2, Newspaper, Image, Eye } from 'lucide-react';
+import { Plus, Pencil, Trash2, Newspaper, Image, Eye, Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import Pagination from '@/components/custom-components/Pagination';
 import CustomTable from '@/components/custom-components/CustomTable';
@@ -25,6 +26,10 @@ interface Props {
         from: number;
         to: number;
     };
+    filters?: {
+        search?: string;
+        status?: string;
+    };
 }
 
 const statusLabels = {
@@ -42,7 +47,37 @@ const statusLabels = {
     },
 };
 
-export default function NewsIndex({ news }: Props) {
+const statusOptions = [
+    { label: 'Semua Status', value: '' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'Diterbitkan', value: 'published' },
+    { label: 'Arsip', value: 'archived' },
+];
+
+export default function NewsIndex({ news, filters }: Props) {
+    const [searchQuery, setSearchQuery] = useState(filters?.search ?? '');
+    const [statusFilter, setStatusFilter] = useState(filters?.status ?? '');
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            router.get(
+                'news-management',
+                {
+                    search: searchQuery || undefined,
+                    status: statusFilter || undefined,
+                },
+                {
+                    preserveState: true,
+                    replace: true,
+                    preserveScroll: true,
+                    only: ['news'],
+                },
+            );
+        }, 400);
+
+        return () => clearTimeout(timeout);
+    }, [searchQuery, statusFilter]);
+
     const destroy = (id: number) => {
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -97,6 +132,31 @@ export default function NewsIndex({ news }: Props) {
                             Tambah Berita
                         </Link>
                     </div>
+
+                    <div className="flex items-center gap-3">
+                        <div className="flex flex-1 items-center gap-2 rounded-xl border bg-white px-4 py-2.5 shadow-sm">
+                            <Search size={16} className="shrink-0 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Cari judul berita..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full text-sm outline-none"
+                            />
+                        </div>
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="cursor-pointer rounded-xl border bg-white px-4 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none"
+                        >
+                            {statusOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     <CustomTable
                         title="Daftar Berita"
                         icon={

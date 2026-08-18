@@ -9,17 +9,36 @@ export function useClipboard(): UseClipboardReturn {
     const [copiedText, setCopiedText] = useState<CopiedValue>(null);
 
     const copy: CopyFn = async (text) => {
-        if (!navigator?.clipboard) {
-            console.warn('Clipboard not supported');
+        if (navigator?.clipboard) {
+            try {
+                await navigator.clipboard.writeText(text);
+                setCopiedText(text);
 
-            return false;
+                return true;
+            } catch {
+                // Fallback to execCommand below
+            }
         }
 
         try {
-            await navigator.clipboard.writeText(text);
-            setCopiedText(text);
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            const success = document.execCommand('copy');
+            document.body.removeChild(textarea);
 
-            return true;
+            if (success) {
+                setCopiedText(text);
+
+                return true;
+            }
+
+            setCopiedText(null);
+
+            return false;
         } catch (error) {
             console.warn('Copy failed', error);
             setCopiedText(null);

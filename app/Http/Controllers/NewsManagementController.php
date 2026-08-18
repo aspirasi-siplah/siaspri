@@ -6,6 +6,7 @@ use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
 use App\Models\Category;
 use App\Models\News;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -14,12 +15,22 @@ use Inertia\Inertia;
 
 class NewsManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('news-management/index-news-management', [
             'news' => News::query()
                 ->latest()
+                ->when($request->search, function ($query, $search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('title', 'ILIKE', '%'.$search.'%')
+                            ->orWhere('slug', 'ILIKE', '%'.$search.'%');
+                    });
+                })
+                ->when($request->status, function ($query, $status) {
+                    $query->where('status', $status);
+                })
                 ->paginate(10)
+                ->withQueryString()
                 ->through(fn ($item) => [
                     'id' => $item->id,
                     'title' => $item->title,
@@ -29,6 +40,7 @@ class NewsManagementController extends Controller
                     'published_at' => $item->published_at?->format('d M Y'),
                     'created_at' => $item->created_at ? $item->created_at->format('d M Y') : null,
                 ]),
+            'filters' => $request->only(['search', 'status']),
         ]);
     }
 

@@ -11,6 +11,7 @@ import {
     Copy,
     Check,
     ShieldCheck,
+    Download,
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { useClipboard } from '@/hooks/use-clipboard';
@@ -66,6 +67,10 @@ export default function ShowPage({ document }: Props) {
                                 {document.principal_name}
                             </h1>
 
+                            <p className="mt-2 text-lg text-slate-500">
+                                {document.company_name}
+                            </p>
+
                             <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-500">
                                 <CalendarDays size={16} />
                                 Terdaftar pada {document.created_at}
@@ -103,6 +108,11 @@ export default function ShowPage({ document }: Props) {
                                         value={document.principal_name}
                                     />
                                     <DetailRow
+                                        icon={<Building2 size={16} />}
+                                        label="Perusahaan Toko"
+                                        value={document.company_name || '-'}
+                                    />
+                                    <DetailRow
                                         icon={<Tag size={16} />}
                                         label="Nomor Dokumen"
                                         value={document.document_number}
@@ -112,7 +122,7 @@ export default function ShowPage({ document }: Props) {
                                     <DetailRow
                                         icon={<FileCheck2 size={16} />}
                                         label="Program"
-                                        value={document.program_name}
+                                        value={document.program_name || '-'}
                                     />
                                     <DetailRow
                                         icon={<ShieldCheck size={16} />}
@@ -122,10 +132,33 @@ export default function ShowPage({ document }: Props) {
                                     <DetailRow
                                         icon={<CalendarDays size={16} />}
                                         label="Tanggal Kedaluwarsa"
-                                        value={document.expired_date}
+                                        value={document.expired_date || '-'}
                                     />
                                 </div>
                             </div>
+
+                            {document.file_name && document.file_path && (
+                                <div className="border-t px-8 py-6">
+                                    <div className="flex items-center gap-3">
+                                        <FileCheck2 size={16} className="text-blue-600" />
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm font-medium">File Dokumen</p>
+                                            <p className="truncate text-xs text-slate-500">
+                                                {document.file_name}
+                                            </p>
+                                        </div>
+                                        <a
+                                            href={document.file_path}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700"
+                                        >
+                                            <Download size={12} />
+                                            Unduh
+                                        </a>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div className="mx-auto mt-8 max-w-4xl rounded-2xl border bg-slate-50 p-6">
@@ -161,26 +194,6 @@ export default function ShowPage({ document }: Props) {
                                     </button>
                                 )}
                             </div>
-                        </div>
-
-                        <div className="mt-16 rounded-3xl bg-slate-50 p-10 text-center">
-                            <h3 className="text-2xl font-bold">
-                                Verifikasi Dokumen Ini
-                            </h3>
-
-                            <p className="mt-3 text-slate-600">
-                                Gunakan reference link di atas untuk
-                                memverifikasi keaslian dokumen reference milik
-                                Principal.
-                            </p>
-
-                            <Link
-                                href={`/verify/${document.reference_id}`}
-                                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700"
-                            >
-                                <ShieldCheck size={18} />
-                                Buka Halaman Verifikasi
-                            </Link>
                         </div>
                     </div>
                 </article>

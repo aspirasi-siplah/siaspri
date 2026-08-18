@@ -30,6 +30,7 @@ test('admin can store a reference document with an auto generated reference id',
 
     $payload = [
         'principal_name' => 'PT Contoh Principal',
+        'company_name' => 'PT Toko Bersama',
         'document_number' => 'DOC-2026-001',
         'program_name' => 'Program Kemitraan',
         'category_name' => 'Kemitraan',
@@ -47,13 +48,44 @@ test('admin can store a reference document with an auto generated reference id',
     expect($document)->not->toBeNull()
         ->and($document->reference_id)->toMatch('/^ASPRI-PK-\d{5}$/')
         ->and($document->principal_name)->toBe('PT Contoh Principal')
+        ->and($document->company_name)->toBe('PT Toko Bersama')
         ->and($document->status)->toBe('active');
+});
+
+test('admin can store a reference document with optional fields', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $payload = [
+        'principal_name' => 'PT Contoh Principal',
+        'company_name' => 'PT Toko Bersama',
+        'document_number' => 'DOC-2026-002',
+        'status' => PrincipalReferenceDocument::STATUS_ACTIVE,
+    ];
+
+    $response = $this->post(route('reference-documents-management.store'), $payload);
+
+    $response->assertRedirect()
+        ->assertSessionHas('success');
+
+    $document = PrincipalReferenceDocument::first();
+
+    expect($document)->not->toBeNull()
+        ->and($document->program_name)->toBeNull()
+        ->and($document->category_name)->toBeNull()
+        ->and($document->expired_date)->toBeNull();
 });
 
 test('reference id uses an abbreviation derived from the program name', function () {
     $referenceId = PrincipalReferenceDocument::generateReferenceId('Program Pengembangan Bisnis');
 
     expect($referenceId)->toMatch('/^ASPRI-PPB-\d{5}$/');
+});
+
+test('reference id falls back to B when program name is single word BP', function () {
+    $referenceId = PrincipalReferenceDocument::generateReferenceId('BP');
+
+    expect($referenceId)->toMatch('/^ASPRI-B-\d{5}$/');
 });
 
 test('admin can update a reference document without changing the reference id', function () {
@@ -64,6 +96,7 @@ test('admin can update a reference document without changing the reference id', 
 
     $response = $this->put(route('reference-documents-management.update', $document->id), [
         'principal_name' => 'PT Principal Baru',
+        'company_name' => 'PT Toko Baru',
         'document_number' => 'DOC-2026-002',
         'program_name' => 'Program Baru',
         'category_name' => 'Kemitraan Baru',
@@ -76,6 +109,7 @@ test('admin can update a reference document without changing the reference id', 
 
     expect($document->fresh()->reference_id)->toBe($document->reference_id)
         ->and($document->fresh()->principal_name)->toBe('PT Principal Baru')
+        ->and($document->fresh()->company_name)->toBe('PT Toko Baru')
         ->and($document->fresh()->status)->toBe('inactive');
 });
 

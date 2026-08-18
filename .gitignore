@@ -28,7 +28,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/.agents
+AGENTS.md
+opencode.json
 docker/nginx/ssl/*
 !docker/nginx/ssl/.gitkeep
-
 /storage/app/google/

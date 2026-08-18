@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { ArrowRight, Mail } from 'lucide-react';
 
 export default function Hero() {
     return (
@@ -11,7 +12,7 @@ export default function Hero() {
                         <span className="rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
                             Platform Aspirasi
                         </span>
-                        <h1 className="mt-6 text-5xl leading-tight font-extrabold text-slate-900">
+                        <h1 className="mt-6 text-4xl leading-tight font-extrabold text-slate-900 md:text-5xl">
                             Asosiasi Pasar Daring
                             <span className="text-blue-600"> Mitra SIPLah</span>
                         </h1>
@@ -20,18 +21,20 @@ export default function Hero() {
                             mudah melalui platform digital yang transparan dan
                             terpercaya.
                         </p>
-                        <div className="mt-8 flex gap-4">
+                        <div className="mt-8 flex flex-wrap gap-4">
                             <Link
                                 href="/news"
-                                className="rounded-xl bg-blue-600 px-6 py-3 text-white"
+                                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md"
                             >
                                 Lihat Kegiatan
                             </Link>
                             <Link
                                 href="/contact"
-                                className="rounded-xl border px-6 py-3"
+                                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 shadow-lg ring-1 ring-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-600 hover:text-white hover:shadow-xl"
                             >
-                                Kontak Kami
+                                <Mail className="h-5 w-5" />
+                                Hubungi Kami
+                                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                             </Link>
                         </div>
                     </div>

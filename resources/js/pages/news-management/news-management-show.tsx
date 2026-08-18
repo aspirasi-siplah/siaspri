@@ -142,7 +142,7 @@ export default function ShowNews({ news }: Props) {
                             Konten Berita
                         </h2>
                         <div
-                            className="prose max-w-none prose-img:rounded-xl"
+                            className="prose max-w-none prose-img:rounded-xl break-words text-gray-700"
                             dangerouslySetInnerHTML={{
                                 __html: news.content,
                             }}

@@ -111,10 +111,12 @@ export default function Index({ documents }: Props) {
                         header={[
                             'Reference ID',
                             'Principal',
+                            'Perusahaan',
                             'Kedaluwarsa',
                             'Aksi',
                         ]}
                         headerAlign={[
+                            'text-left',
                             'text-left',
                             'text-left',
                             'text-center',
@@ -159,8 +161,11 @@ export default function Index({ documents }: Props) {
                                     <td className="px-4 py-1 text-sm font-medium text-gray-700">
                                         {document.principal_name}
                                     </td>
+                                    <td className="px-4 py-1 text-sm text-gray-600">
+                                        {document.company_name || '-'}
+                                    </td>
                                     <td className="px-4 py-1 text-center text-sm text-gray-600">
-                                        {document.expired_date}
+                                        {document.expired_date || '-'}
                                     </td>
                                     <td className="px-4 py-1">
                                         <div className="flex justify-center gap-2">
@@ -181,7 +186,7 @@ export default function Index({ documents }: Props) {
                         ) : (
                             <tr>
                                 <td
-                                    colSpan={4}
+                                    colSpan={5}
                                     className="py-16 text-center text-sm text-gray-700"
                                 >
                                     Tidak ada data

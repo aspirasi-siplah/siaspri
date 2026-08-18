@@ -3,7 +3,7 @@
 const partners = [
     {
         name: 'Toko Ladang',
-        logo: '/images/siplah/tokoladang.png',
+        logo: '/images/siplah/tokoladang.svg',
     },
     {
         name: 'Eureka Bookhouse',
@@ -12,10 +12,6 @@ const partners = [
     {
         name: 'Telkom',
         logo: '/images/siplah/telkom.png',
-    },
-    {
-        name: 'Blibli',
-        logo: '/images/siplah/blibli.png',
     },
     {
         name: 'Gramedia',
@@ -32,6 +28,10 @@ const partners = [
     {
         name: 'Temprina',
         logo: '/images/siplah/temprina.png',
+    },
+    {
+        name: 'Blibli',
+        logo: '/images/siplah/blibli.png',
     },
 ];
 
@@ -61,7 +61,7 @@ export default function PartnersSection() {
                             <img
                                 src={partner.logo}
                                 alt={partner.name}
-                                className="max-h-16 w-auto object-contain"
+                                className="h-[35px] w-[170px] object-contain"
                             />
                             <p className="mt-4 text-[13px] font-medium text-slate-500">
                                 {partner.name}

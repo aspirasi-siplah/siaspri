@@ -5,11 +5,14 @@ export interface ReferenceDocument {
     reference_id: string;
     reference_link: string;
     principal_name: string;
+    company_name: string;
     document_number: string;
-    program_name: string;
+    file_name: string | null;
+    file_path: string | null;
+    program_name: string | null;
     category_name: string | null;
     status: ReferenceDocumentStatus;
-    expired_date: string;
+    expired_date: string | null;
     created_at?: string;
 }
 
