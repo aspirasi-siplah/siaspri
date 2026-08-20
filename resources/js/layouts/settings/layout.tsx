@@ -16,11 +16,11 @@ const sidebarNavItems: NavItem[] = [
         href: edit(),
         icon: null,
     },
-    // {
-    //     title: 'Security',
-    //     href: editSecurity(),
-    //     icon: null,
-    // },
+    {
+        title: 'Keamanan',
+        href: editSecurity(),
+        icon: null,
+    },
     {
         title: 'Tampilan',
         href: editAppearance(),
