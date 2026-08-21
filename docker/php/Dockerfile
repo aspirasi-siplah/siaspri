@@ -1,20 +1,3 @@
-FROM node:22-alpine AS build
-
-WORKDIR /build
-
-ARG VITE_GA_ID
-ENV VITE_GA_ID=${VITE_GA_ID}
-ARG VITE_APP_NAME
-ENV VITE_APP_NAME=${VITE_APP_NAME}
-
-COPY package.json pnpm-lock.yaml .npmrc ./
-
-RUN corepack enable && corepack prepare pnpm@10.20.0 --activate && pnpm install --frozen-lockfile
-
-COPY . .
-ENV WAYFINDER_COMMAND=true
-RUN pnpm run build
-
 FROM php:8.4-fpm AS vendor
 
 RUN apt-get update && apt-get install -y \
@@ -49,6 +32,30 @@ RUN php -r 'file_put_contents("/var/www/.env", "APP_KEY=base64:".base64_encode(r
     && php artisan wayfinder:generate --with-form --no-interaction \
     && rm /var/www/.env
 
+FROM node:22-alpine AS build
+
+WORKDIR /build
+
+ARG VITE_GA_ID
+ENV VITE_GA_ID=${VITE_GA_ID}
+ARG VITE_APP_NAME
+ENV VITE_APP_NAME=${VITE_APP_NAME}
+
+COPY package.json pnpm-lock.yaml .npmrc ./
+
+RUN corepack enable && corepack prepare pnpm@10.20.0 --activate && pnpm install --frozen-lockfile
+
+COPY . .
+
+RUN rm -rf resources/js/routes resources/js/actions resources/js/wayfinder
+
+COPY --from=vendor /var/www/resources/js/routes /build/resources/js/routes
+COPY --from=vendor /var/www/resources/js/actions /build/resources/js/actions
+COPY --from=vendor /var/www/resources/js/wayfinder /build/resources/js/wayfinder
+
+ENV WAYFINDER_COMMAND=true
+RUN pnpm run build
+
 FROM php:8.4-fpm
 
 RUN apt-get update && apt-get install -y \
@@ -73,6 +80,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 COPY . /var/www
+
+RUN rm -rf /var/www/resources/js/routes /var/www/resources/js/actions /var/www/resources/js/wayfinder
 
 COPY --from=vendor /var/www/vendor /var/www/vendor
 COPY --from=vendor /var/www/resources/js/routes /var/www/resources/js/routes
