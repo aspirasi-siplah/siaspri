@@ -106,7 +106,12 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
                         onImageChange={(image) =>
                             form.setData('thumbnail', image)
                         }
-                        info="Maks. 2MB, format: jpg, jpeg, png"
+                        // info={`Rasio 16:9, idealnya 1920x1080 px (min. 1280x720 px). Maks. 2MB, format: jpg, jpeg, png`}
+                        multipleInfo={[
+                            'Rasio 16:9',
+                            'idealnya 1920x1080 px (min. 1280x720 px).',
+                            'Maks. 2MB, format: jpg, jpeg, png.',
+                        ]}
                         error={form.errors.thumbnail}
                     />
                 </div>
@@ -184,7 +189,9 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
                 />
             </div>
             <div className="">
-                <label className="mb-2 block text-base font-medium">Konten Berita</label>
+                <label className="mb-2 block text-base font-medium">
+                    Konten Berita
+                </label>
                 <TiptapEditor
                     value={form.data.content}
                     onChange={(value) => form.setData('content', value)}

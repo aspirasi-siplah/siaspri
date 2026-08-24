@@ -8,9 +8,10 @@ interface Props {
     onImageChange: (image: any) => void;
     info?: string;
     error?: string;
+    multipleInfo?: string[];
 }
 
-export default function ImageUploader({ title = 'Gambar', name, defaultImage, onImageChange, info, error }: Props) {
+export default function ImageUploader({ title = 'Gambar', name, defaultImage, onImageChange, info, error, multipleInfo }: Props) {
     const [preview, setPreview] = useState<string | any>(defaultImage || null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,6 +67,18 @@ export default function ImageUploader({ title = 'Gambar', name, defaultImage, on
                             {info}
                         </p>
                     )
+                )}
+                {multipleInfo && (
+                    <ul className="mt-2 list-disc space-y-1">
+                        {multipleInfo.map((item, index) => (
+                            <li
+                                key={index}
+                                className="text-left text-xs text-gray-400"
+                            >
+                                {item}
+                            </li>
+                        ))}
+                    </ul>
                 )}
             </div>
         </div>

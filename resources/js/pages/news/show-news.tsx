@@ -78,7 +78,7 @@ export default function ShowNews({ news }: Props) {
                                 <img
                                     src={news.thumbnail}
                                     alt={news.title}
-                                    className="h-[500px] w-full object-cover"
+                                    className="h-[500px] w-full object-contain"
                                 />
                             </div>
                         )}
