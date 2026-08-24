@@ -265,9 +265,6 @@ export default function NewsIndex({ news, filters }: Props) {
                         current_page={news.current_page}
                         next_page_url={news.next_page_url}
                         prev_page_url={news.prev_page_url}
-                        per_page={news.per_page}
-                        from={news.from}
-                        to={news.to}
                     />
                 </div>
             </AppLayout>

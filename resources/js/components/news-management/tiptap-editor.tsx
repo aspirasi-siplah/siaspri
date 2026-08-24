@@ -1,20 +1,20 @@
-import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
 import Highlight from '@tiptap/extension-highlight';
-import Link from '@tiptap/extension-link';
-import TextAlign from '@tiptap/extension-text-align';
-import TaskList from '@tiptap/extension-task-list';
-import TaskItem from '@tiptap/extension-task-item';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import Link from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
 import { Table } from '@tiptap/extension-table';
-import TableRow from '@tiptap/extension-table-row';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
-import Placeholder from '@tiptap/extension-placeholder';
-import { CustomImage } from '../extensions/custom-image';
+import TableRow from '@tiptap/extension-table-row';
+import TaskItem from '@tiptap/extension-task-item';
+import TaskList from '@tiptap/extension-task-list';
+import TextAlign from '@tiptap/extension-text-align';
+import Underline from '@tiptap/extension-underline';
+import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 
+import axios from 'axios';
 import {
     Bold,
     Italic,
@@ -35,14 +35,12 @@ import {
     AlignCenter,
     AlignRight,
     AlignJustify,
-    TableIcon,
     Table2,
     Trash2,
     WrapText,
 } from 'lucide-react';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { CustomImage } from '../extensions/custom-image';
 
 interface Props {
     value: string;
@@ -115,10 +113,11 @@ export default function TiptapEditor({ value, onChange }: Props) {
             imageTextWrap: editor.isActive('image', { textWrap: true }),
         }),
     });
-    const imageAttributes = editor.getAttributes('image');
-    const [altText, setAltText] = useState('');
+    //     const imageAttributes = editor.getAttributes('image');
 
-    if (!editor) return null;
+    if (!editor) {
+return null;
+}
 
     const uploadImage = async (file: File) => {
         try {
@@ -139,6 +138,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
         } catch (error: any) {
             if (error.response && error.response.data && error.response.data.errors) {
                 const errors = error.response.data.errors;
+
                 if (errors.image) {
                     Swal.fire({
                         icon: 'error',
@@ -167,7 +167,10 @@ export default function TiptapEditor({ value, onChange }: Props) {
         input.type = 'file';
         input.accept = 'image/*';
         input.onchange = async () => {
-            if (!input.files?.length) return;
+            if (!input.files?.length) {
+return;
+}
+
             await uploadImage(input.files[0]);
         };
         input.click();
@@ -175,7 +178,11 @@ export default function TiptapEditor({ value, onChange }: Props) {
 
     const addLink = () => {
         const url = prompt('Masukkan URL');
-        if (!url) return;
+
+        if (!url) {
+return;
+}
+
         editor
             .chain()
             .focus()
@@ -184,12 +191,6 @@ export default function TiptapEditor({ value, onChange }: Props) {
             })
             .run();
     };
-
-    useEffect(() => {
-        if (editor?.isActive('image')) {
-            setAltText(editor.getAttributes('image').alt ?? '');
-        }
-    }, [editorState.imageSelected]);
 
     return (
         <div className="overflow-hidden rounded-2xl border bg-white">
@@ -513,16 +514,15 @@ export default function TiptapEditor({ value, onChange }: Props) {
                                 type="text"
                                 placeholder="Alt text..."
                                 className="rounded-lg border px-2 py-1 text-[12px] font-medium text-gray-600"
-                                value={altText}
-                                onChange={(e) => setAltText(e.target.value)}
-                                onBlur={() =>
-                                    editor
-                                        ?.chain()
-                                        .focus()
-                                        .updateAttributes('image', {
-                                            alt: altText,
-                                        })
-                                        .run()
+                                value={
+                                    (editor.getAttributes('image').alt as
+                                        | string
+                                        | undefined) ?? ''
+                                }
+                                onChange={(e) =>
+                                    editor.commands.updateAttributes('image', {
+                                        alt: e.target.value,
+                                    })
                                 }
                             />
                             <ButtonToolbar

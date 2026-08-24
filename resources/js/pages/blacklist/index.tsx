@@ -1,8 +1,8 @@
-import LandingLayout from '@/layouts/landing-layout';
 import { Head, Link, router } from '@inertiajs/react';
 
 import { ShieldAlert, Search, ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import LandingLayout from '@/layouts/landing-layout';
 
 interface Merchant {
     id: number;
@@ -28,9 +28,19 @@ export default function IndexPage({ merchants }: Props) {
     const [hasMore, setHasMore] = useState(
         merchants.current_page < merchants.last_page,
     );
+    const [prevMerchants, setPrevMerchants] = useState(merchants);
+
+    if (merchants !== prevMerchants) {
+        setPrevMerchants(merchants);
+        setItems(merchants.data);
+        setCurrentPage(merchants.current_page);
+        setHasMore(merchants.current_page < merchants.last_page);
+    }
 
     const loadMore = () => {
-        if (!hasMore || loading) return;
+        if (!hasMore || loading) {
+return;
+}
 
         setLoading(true);
 
@@ -87,12 +97,6 @@ export default function IndexPage({ merchants }: Props) {
 
         return () => clearTimeout(timeout);
     }, [searchQuery]);
-
-    useEffect(() => {
-        setItems(merchants.data);
-        setCurrentPage(merchants.current_page);
-        setHasMore(merchants.current_page < merchants.last_page);
-    }, [merchants]);
 
     return (
         <>

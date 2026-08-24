@@ -3,7 +3,7 @@ import CustomTable from "@/components/custom-components/CustomTable";
 import FormInput from "@/components/custom-components/FormInput";
 import Pagination from "@/components/custom-components/Pagination";
 import AppLayout from "@/layouts/app-layout";
-import { Head, Link, router, useForm } from "@inertiajs/react";
+import { Head, router, useForm } from "@inertiajs/react";
 import { LayoutGrid, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Swal from "sweetalert2";
@@ -30,7 +30,7 @@ interface Props {
 export default function IndexCategory({ categories }: Props) {
     const [isOpenModal, setIsOpenModal] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { setData, post, errors, reset } = useForm({
         name: "",
         description: "",
     });
@@ -176,9 +176,6 @@ export default function IndexCategory({ categories }: Props) {
                         current_page={categories.current_page}
                         next_page_url={categories.next_page_url}
                         prev_page_url={categories.prev_page_url}
-                        per_page={categories.per_page}
-                        from={categories.from}
-                        to={categories.to}
                     />
                 </div>
             </AppLayout>

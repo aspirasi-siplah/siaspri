@@ -2,7 +2,7 @@ import LandingLayout from '@/layouts/landing-layout';
 
 import { Head, Link } from '@inertiajs/react';
 
-import { CalendarDays, ArrowLeft, User, Images } from 'lucide-react';
+import { CalendarDays, ArrowLeft, Images } from 'lucide-react';
 
 interface NewsDocument {
     id: number;
@@ -46,7 +46,7 @@ export default function ShowNews({ news }: Props) {
                         </Link>
                         <div className="mb-12">
                             <div className="mb-4 flex flex-wrap gap-2 md:gap-3">
-                                {news.categories.map((category, index) => (
+                                {news.categories.map((category) => (
                                     <div
                                         key={category.id}
                                         className="rounded-full bg-primary/10 px-6 py-2 text-sm font-medium text-primary"

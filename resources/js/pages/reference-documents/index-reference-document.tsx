@@ -198,9 +198,6 @@ export default function Index({ documents }: Props) {
                         current_page={documents.current_page}
                         next_page_url={documents.next_page_url}
                         prev_page_url={documents.prev_page_url}
-                        per_page={documents.per_page}
-                        from={documents.from}
-                        to={documents.to}
                     />
                 </div>
             </AppLayout>
