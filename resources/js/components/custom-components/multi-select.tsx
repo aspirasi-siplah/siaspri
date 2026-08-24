@@ -61,7 +61,7 @@ export default function MultiSelect({
             </select>
             {selectedItems.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                    {selectedItems.map((item, index) => (
+                    {selectedItems.map((item) => (
                         <div
                             key={item.id}
                             className="flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm"

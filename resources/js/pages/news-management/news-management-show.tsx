@@ -6,7 +6,6 @@ import {
     ArrowLeft,
     Pencil,
     Calendar,
-    User,
     Link2,
     ImageIcon,
 } from 'lucide-react';

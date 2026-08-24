@@ -1,21 +1,9 @@
 import { router } from '@inertiajs/react';
 
-interface SimplePaginate {
-    current_page: number;
-    next_page_url: string | null;
-    prev_page_url: string | null;
-    per_page: number;
-    from: number;
-    to: number;
-}
-
 interface PaginationProps {
     current_page: number;
     next_page_url: string | null;
     prev_page_url: string | null;
-    per_page: number;
-    from: number;
-    to: number;
     className?: string;
 }
 
@@ -23,9 +11,6 @@ export default function Pagination({
     current_page,
     next_page_url,
     prev_page_url,
-    per_page,
-    from,
-    to,
     className = '',
 }: PaginationProps) {
     const goTo = (url: string | null) => {

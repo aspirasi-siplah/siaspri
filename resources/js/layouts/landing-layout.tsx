@@ -1,6 +1,5 @@
 import Footer from '@/components/landing/footer';
 import Navbar from '@/components/landing/navbar';
-import { Head } from '@inertiajs/react';
 import { ReactNode } from 'react';
 
 interface Props {

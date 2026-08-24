@@ -2,8 +2,8 @@ import ModalForm from '@/components/blacklist-merchants/ModalForm';
 import CustomTable from '@/components/custom-components/CustomTable';
 import Pagination from '@/components/custom-components/Pagination';
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link, router } from '@inertiajs/react';
-import { Eye, Pencil, Trash2, Plus, Store } from 'lucide-react';
+import { Head, router } from '@inertiajs/react';
+import { Trash2, Store } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 interface BlacklistMerchant {
@@ -167,9 +167,6 @@ export default function Index({ merchants }: Props) {
                         current_page={merchants.current_page}
                         next_page_url={merchants.next_page_url}
                         prev_page_url={merchants.prev_page_url}
-                        per_page={merchants.per_page}
-                        from={merchants.from}
-                        to={merchants.to}
                     />
                 </div>
             </AppLayout>

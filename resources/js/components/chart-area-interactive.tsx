@@ -18,13 +18,13 @@ import {
     ChartTooltipContent,
     type ChartConfig,
 } from '@/components/ui/chart';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+// import {
+//     Select,
+//     SelectContent,
+//     SelectItem,
+//     SelectTrigger,
+//     SelectValue,
+// } from '@/components/ui/select';
 
 export const description = 'An interactive area chart';
 
@@ -43,17 +43,17 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartAreaInteractive({ chartData }: { chartData: any[] }) {
-    const [timeRange, setTimeRange] = React.useState('90d');
+    // const [timeRange, setTimeRange] = React.useState('90d');
 
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date);
         const referenceDate = new Date();
         let daysToSubtract = 90;
-        if (timeRange === '30d') {
-            daysToSubtract = 30;
-        } else if (timeRange === '7d') {
-            daysToSubtract = 7;
-        }
+        // if (timeRange === '30d') {
+        //     daysToSubtract = 30;
+        // } else if (timeRange === '7d') {
+        //     daysToSubtract = 7;
+        // }
         const startDate = new Date(referenceDate);
         startDate.setDate(startDate.getDate() - daysToSubtract);
         return date >= startDate;

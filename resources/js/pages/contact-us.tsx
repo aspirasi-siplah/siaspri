@@ -1,8 +1,5 @@
 import { Head } from '@inertiajs/react';
-
 import LandingLayout from '@/layouts/landing-layout';
-import Navbar from '@/components/landing/navbar';
-import Footer from '@/components/landing/footer';
 
 export default function ContactUs() {
     return (

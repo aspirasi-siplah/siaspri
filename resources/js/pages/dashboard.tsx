@@ -10,16 +10,6 @@ import {
 } from 'lucide-react';
 
 import { Head, Link } from '@inertiajs/react';
-
-import {
-    ResponsiveContainer,
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    Tooltip,
-    CartesianGrid,
-} from 'recharts';
 import { ChartAreaInteractive } from '@/components/chart-area-interactive';
 
 interface Props {
