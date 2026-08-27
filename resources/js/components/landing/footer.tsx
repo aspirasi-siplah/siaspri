@@ -53,10 +53,10 @@ export default function Footer() {
                             </li>
                             <li>
                                 <Link
-                                    href="/reference-documents"
+                                    href="/principals"
                                     className="hover:text-white"
                                 >
-                                    Dokumen Referensi
+                                    Principal
                                 </Link>
                             </li>
                             <li>
@@ -81,8 +81,12 @@ export default function Footer() {
                         <h4 className="mb-4 text-lg font-semibold">Layanan</h4>
                         <ul className="space-y-3 text-slate-400">
                             {marketplaceLinks.map((link, idx) => (
-                                <li key={idx} className='hover:text-white'>
-                                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                                <li key={idx} className="hover:text-white">
+                                    <a
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
                                         {link.name}
                                     </a>
                                 </li>

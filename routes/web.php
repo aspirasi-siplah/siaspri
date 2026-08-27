@@ -7,8 +7,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsManagementController;
+use App\Http\Controllers\PrincipalController;
+use App\Http\Controllers\PrincipalDocumentManagementController;
+use App\Http\Controllers\PrincipalManagementController;
 use App\Http\Controllers\PrincipalReferenceDocumentController;
 use App\Http\Controllers\PrincipalReferenceDocumentManagementController;
+use App\Http\Controllers\ResellerManagementController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,6 +35,11 @@ Route::prefix('news')->group(function () {
 Route::prefix('blacklist')->group(function () {
     Route::get('/', [BlacklistMerchantController::class, 'index'])->name('blacklist.index');
     Route::get('/{id}', [BlacklistMerchantController::class, 'show'])->name('blacklist.show');
+});
+
+Route::prefix('principals')->group(function () {
+    Route::get('/', [PrincipalController::class, 'index'])->name('principals.index');
+    Route::get('/{principal}', [PrincipalController::class, 'show'])->name('principals.show');
 });
 
 Route::prefix('reference-documents')->group(function () {
@@ -72,6 +81,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [BlacklistMerchantManagementController::class, 'store'])->name('blacklist-merchants.store');
         Route::put('/{id}', [BlacklistMerchantManagementController::class, 'update'])->name('blacklist-merchants.update');
         Route::delete('/{id}/delete', [BlacklistMerchantManagementController::class, 'destroy'])->name('blacklist-merchants.destroy');
+    });
+
+    Route::prefix('principal-management')->group(function () {
+        Route::get('/', [PrincipalManagementController::class, 'index'])->name('principal-management.index');
+        Route::post('/', [PrincipalManagementController::class, 'store'])->name('principal-management.store');
+        Route::get('/{principal}', [PrincipalManagementController::class, 'show'])->name('principal-management.show');
+        Route::put('/{principal}', [PrincipalManagementController::class, 'update'])->name('principal-management.update');
+        Route::delete('/{principal}/delete', [PrincipalManagementController::class, 'destroy'])->name('principal-management.destroy');
+        Route::post('/{principal}/resellers', [ResellerManagementController::class, 'store'])->name('principal-management.resellers.store');
+        Route::put('/{principal}/resellers/{reseller}', [ResellerManagementController::class, 'update'])->name('principal-management.resellers.update');
+        Route::delete('/{principal}/resellers/{reseller}/delete', [ResellerManagementController::class, 'destroy'])->name('principal-management.resellers.destroy');
+        Route::post('/{principal}/documents', [PrincipalDocumentManagementController::class, 'store'])->name('principal-management.documents.store');
+        Route::put('/{principal}/documents/{document}', [PrincipalDocumentManagementController::class, 'update'])->name('principal-management.documents.update');
+        Route::delete('/{principal}/documents/{document}/delete', [PrincipalDocumentManagementController::class, 'destroy'])->name('principal-management.documents.destroy');
     });
 
     Route::prefix('reference-documents-management')->group(function () {

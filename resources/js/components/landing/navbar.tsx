@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Navbar() {
     const { auth } = usePage().props as any;
@@ -15,12 +15,36 @@ export default function Navbar() {
                 </Link>
 
                 <nav className="hidden gap-8 md:flex">
-                    <NavLink label="Beranda" href="/" active={location === '/'} />
-                    <NavLink label="Berita" href="/news" active={location.startsWith('/news')} />
-                    <NavLink label="Blacklist" href="/blacklist" active={location.startsWith('/blacklist')} />
-                    <NavLink label="Dokumen" href="/reference-documents" active={location.startsWith('/reference-documents')} />
-                    <NavLink label="Tentang" href="/about" active={location === '/about'} />
-                    <NavLink label="Kontak" href="/contact" active={location === '/contact'} />
+                    <NavLink
+                        label="Beranda"
+                        href="/"
+                        active={location === '/'}
+                    />
+                    <NavLink
+                        label="Berita"
+                        href="/news"
+                        active={location.startsWith('/news')}
+                    />
+                    <NavLink
+                        label="Blacklist"
+                        href="/blacklist"
+                        active={location.startsWith('/blacklist')}
+                    />
+                    <NavLink
+                        label="Principal"
+                        href="/principals"
+                        active={location.startsWith('/principals')}
+                    />
+                    <NavLink
+                        label="Tentang"
+                        href="/about"
+                        active={location === '/about'}
+                    />
+                    <NavLink
+                        label="Kontak"
+                        href="/contact"
+                        active={location === '/contact'}
+                    />
                 </nav>
 
                 <div className="hidden items-center gap-4 md:flex">
@@ -52,16 +76,48 @@ export default function Navbar() {
 
             <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
-                    mobileOpen ? 'max-h-96 border-t border-slate-100' : 'max-h-0'
+                    mobileOpen
+                        ? 'max-h-96 border-t border-slate-100'
+                        : 'max-h-0'
                 }`}
             >
                 <nav className="flex flex-col gap-1 px-6 py-4">
-                    <MobileNavLink label="Beranda" href="/" active={location === '/'} onClick={() => setMobileOpen(false)} />
-                    <MobileNavLink label="Berita" href="/news" active={location.startsWith('/news')} onClick={() => setMobileOpen(false)} />
-                    <MobileNavLink label="Blacklist" href="/blacklist" active={location.startsWith('/blacklist')} onClick={() => setMobileOpen(false)} />
-                    <MobileNavLink label="Dokumen" href="/reference-documents" active={location.startsWith('/reference-documents')} onClick={() => setMobileOpen(false)} />
-                    <MobileNavLink label="Tentang" href="/about" active={location === '/about'} onClick={() => setMobileOpen(false)} />
-                    <MobileNavLink label="Kontak" href="/contact" active={location === '/contact'} onClick={() => setMobileOpen(false)} />
+                    <MobileNavLink
+                        label="Beranda"
+                        href="/"
+                        active={location === '/'}
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <MobileNavLink
+                        label="Berita"
+                        href="/news"
+                        active={location.startsWith('/news')}
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <MobileNavLink
+                        label="Blacklist"
+                        href="/blacklist"
+                        active={location.startsWith('/blacklist')}
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <MobileNavLink
+                        label="Principal"
+                        href="/principals"
+                        active={location.startsWith('/principals')}
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <MobileNavLink
+                        label="Tentang"
+                        href="/about"
+                        active={location === '/about'}
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <MobileNavLink
+                        label="Kontak"
+                        href="/contact"
+                        active={location === '/contact'}
+                        onClick={() => setMobileOpen(false)}
+                    />
 
                     <div className="my-2 border-t border-slate-100" />
 
@@ -88,7 +144,15 @@ export default function Navbar() {
     );
 }
 
-const NavLink = ({ label, href, active }: { label: string; href: string; active?: boolean }) => {
+const NavLink = ({
+    label,
+    href,
+    active,
+}: {
+    label: string;
+    href: string;
+    active?: boolean;
+}) => {
     return (
         <Link
             href={href}
@@ -99,13 +163,25 @@ const NavLink = ({ label, href, active }: { label: string; href: string; active?
     );
 };
 
-const MobileNavLink = ({ label, href, active, onClick }: { label: string; href: string; active?: boolean; onClick: () => void }) => {
+const MobileNavLink = ({
+    label,
+    href,
+    active,
+    onClick,
+}: {
+    label: string;
+    href: string;
+    active?: boolean;
+    onClick: () => void;
+}) => {
     return (
         <Link
             href={href}
             onClick={onClick}
             className={`rounded-lg px-4 py-2.5 text-sm font-medium transition ${
-                active ? 'bg-blue-50 text-blue-600' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600'
+                active
+                    ? 'bg-blue-50 text-blue-600'
+                    : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600'
             }`}
         >
             {label}

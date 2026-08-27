@@ -24,18 +24,16 @@ export default function ReferenceDocumentIntro() {
                             </h2>
 
                             <p className="mt-4 max-w-xl text-sm leading-6 text-blue-100 sm:text-base sm:leading-relaxed">
-                                Telusuri dan verifikasi dokumen referensi milik
-                                Principal yang telah terdaftar resmi dalam
-                                sistem kami. Setiap dokumen memiliki reference
-                                link unik untuk memastikan keaslian dan
-                                validitasnya.
+                                Telusuri Principal, reseller, dan dokumen
+                                pendukung yang telah terdaftar resmi dalam
+                                sistem kami.
                             </p>
 
                             <Link
-                                href="/reference-documents"
+                                href="/principals"
                                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50 active:scale-[0.98] sm:mt-8 sm:w-auto sm:px-6 sm:py-3"
                             >
-                                Lihat Semua Dokumen
+                                Lihat Daftar Principal
                                 <ArrowRight size={17} />
                             </Link>
                         </div>
