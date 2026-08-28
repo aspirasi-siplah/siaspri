@@ -1,10 +1,10 @@
+import { Head, router } from '@inertiajs/react';
+import { Trash2, Store } from 'lucide-react';
+import Swal from 'sweetalert2';
 import ModalForm from '@/components/blacklist-merchants/ModalForm';
 import CustomTable from '@/components/custom-components/CustomTable';
 import Pagination from '@/components/custom-components/Pagination';
 import AppLayout from '@/layouts/app-layout';
-import { Head, router } from '@inertiajs/react';
-import { Trash2, Store } from 'lucide-react';
-import Swal from 'sweetalert2';
 
 interface BlacklistMerchant {
     id: number;

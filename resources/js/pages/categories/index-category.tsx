@@ -1,12 +1,12 @@
+import { Head, router, useForm } from "@inertiajs/react";
+import { LayoutGrid, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import Swal from "sweetalert2";
 import CustomModal from "@/components/custom-components/CustomModal";
 import CustomTable from "@/components/custom-components/CustomTable";
 import FormInput from "@/components/custom-components/FormInput";
 import Pagination from "@/components/custom-components/Pagination";
 import AppLayout from "@/layouts/app-layout";
-import { Head, router, useForm } from "@inertiajs/react";
-import { LayoutGrid, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
-import Swal from "sweetalert2";
 
 interface Category {
     data: {

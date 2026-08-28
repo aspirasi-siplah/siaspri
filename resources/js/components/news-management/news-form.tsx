@@ -1,14 +1,14 @@
-import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
+import Swal from 'sweetalert2';
 import FormInput from '../custom-components/FormInput';
+import FormSelect from '../custom-components/FormSelect';
 import FormTextArea from '../custom-components/FormTextArea';
 import ImageUploader from '../custom-components/ImageUploader';
-import FormSelect from '../custom-components/FormSelect';
-import NewsGalleryUpload from './news-gallery-upload';
-import Swal from 'sweetalert2';
-import TiptapEditor from './tiptap-editor';
 import MultiSelect from '../custom-components/multi-select';
+import NewsGalleryUpload from './news-gallery-upload';
+import TiptapEditor from './tiptap-editor';
 
 interface ExistingNewsDocument {
     id: number;
@@ -89,6 +89,7 @@ export default function NewsForm({ news, submitUrl, method, categories }: Props)
 
         if (method === 'put') {
             form.put(submitUrl, options);
+
             return;
         }
 

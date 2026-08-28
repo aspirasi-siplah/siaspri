@@ -29,7 +29,10 @@ export default function MultiSelect({
     );
 
     const handleAdd = (itemId: number) => {
-        if (value.includes(itemId)) return;
+        if (value.includes(itemId)) {
+return;
+}
+
         onChange([...value, itemId]);
     };
 
@@ -46,9 +49,11 @@ export default function MultiSelect({
                 defaultValue=""
                 onChange={(e) => {
                     const itemId = parseInt(e.target.value);
+
                     if (!isNaN(itemId)) {
                         handleAdd(itemId);
                     }
+
                     e.target.value = '';
                 }}
             >

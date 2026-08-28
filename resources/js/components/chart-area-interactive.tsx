@@ -15,9 +15,10 @@ import {
     ChartLegend,
     ChartLegendContent,
     ChartTooltip,
-    ChartTooltipContent,
-    type ChartConfig,
+    ChartTooltipContent
+    
 } from '@/components/ui/chart';
+import type {ChartConfig} from '@/components/ui/chart';
 // import {
 //     Select,
 //     SelectContent,
@@ -48,7 +49,7 @@ export function ChartAreaInteractive({ chartData }: { chartData: any[] }) {
     const filteredData = chartData.filter((item) => {
         const date = new Date(item.date);
         const referenceDate = new Date();
-        let daysToSubtract = 90;
+        const daysToSubtract = 90;
         // if (timeRange === '30d') {
         //     daysToSubtract = 30;
         // } else if (timeRange === '7d') {
@@ -56,6 +57,7 @@ export function ChartAreaInteractive({ chartData }: { chartData: any[] }) {
         // }
         const startDate = new Date(referenceDate);
         startDate.setDate(startDate.getDate() - daysToSubtract);
+
         return date >= startDate;
     });
 
@@ -141,6 +143,7 @@ export function ChartAreaInteractive({ chartData }: { chartData: any[] }) {
                             minTickGap={32}
                             tickFormatter={(value) => {
                                 const date = new Date(value);
+
                                 return date.toLocaleDateString('en-US', {
                                     month: 'short',
                                     day: 'numeric',

@@ -1,8 +1,8 @@
+import { Head, Link } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
 import NewsForm from '@/components/news-management/news-form';
 import AppLayout from '@/layouts/app-layout';
 
-import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft } from 'lucide-react';
 
 interface ExistingNewsDocument {
     id: number;

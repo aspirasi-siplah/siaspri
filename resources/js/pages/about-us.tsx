@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
-import LandingLayout from '@/layouts/landing-layout';
 import { CheckCircle2, Target } from 'lucide-react';
+import LandingLayout from '@/layouts/landing-layout';
 
 export default function AboutUs() {
     return (
