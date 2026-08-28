@@ -1,10 +1,10 @@
 import { Head, Link, router } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import { Plus, Pencil, Trash2, Newspaper, Image, Eye, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import Pagination from '@/components/custom-components/Pagination';
 import CustomTable from '@/components/custom-components/CustomTable';
+import Pagination from '@/components/custom-components/Pagination';
+import AppLayout from '@/layouts/app-layout';
 
 export interface News {
     id: number;

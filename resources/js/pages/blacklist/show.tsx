@@ -1,4 +1,3 @@
-import LandingLayout from '@/layouts/landing-layout';
 
 import { Head, Link } from '@inertiajs/react';
 
@@ -8,6 +7,7 @@ import {
     ArrowLeft,
     AlertTriangle,
 } from 'lucide-react';
+import LandingLayout from '@/layouts/landing-layout';
 
 interface Merchant {
     id: number;

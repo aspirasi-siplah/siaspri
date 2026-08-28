@@ -1,10 +1,10 @@
-import LandingLayout from '@/layouts/landing-layout';
-import news from '@/routes/news';
 
 import { Head, Link, router } from '@inertiajs/react';
 
 import { CalendarDays, ArrowRight, Newspaper } from 'lucide-react';
 import { useState } from 'react';
+import LandingLayout from '@/layouts/landing-layout';
+import news from '@/routes/news';
 
 interface News {
     id: number;
@@ -42,7 +42,9 @@ export default function IndexNews({ listNews, categories }: Props) {
     const remaining = items.slice(1);
 
     const loadMore = () => {
-        if (!hasMore || loading) return;
+        if (!hasMore || loading) {
+return;
+}
 
         setLoading(true);
 

@@ -20,11 +20,16 @@ class ResellerFactory extends Factory
     {
         return [
             'principal_id' => Principal::factory(),
-            'name' => fake()->company(),
+            'name' => $name = fake()->company(),
             'npwp_number' => fake()->optional()->numerify('##.###.###.#-###.###'),
             'document_number' => fake()->optional()->bothify('DOC-####-???'),
             'document_path' => null,
-            'reference_code' => fake()->optional()->bothify('REF-########'),
+            'reference_code' => 'ASPRI-'.Reseller::nameAbbreviation($name).'-'.str_pad(
+                (string) fake()->numberBetween(0, 99999),
+                5,
+                '0',
+                STR_PAD_LEFT
+            ),
         ];
     }
 }

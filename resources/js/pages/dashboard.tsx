@@ -1,5 +1,5 @@
-import AppLayout from '@/layouts/app-layout';
 
+import { Head, Link } from '@inertiajs/react';
 import {
     Users,
     Eye,
@@ -9,8 +9,8 @@ import {
     ShieldAlert,
 } from 'lucide-react';
 
-import { Head, Link } from '@inertiajs/react';
 import { ChartAreaInteractive } from '@/components/chart-area-interactive';
+import AppLayout from '@/layouts/app-layout';
 
 interface Props {
     analytics: {

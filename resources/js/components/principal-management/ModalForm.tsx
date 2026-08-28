@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { Pencil, Plus } from 'lucide-react';
+import { Building2, Check, Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import principalManagement from '@/routes/principal-management';
@@ -105,25 +105,46 @@ export default function ModalForm({ principal }: Props) {
                 size="lg"
             >
                 <form onSubmit={submit} className="space-y-6">
-                    <div className="max-h-[60vh] space-y-5 overflow-y-auto">
+                    <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3">
+                        <Building2
+                            size={20}
+                            className="mt-0.5 shrink-0 text-blue-600"
+                        />
+                        <div>
+                            <p className="text-sm font-medium text-blue-900">
+                                {isEdit
+                                    ? 'Perbarui informasi principal'
+                                    : 'Informasi Principal baru'}
+                            </p>
+                            <p className="mt-0.5 text-sm text-blue-700/80">
+                                {isEdit
+                                    ? 'Pastikan data NPWP dan NIB sudah benar sebelum menyimpan perubahan.'
+                                    : 'Lengkapi data di bawah ini untuk menambahkan principal baru.'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="max-h-[60vh] overflow-y-auto pr-1">
                         <div className="grid gap-5 md:grid-cols-2">
-                            <FormInput
-                                name="name"
-                                label="Nama Principal"
-                                type="text"
-                                placeholder="Masukkan nama principal"
-                                value={form.data.name}
-                                onChange={(
-                                    e: React.ChangeEvent<HTMLInputElement>,
-                                ) => form.setData('name', e.target.value)}
-                                error={form.errors.name}
-                                required
-                            />
+                            <div className="md:col-span-2">
+                                <FormInput
+                                    name="name"
+                                    label="Nama Principal"
+                                    type="text"
+                                    placeholder="Contoh: PT Mitra Sejahtera Abadi"
+                                    value={form.data.name}
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>,
+                                    ) => form.setData('name', e.target.value)}
+                                    error={form.errors.name}
+                                    required
+                                />
+                            </div>
                             <FormInput
                                 name="npwp_number"
                                 label="NPWP"
                                 type="text"
-                                placeholder="Masukkan nomor NPWP"
+                                placeholder="Contoh: 01.234.567.8-901.000"
                                 value={form.data.npwp_number}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLInputElement>,
@@ -135,7 +156,7 @@ export default function ModalForm({ principal }: Props) {
                                 name="nib"
                                 label="NIB"
                                 type="text"
-                                placeholder="Masukkan nomor NIB"
+                                placeholder="Contoh: 8123456789012"
                                 value={form.data.nib}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLInputElement>,
@@ -143,37 +164,42 @@ export default function ModalForm({ principal }: Props) {
                                 error={form.errors.nib}
                                 info="Opsional"
                             />
-                            <FormTextArea
-                                name="notes"
-                                label="Catatan"
-                                rows={4}
-                                placeholder="Masukkan catatan (opsional)"
-                                value={form.data.notes}
-                                onChange={(
-                                    e: React.ChangeEvent<HTMLTextAreaElement>,
-                                ) => form.setData('notes', e.target.value)}
-                                error={form.errors.notes}
-                            />
+                            <div className="md:col-span-2">
+                                <FormTextArea
+                                    name="notes"
+                                    label="Catatan"
+                                    rows={4}
+                                    placeholder="Tambahkan catatan tambahan mengenai principal ini (opsional)"
+                                    value={form.data.notes}
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLTextAreaElement>,
+                                    ) => form.setData('notes', e.target.value)}
+                                    error={form.errors.notes}
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="flex justify-end gap-3">
+                    <div className="flex items-center justify-end gap-3 border-t border-gray-100 pt-5">
                         <button
                             type="button"
                             onClick={() => setOpen(false)}
-                            className="rounded-lg border border-gray-200 px-5 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                            className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm text-gray-600 transition hover:bg-gray-50"
                         >
                             Batal
                         </button>
                         <button
                             type="submit"
                             disabled={form.processing}
-                            className="rounded-lg bg-blue-600 px-6 py-2 text-sm text-white disabled:opacity-50"
+                            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
                         >
-                            {form.processing
-                                ? 'Menyimpan...'
-                                : isEdit
-                                  ? 'Perbarui'
-                                  : 'Simpan'}
+                            {form.processing ? (
+                                'Menyimpan...'
+                            ) : (
+                                <>
+                                    <Check size={16} />
+                                    {isEdit ? 'Perbarui' : 'Simpan'}
+                                </>
+                            )}
                         </button>
                     </div>
                 </form>

@@ -1,8 +1,8 @@
-import LandingLayout from '@/layouts/landing-layout';
 
 import { Head, Link } from '@inertiajs/react';
 
 import { CalendarDays, ArrowLeft, Images } from 'lucide-react';
+import LandingLayout from '@/layouts/landing-layout';
 
 interface NewsDocument {
     id: number;

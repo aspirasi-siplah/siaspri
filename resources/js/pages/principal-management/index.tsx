@@ -1,7 +1,14 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Building2, Trash2 } from 'lucide-react';
+import { Building2, Eye, Trash2 } from 'lucide-react';
 import Swal from 'sweetalert2';
+import CustomTable from '@/components/custom-components/CustomTable';
+import Pagination from '@/components/custom-components/Pagination';
 import ModalForm from '@/components/principal-management/ModalForm';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import principalManagement from '@/routes/principal-management';
 
@@ -21,6 +28,9 @@ interface Props {
         current_page: number;
         next_page_url: string | null;
         prev_page_url: string | null;
+        per_page: number;
+        from: number;
+        to: number;
     };
 }
 
@@ -78,77 +88,116 @@ export default function Index({ principals }: Props) {
                         </div>
                         <ModalForm />
                     </div>
-                    <div className="overflow-x-auto rounded-xl border bg-white">
-                        <table className="w-full text-left text-sm">
-                            <thead>
-                                <tr className="border-b bg-slate-50">
-                                    <th className="p-4">Principal</th>
-                                    <th className="p-4">Reseller</th>
-                                    <th className="p-4">Dokumen</th>
-                                    <th className="p-4 text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {principals.data.length ? (
-                                    principals.data.map((principal) => (
-                                        <tr
-                                            key={principal.id}
-                                            className="border-b last:border-0"
-                                        >
-                                            <td className="p-4">
-                                                <Link
-                                                    href={principalManagement.show(
-                                                        principal.id,
-                                                    )}
-                                                    className="font-medium text-blue-600 hover:underline"
-                                                >
-                                                    {principal.name}
-                                                </Link>
-                                                <p className="text-xs text-slate-500">
-                                                    {principal.npwp_number ||
-                                                        'NPWP belum diisi'}
-                                                </p>
-                                            </td>
-                                            <td className="p-4">
-                                                {principal.resellers_count}
-                                            </td>
-                                            <td className="p-4">
-                                                {principal.documents_count}
-                                            </td>
-                                            <td className="p-4">
-                                                <div className="flex justify-end gap-2">
-                                                    <ModalForm
-                                                        principal={principal}
-                                                    />
+                    <CustomTable
+                        title="Daftar Principal"
+                        icon={
+                            <Building2
+                                size={20}
+                                className="text-muted-foreground"
+                            />
+                        }
+                        header={['Principal', 'Reseller', 'Dokumen', 'Aksi']}
+                        headerAlign={[
+                            'text-left',
+                            'text-center',
+                            'text-center',
+                            'text-center',
+                        ]}
+                    >
+                        {principals.data.length ? (
+                            principals.data.map((principal) => (
+                                <tr key={principal.id} className="border-t">
+                                    <td className="max-w-64 px-4 py-1">
+                                        <div className="flex flex-col gap-1">
+                                            <p className="text-sm font-medium">
+                                                {principal.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {principal.npwp_number ||
+                                                    'NPWP belum diisi'}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td className="px-4 py-1 text-sm font-medium text-gray-700">
+                                        {principal.resellers_count}
+                                    </td>
+                                    <td className="px-4 py-1 text-sm text-gray-600">
+                                        {principal.documents_count}
+                                    </td>
+                                    <td className="px-4 py-1">
+                                        <div className="flex justify-center gap-2">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Link
+                                                        href={principalManagement.show(
+                                                            principal.id,
+                                                        )}
+                                                        className="cursor-pointer rounded-lg border p-2 text-blue-500 hover:bg-blue-50"
+                                                    >
+                                                        <Eye size={16} />
+                                                        <span className="sr-only">
+                                                            Lihat Detail
+                                                        </span>
+                                                    </Link>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Lihat Detail</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <span className="inline-flex">
+                                                        <ModalForm
+                                                            principal={
+                                                                principal
+                                                            }
+                                                        />
+                                                    </span>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Ubah Principal</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
                                                     <button
-                                                        title="Hapus"
                                                         onClick={() =>
                                                             destroy(
                                                                 principal.id,
                                                             )
                                                         }
-                                                        className="rounded-lg border border-red-200 p-2 text-red-500"
+                                                        className="cursor-pointer rounded-lg border border-red-200 p-2 text-red-500 hover:bg-red-50"
                                                     >
                                                         <Trash2 size={16} />
+                                                        <span className="sr-only">
+                                                            Hapus
+                                                        </span>
                                                     </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td
-                                            colSpan={4}
-                                            className="p-12 text-center text-slate-500"
-                                        >
-                                            <Building2 className="mx-auto mb-2" />
-                                            Belum ada Principal.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Hapus</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="py-16 text-center text-sm text-gray-700"
+                                >
+                                    Tidak ada data
+                                </td>
+                            </tr>
+                        )}
+                    </CustomTable>
+                    <Pagination
+                        current_page={principals.current_page}
+                        next_page_url={principals.next_page_url}
+                        prev_page_url={principals.prev_page_url}
+                    />
                 </div>
             </AppLayout>
         </>

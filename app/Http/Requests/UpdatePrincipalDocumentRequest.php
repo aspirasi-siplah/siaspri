@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\PrincipalDocumentType;
+use App\Enums\PrincipalDocumentType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;

@@ -1,5 +1,5 @@
-import { ChangeEvent } from 'react';
 import { ImagePlus, Trash2 } from 'lucide-react';
+import type { ChangeEvent } from 'react';
 
 interface ExistingNewsDocument {
     id: number;

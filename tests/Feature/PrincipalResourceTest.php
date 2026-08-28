@@ -17,7 +17,22 @@ test('visitors can browse principals and their public detail', function () {
         ->assertInertia(fn (Assert $page) => $page->component('principals/index-landing')->has('principals.data', 1));
 
     $this->get(route('principals.show', $principal))->assertSuccessful()
-        ->assertInertia(fn (Assert $page) => $page->component('principals/show-landing')->has('principal.resellers', 1)->has('principal.documents', 1));
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('principals/show-landing')
+            ->has('principal.resellers', 1)
+            ->has('principal.resellers.0.reference_link')
+            ->missing('principal.documents')
+            ->missing('principal.npwp_number')
+            ->missing('principal.nib')
+            ->missing('principal.resellers.0.npwp_number')
+            ->missing('principal.resellers.0.document_path'));
+
+    $reseller = Reseller::first();
+
+    $this->get(route('resellers.show', $reseller->reference_code))->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('resellers/show-landing')
+            ->has('reseller.id'));
 });
 
 test('admin can create, manage children, and soft delete a principal', function () {
@@ -31,7 +46,6 @@ test('admin can create, manage children, and soft delete a principal', function 
     $this->post(route('principal-management.resellers.store', $principal), [
         'name' => 'PT Reseller',
         'document_number' => 'DOC-001',
-        'reference_code' => 'REF-001',
     ])->assertRedirect();
 
     $this->post(route('principal-management.documents.store', $principal), [
@@ -39,8 +53,11 @@ test('admin can create, manage children, and soft delete a principal', function 
         'file' => UploadedFile::fake()->create('pact.pdf', 100, 'application/pdf'),
     ])->assertRedirect();
 
+    $reseller = $principal->fresh()->resellers->first();
     expect($principal->fresh()->resellers)->toHaveCount(1)
-        ->and($principal->fresh()->documents->first()->name->value)->toBe('INTEGRITY_PACT');
+        ->and($principal->fresh()->documents->first()->name->value)->toBe('INTEGRITY_PACT')
+        ->and($reseller->reference_code)->toMatch('/^ASPRI-[A-Z]+-\d{5}$/')
+        ->and($reseller->reference_link)->toBe(route('resellers.show', $reseller->reference_code));
 
     $this->delete(route('principal-management.destroy', $principal))->assertRedirect();
     expect($principal->fresh()->trashed())->toBeTrue();

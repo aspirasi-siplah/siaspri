@@ -12,6 +12,7 @@ use App\Http\Controllers\PrincipalDocumentManagementController;
 use App\Http\Controllers\PrincipalManagementController;
 use App\Http\Controllers\PrincipalReferenceDocumentController;
 use App\Http\Controllers\PrincipalReferenceDocumentManagementController;
+use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\ResellerManagementController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,10 @@ Route::prefix('blacklist')->group(function () {
 Route::prefix('principals')->group(function () {
     Route::get('/', [PrincipalController::class, 'index'])->name('principals.index');
     Route::get('/{principal}', [PrincipalController::class, 'show'])->name('principals.show');
+});
+
+Route::prefix('reseller')->group(function () {
+    Route::get('/{referenceCode}', [ResellerController::class, 'show'])->name('resellers.show');
 });
 
 Route::prefix('reference-documents')->group(function () {

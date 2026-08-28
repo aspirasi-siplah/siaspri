@@ -20,10 +20,29 @@ class PrincipalController extends Controller
 
     public function show(Principal $principal): Response
     {
-        $principal->load('resellers', 'documents');
+        $principal->load([
+            'resellers' => fn ($query) => $query->select([
+                'id',
+                'principal_id',
+                'name',
+                'document_number',
+                'reference_code',
+            ]),
+        ]);
 
         return Inertia::render('principals/show-landing', [
-            'principal' => app(PrincipalManagementController::class)->payload($principal),
+            'principal' => [
+                'id' => $principal->id,
+                'name' => $principal->name,
+                'notes' => $principal->notes,
+                'resellers' => $principal->resellers->map(fn ($reseller) => [
+                    'id' => $reseller->id,
+                    'name' => $reseller->name,
+                    'document_number' => $reseller->document_number,
+                    'reference_code' => $reseller->reference_code,
+                    'reference_link' => $reseller->reference_link,
+                ])->values()->all(),
+            ],
         ]);
     }
 }

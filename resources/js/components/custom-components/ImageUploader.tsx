@@ -1,5 +1,6 @@
-import { useState, ChangeEvent } from 'react';
 import { Camera, Image } from 'lucide-react';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 
 interface Props {
     title?: string;
@@ -17,7 +18,9 @@ export default function ImageUploader({ title = 'Gambar', name, defaultImage, on
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
 
-        if (!file) return;
+        if (!file) {
+return;
+}
 
         const imageUrl = URL.createObjectURL(file);
         setPreview(imageUrl);

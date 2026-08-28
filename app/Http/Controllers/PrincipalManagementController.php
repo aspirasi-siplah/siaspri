@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PrincipalDocumentType;
 use App\Http\Requests\StorePrincipalRequest;
 use App\Http\Requests\UpdatePrincipalRequest;
 use App\Models\Principal;
@@ -31,7 +32,10 @@ class PrincipalManagementController extends Controller
     {
         $principal->load('resellers', 'documents');
 
-        return Inertia::render('principal-management/show', ['principal' => $this->payload($principal)]);
+        return Inertia::render('principal-management/show', [
+            'principal' => $this->payload($principal),
+            'document_types' => PrincipalDocumentType::cases(),
+        ]);
     }
 
     public function store(StorePrincipalRequest $request): RedirectResponse
@@ -70,11 +74,11 @@ class PrincipalManagementController extends Controller
                 'document_number' => $reseller->document_number,
                 'document_path' => $reseller->document_path ? asset('storage/'.$reseller->document_path) : null,
                 'reference_code' => $reseller->reference_code,
+                'reference_link' => $reseller->reference_link,
             ])->values()->all(),
             'documents' => $principal->documents->map(fn ($document) => [
                 'id' => $document->id,
-                'name' => $document->name->value,
-                'label' => $document->name->label(),
+                'name' => $document->name,
                 'path' => asset('storage/'.$document->path),
             ])->values()->all(),
         ];

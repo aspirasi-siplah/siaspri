@@ -26,7 +26,6 @@ class StoreResellerRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'npwp_number' => ['nullable', 'string', 'max:255'],
             'document_number' => ['nullable', 'string', 'max:255'],
-            'reference_code' => ['nullable', 'string', 'max:255'],
             'file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx', 'max:5120'],
         ];
     }

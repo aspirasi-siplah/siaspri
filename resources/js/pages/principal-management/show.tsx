@@ -1,20 +1,26 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import {
-    ArrowLeft,
     BadgeCheck,
     Building2,
     Download,
+    Eye,
     FileText,
-    FileUp,
     Hash,
     Pencil,
     Plus,
     Trash2,
-    Upload,
     UserRound,
 } from 'lucide-react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import DocumentFormModal from '@/components/principal-management/DocumentFormModal';
+import ResellerDetailModal from '@/components/principal-management/ResellerDetailModal';
+import ResellerFormModal from '@/components/principal-management/ResellerFormModal';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import principalManagement from '@/routes/principal-management';
 import documents from '@/routes/principal-management/documents';
@@ -27,11 +33,14 @@ type Reseller = {
     document_number: string | null;
     document_path: string | null;
     reference_code: string | null;
+    reference_link: string | null;
 };
 type PrincipalDocument = {
     id: number;
-    name: string;
-    label: string;
+    name: {
+        value: string;
+        label: string;
+    };
     path: string;
 };
 type Principal = {
@@ -44,77 +53,22 @@ type Principal = {
     documents: PrincipalDocument[];
 };
 
-export default function Show({ principal }: { principal: Principal }) {
+type PrincipalDocumentType = {
+    value: string;
+    label: string;
+};
+
+export default function Show({ principal, document_types }: { principal: Principal, document_types: PrincipalDocumentType[] }) {
     const [editingReseller, setEditingReseller] = useState<Reseller | null>(
         null,
     );
     const [editingDocument, setEditingDocument] =
         useState<PrincipalDocument | null>(null);
-    const [resellerOpen, setResellerOpen] = useState(false);
-    const [documentOpen, setDocumentOpen] = useState(false);
-    const resellerForm = useForm({
-        name: '',
-        npwp_number: '',
-        document_number: '',
-        reference_code: '',
-        file: null as File | null,
-    });
-    const documentForm = useForm({
-        name: 'STATEMENT_LETTER',
-        file: null as File | null,
-    });
-    const saveReseller = (event: React.FormEvent) => {
-        event.preventDefault();
-        const options = {
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                setEditingReseller(null);
-                setResellerOpen(false);
-                resellerForm.reset();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Data reseller berhasil disimpan.',
-                });
-            },
-        };
+    const [resellerModalOpen, setResellerModalOpen] = useState(false);
+    const [documentModalOpen, setDocumentModalOpen] = useState(false);
+    const [viewingReseller, setViewingReseller] =
+        useState<Reseller | null>(null);
 
-        if (editingReseller) {
-            resellerForm.post(
-                `${resellers.update.url({ principal: principal.id, reseller: editingReseller.id })}?_method=PUT`,
-                options,
-            );
-        } else {
-            resellerForm.post(resellers.store.url(principal.id), options);
-        }
-    };
-    const saveDocument = (event: React.FormEvent) => {
-        event.preventDefault();
-        const options = {
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                setEditingDocument(null);
-                setDocumentOpen(false);
-                documentForm.reset();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Dokumen berhasil disimpan.',
-                });
-            },
-        };
-
-        if (editingDocument) {
-            documentForm.post(
-                `${documents.update.url({ principal: principal.id, document: editingDocument.id })}?_method=PUT`,
-                options,
-            );
-        } else {
-            documentForm.post(documents.store.url(principal.id), options);
-        }
-    };
     const remove = (url: string, label: string) => {
         Swal.fire({
             title: 'Hapus Data',
@@ -178,14 +132,6 @@ export default function Show({ principal }: { principal: Principal }) {
                 ]}
             >
                 <div className="space-y-8 p-12">
-                    <Link
-                        href={principalManagement.index()}
-                        className="inline-flex w-fit items-center gap-2 rounded-lg px-2 py-1 text-sm text-slate-500 transition hover:bg-slate-100 hover:text-blue-600"
-                    >
-                        <ArrowLeft size={16} />
-                        Kembali ke Principal
-                    </Link>
-
                     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                         <div className="h-24 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-500" />
                         <div className="px-8 pb-8">
@@ -218,7 +164,7 @@ export default function Show({ principal }: { principal: Principal }) {
                                         key={item.label}
                                         className="rounded-xl border border-slate-100 bg-slate-50/60 p-4"
                                     >
-                                        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+                                        <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-slate-400 uppercase">
                                             <item.icon size={14} />
                                             {item.label}
                                         </div>
@@ -252,8 +198,7 @@ export default function Show({ principal }: { principal: Principal }) {
                             <button
                                 onClick={() => {
                                     setEditingDocument(null);
-                                    setDocumentOpen(true);
-                                    documentForm.reset();
+                                    setDocumentModalOpen(true);
                                 }}
                                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white shadow-sm transition hover:bg-blue-700"
                             >
@@ -263,82 +208,6 @@ export default function Show({ principal }: { principal: Principal }) {
                         </div>
 
                         <div className="p-8">
-                            {documentOpen ? (
-                                <form
-                                    onSubmit={saveDocument}
-                                    className="mb-6 grid gap-3 rounded-xl border border-blue-100 bg-slate-50/60 p-5 md:grid-cols-3"
-                                >
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-slate-600">
-                                            Jenis Dokumen
-                                        </label>
-                                        <select
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none"
-                                            value={documentForm.data.name}
-                                            onChange={(e) =>
-                                                documentForm.setData(
-                                                    'name',
-                                                    e.target.value,
-                                                )
-                                            }
-                                        >
-                                            <option value="STATEMENT_LETTER">
-                                                Statement Letter
-                                            </option>
-                                            <option value="LETTER_OF_SUPPORT">
-                                                Letter of Support
-                                            </option>
-                                            <option value="INTEGRITY_PACT">
-                                                Integrity Pact
-                                            </option>
-                                        </select>
-                                        {documentForm.errors.name && (
-                                            <span className="text-xs text-red-500">
-                                                {documentForm.errors.name}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-slate-600">
-                                            File Dokumen
-                                        </label>
-                                        <input
-                                            type="file"
-                                            required={!editingDocument}
-                                            onChange={(e) =>
-                                                documentForm.setData(
-                                                    'file',
-                                                    e.target.files?.[0] ?? null,
-                                                )
-                                            }
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3 file:py-1.5 file:text-sm file:text-blue-600 focus:border-blue-500 focus:outline-none"
-                                        />
-                                        {documentForm.errors.file && (
-                                            <span className="text-xs text-red-500">
-                                                {documentForm.errors.file}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="flex items-end gap-2">
-                                        <button className="inline-flex h-11 items-center gap-2 rounded-lg bg-blue-600 px-5 text-sm text-white transition hover:bg-blue-700">
-                                            <FileUp size={16} />
-                                            Simpan
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setEditingDocument(null);
-                                                setDocumentOpen(false);
-                                                documentForm.reset();
-                                            }}
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-5 text-sm text-slate-600 transition hover:bg-slate-50"
-                                        >
-                                            Batal
-                                        </button>
-                                    </div>
-                                </form>
-                            ) : null}
-
                             {principal.documents.length ? (
                                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                                     {principal.documents.map((document) => (
@@ -351,7 +220,7 @@ export default function Show({ principal }: { principal: Principal }) {
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <p className="truncate font-medium text-slate-800">
-                                                    {document.label}
+                                                    {document.name.label}
                                                 </p>
                                                 <a
                                                     href={document.path}
@@ -370,11 +239,9 @@ export default function Show({ principal }: { principal: Principal }) {
                                                         setEditingDocument(
                                                             document,
                                                         );
-                                                        setDocumentOpen(true);
-                                                        documentForm.setData({
-                                                            name: document.name,
-                                                            file: null,
-                                                        });
+                                                        setDocumentModalOpen(
+                                                            true,
+                                                        );
                                                     }}
                                                     className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600"
                                                 >
@@ -413,8 +280,8 @@ export default function Show({ principal }: { principal: Principal }) {
                                         Belum ada dokumen
                                     </p>
                                     <p className="mt-1 text-xs text-slate-400">
-                                        Tambahkan dokumen pendukung principal
-                                        di atas.
+                                        Tambahkan dokumen pendukung principal di
+                                        atas.
                                     </p>
                                 </div>
                             )}
@@ -434,8 +301,7 @@ export default function Show({ principal }: { principal: Principal }) {
                             <button
                                 onClick={() => {
                                     setEditingReseller(null);
-                                    setResellerOpen(true);
-                                    resellerForm.reset();
+                                    setResellerModalOpen(true);
                                 }}
                                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white shadow-sm transition hover:bg-blue-700"
                             >
@@ -445,147 +311,12 @@ export default function Show({ principal }: { principal: Principal }) {
                         </div>
 
                         <div className="p-8">
-                            {resellerOpen ? (
-                                <form
-                                    onSubmit={saveReseller}
-                                    className="mb-6 grid gap-4 rounded-xl border border-blue-100 bg-slate-50/60 p-6 lg:grid-cols-2"
-                                >
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-slate-600">
-                                            Nama Reseller *
-                                        </label>
-                                        <input
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none"
-                                            placeholder="Masukkan nama reseller"
-                                            value={resellerForm.data.name}
-                                            onChange={(e) =>
-                                                resellerForm.setData(
-                                                    'name',
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                        {resellerForm.errors.name && (
-                                            <span className="text-xs text-red-500">
-                                                {resellerForm.errors.name}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-slate-600">
-                                            NPWP
-                                        </label>
-                                        <input
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none"
-                                            placeholder="Masukkan nomor NPWP"
-                                            value={
-                                                resellerForm.data.npwp_number
-                                            }
-                                            onChange={(e) =>
-                                                resellerForm.setData(
-                                                    'npwp_number',
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                        {resellerForm.errors.npwp_number && (
-                                            <span className="text-xs text-red-500">
-                                                {
-                                                    resellerForm.errors
-                                                        .npwp_number
-                                                }
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-slate-600">
-                                            Nomor Dokumen
-                                        </label>
-                                        <input
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none"
-                                            placeholder="Masukkan nomor dokumen"
-                                            value={
-                                                resellerForm.data
-                                                    .document_number
-                                            }
-                                            onChange={(e) =>
-                                                resellerForm.setData(
-                                                    'document_number',
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-slate-600">
-                                            Reference Code
-                                        </label>
-                                        <input
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none"
-                                            placeholder="Masukkan reference code"
-                                            value={
-                                                resellerForm.data.reference_code
-                                            }
-                                            onChange={(e) =>
-                                                resellerForm.setData(
-                                                    'reference_code',
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-1 lg:col-span-2">
-                                        <label className="text-sm font-medium text-slate-600">
-                                            File Dokumen
-                                        </label>
-                                        <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-white px-4 py-3 text-sm text-slate-500 transition hover:border-blue-400 hover:bg-blue-50">
-                                            <Upload size={16} />
-                                            Klik untuk memilih file
-                                            <input
-                                                type="file"
-                                                onChange={(e) =>
-                                                    resellerForm.setData(
-                                                        'file',
-                                                        e.target.files?.[0] ??
-                                                            null,
-                                                    )
-                                                }
-                                                className="hidden"
-                                            />
-                                        </label>
-                                    </div>
-                                    <div className="flex justify-end gap-2 lg:col-span-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setEditingReseller(null);
-                                                setResellerOpen(false);
-                                                resellerForm.reset();
-                                            }}
-                                            className="h-11 rounded-lg border border-slate-200 bg-white px-5 text-sm text-slate-600 transition hover:bg-slate-50"
-                                        >
-                                            Batal
-                                        </button>
-                                        <button className="inline-flex h-11 items-center gap-2 rounded-lg bg-blue-600 px-6 text-sm text-white transition hover:bg-blue-700">
-                                            <FileUp size={16} />
-                                            Simpan
-                                        </button>
-                                    </div>
-                                </form>
-                            ) : null}
-
                             {principal.resellers.length ? (
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-left text-sm">
                                         <thead>
-                                            <tr className="rounded-lg bg-slate-50 text-xs uppercase tracking-wide text-slate-400">
+                                            <tr className="rounded-lg bg-slate-50 text-xs tracking-wide text-slate-400 uppercase">
                                                 <th className="p-4">Nama</th>
-                                                <th className="p-4">
-                                                    Nomor Dokumen
-                                                </th>
-                                                <th className="p-4">
-                                                    Reference Code
-                                                </th>
                                                 <th className="p-4 text-right">
                                                     Aksi
                                                 </th>
@@ -596,91 +327,114 @@ export default function Show({ principal }: { principal: Principal }) {
                                                 (reseller, index) => (
                                                     <tr
                                                         key={reseller.id}
-                                                        className="group border-b border-slate-100 transition hover:bg-slate-50/60 last:border-0"
+                                                        className="group border-b border-slate-100 transition last:border-0 hover:bg-slate-50/60"
                                                     >
                                                         <td className="p-4">
                                                             <div className="flex items-center gap-3">
                                                                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-blue-600">
                                                                     {index + 1}
                                                                 </div>
-                                                                <div>
-                                                                    <p className="font-medium text-slate-800">
-                                                                        {
-                                                                            reseller.name
-                                                                        }
-                                                                    </p>
-                                                                    {reseller.npwp_number && (
-                                                                        <p className="text-xs text-slate-400">
-                                                                            {
-                                                                                reseller.npwp_number
-                                                                            }
-                                                                        </p>
-                                                                    )}
-                                                                </div>
+                                                                <p className="font-medium text-slate-800">
+                                                                    {
+                                                                        reseller.name
+                                                                    }
+                                                                </p>
                                                             </div>
-                                                        </td>
-                                                        <td className="p-4 text-slate-600">
-                                                            {reseller.document_number ||
-                                                                '-'}
-                                                        </td>
-                                                        <td className="p-4 text-slate-600">
-                                                            {reseller.reference_code ||
-                                                                '-'}
                                                         </td>
                                                         <td className="p-4">
                                                             <div className="flex justify-end gap-1 opacity-0 transition group-hover:opacity-100">
-                                                                <button
-                                                                    title="Edit"
-                                                                    onClick={() => {
-                                                                        setEditingReseller(
-                                                                            reseller,
-                                                                        );
-                                                                        setResellerOpen(
-                                                                            true,
-                                                                        );
-                                                                        resellerForm.setData(
-                                                                            {
-                                                                                name: reseller.name,
-                                                                                npwp_number:
-                                                                                    reseller.npwp_number ||
-                                                                                    '',
-                                                                                document_number:
-                                                                                    reseller.document_number ||
-                                                                                    '',
-                                                                                reference_code:
-                                                                                    reseller.reference_code ||
-                                                                                    '',
-                                                                                file: null,
-                                                                            },
-                                                                        );
-                                                                    }}
-                                                                    className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600"
-                                                                >
-                                                                    <Pencil
-                                                                        size={16}
-                                                                    />
-                                                                </button>
-                                                                <button
-                                                                    title="Hapus"
-                                                                    onClick={() =>
-                                                                        remove(
-                                                                            resellers.destroy.url(
-                                                                                {
-                                                                                    principal:
-                                                                                        principal.id,
-                                                                                    reseller:
-                                                                                        reseller.id,
-                                                                                },
-                                                                            ),
-                                                                            'reseller',
-                                                                        )
-                                                                    }
-                                                                    className="rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
-                                                                >
-                                                                    <Trash2
-                                                                        size={16}
-                                                                    />
-                                                                </button>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger asChild>
+                                                                        <button
+                                                                            title="Detail"
+                                                                            onClick={() =>
+                                                                                setViewingReseller(
+                                                                                    reseller,
+                                                                                )
+                                                                            }
+                                                                            className="cursor-pointer rounded-lg p-2 text-blue-500 transition hover:bg-blue-50"
+                                                                        >
+                                                                            <Eye
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
+                                                                            <span className="sr-only">
+                                                                                Detail
+                                                                            </span>
+                                                                        </button>
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        <p>
+                                                                            Detail
+                                                                        </p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger asChild>
+                                                                        <button
+                                                                            title="Ubah"
+                                                                            onClick={() => {
+                                                                                setEditingReseller(
+                                                                                    reseller,
+                                                                                );
+                                                                                setResellerModalOpen(
+                                                                                    true,
+                                                                                );
+                                                                            }}
+                                                                            className="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600"
+                                                                        >
+                                                                            <Pencil
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
+                                                                            <span className="sr-only">
+                                                                                Ubah
+                                                                            </span>
+                                                                        </button>
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        <p>
+                                                                            Ubah
+                                                                        </p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger asChild>
+                                                                        <button
+                                                                            title="Hapus"
+                                                                            onClick={() =>
+                                                                                remove(
+                                                                                    resellers.destroy.url(
+                                                                                        {
+                                                                                            principal:
+                                                                                                principal.id,
+                                                                                            reseller:
+                                                                                                reseller.id,
+                                                                                        },
+                                                                                    ),
+                                                                                    'reseller',
+                                                                                )
+                                                                            }
+                                                                            className="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
+                                                                        >
+                                                                            <Trash2
+                                                                                size={
+                                                                                    16
+                                                                                }
+                                                                            />
+                                                                            <span className="sr-only">
+                                                                                Hapus
+                                                                            </span>
+                                                                        </button>
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        <p>
+                                                                            Hapus
+                                                                        </p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -707,6 +461,25 @@ export default function Show({ principal }: { principal: Principal }) {
                     </section>
                 </div>
             </AppLayout>
+
+            <DocumentFormModal
+                open={documentModalOpen}
+                principalId={principal.id}
+                documentTypes={document_types}
+                editingDocument={editingDocument}
+                onClose={() => setDocumentModalOpen(false)}
+            />
+            <ResellerDetailModal
+                open={viewingReseller !== null}
+                reseller={viewingReseller}
+                onClose={() => setViewingReseller(null)}
+            />
+            <ResellerFormModal
+                open={resellerModalOpen}
+                principalId={principal.id}
+                editingReseller={editingReseller}
+                onClose={() => setResellerModalOpen(false)}
+            />
         </>
     );
 }

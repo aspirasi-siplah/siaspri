@@ -14,7 +14,10 @@ export default function Pagination({
     className = '',
 }: PaginationProps) {
     const goTo = (url: string | null) => {
-        if (!url) return;
+        if (!url) {
+return;
+}
+
         router.visit(url, {
             preserveState: true,
             preserveScroll: true,

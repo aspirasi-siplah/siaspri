@@ -1,11 +1,11 @@
-import { useState } from "react";
-import CustomModal from "../custom-components/CustomModal";
-import ImageUploader from "../custom-components/ImageUploader";
 import { useForm } from "@inertiajs/react";
+import { Pencil, Plus } from "lucide-react";
+import { useState } from "react";
+import Swal from "sweetalert2";
+import CustomModal from "../custom-components/CustomModal";
 import FormInput from "../custom-components/FormInput";
 import FormTextArea from "../custom-components/FormTextArea";
-import Swal from "sweetalert2";
-import { Pencil, Plus } from "lucide-react";
+import ImageUploader from "../custom-components/ImageUploader";
 
 interface Merchant {
     id: number;
@@ -66,6 +66,7 @@ export default function ModalForm({ merchant }: Props) {
 
         if (isEdit) {
             form.put(`blacklist-merchants/${merchant?.id}`, options);
+
             return;
         }
 

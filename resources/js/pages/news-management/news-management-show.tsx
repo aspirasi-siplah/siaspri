@@ -1,4 +1,3 @@
-import AppLayout from '@/layouts/app-layout';
 
 import { Head, Link } from '@inertiajs/react';
 
@@ -9,6 +8,7 @@ import {
     Link2,
     ImageIcon,
 } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
 
 interface NewsDocument {
     id: number;

@@ -1,6 +1,6 @@
+import { X } from 'lucide-react';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
 
 interface ModalProps {
     open: boolean;
@@ -37,7 +37,9 @@ export default function CustomModal({
         };
     }, [open, onClose]);
 
-    if (!open) return null;
+    if (!open) {
+return null;
+}
 
     const sizes = {
         sm: 'max-w-md',

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\PrincipalDocumentType;
+use App\Enums\PrincipalDocumentType;
 use Database\Factories\PrincipalDocumentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

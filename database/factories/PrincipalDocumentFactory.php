@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\PrincipalDocumentType;
 use App\Models\Principal;
 use App\Models\PrincipalDocument;
-use App\PrincipalDocumentType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
