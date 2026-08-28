@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\ResellerFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +17,13 @@ class Reseller extends Model
     public function principal()
     {
         return $this->belongsTo(Principal::class);
+    }
+
+    public function scopeSearchByName(Builder $query, string $search): void
+    {
+        $driver = $query->getQuery()->getConnection()->getDriverName();
+
+        $query->where('name', $driver === 'pgsql' ? 'ILIKE' : 'LIKE', '%'.$search.'%');
     }
 
     public function getReferenceLinkAttribute(): ?string

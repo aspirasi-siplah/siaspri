@@ -1,5 +1,13 @@
-import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, ArrowUpRight, Building2, UsersRound } from 'lucide-react';
+import { Head, Link, router } from '@inertiajs/react';
+import {
+    ArrowLeft,
+    ArrowUpRight,
+    Building2,
+    Search,
+    UsersRound,
+} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import Pagination from '@/components/custom-components/Pagination';
 import LandingLayout from '@/layouts/landing-layout';
 import principals from '@/routes/principals';
 
@@ -10,13 +18,48 @@ type Reseller = {
     reference_code: string | null;
     reference_link: string | null;
 };
+type Resellers = {
+    data: Reseller[];
+    current_page: number;
+    last_page: number;
+    total: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+};
 type Principal = {
     id: number;
     name: string;
     notes: string | null;
-    resellers: Reseller[];
+    resellers_total: number;
+    resellers: Resellers;
 };
 export default function Show({ principal }: { principal: Principal }) {
+    const [search, setSearch] = useState('');
+    const initial = useRef(true);
+
+    useEffect(() => {
+        if (initial.current) {
+            initial.current = false;
+
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            router.get(
+                principals.show(principal.id),
+                { search: search.trim(), page: 1 },
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    replace: true,
+                    only: ['principal'],
+                },
+            );
+        }, 400);
+
+        return () => clearTimeout(timeout);
+    }, [search, principal.id]);
+
     return (
         <>
             <Head title={principal.name} />
@@ -62,7 +105,7 @@ export default function Show({ principal }: { principal: Principal }) {
                                         className="text-emerald-200"
                                     />
                                     <p className="mt-3 text-2xl font-bold">
-                                        {principal.resellers.length}
+                                        {principal.resellers_total}
                                     </p>
                                     <p className="mt-1 text-xs leading-5 text-slate-300">
                                         Reseller terdaftar
@@ -86,10 +129,24 @@ export default function Show({ principal }: { principal: Principal }) {
                                         </h2>
                                     </div>
                                     <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                        {principal.resellers.length} reseller
+                                        {principal.resellers_total} reseller
                                     </span>
                                 </div>
-                                <div className="mt-5 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+                                <div className="mt-5 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 shadow-sm lg:w-1/3">
+                                    <Search
+                                        size={16}
+                                        className="shrink-0 text-slate-400"
+                                    />
+                                    <input
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        placeholder="Cari nama reseller..."
+                                        className="w-full text-sm outline-none placeholder:text-slate-400"
+                                    />
+                                </div>
+
+                                <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
                                     <table className="w-full min-w-[580px] text-left text-sm">
                                         <thead>
                                             <tr className="border-b border-slate-200 bg-slate-50/80 text-xs tracking-wide text-slate-500 uppercase">
@@ -102,7 +159,7 @@ export default function Show({ principal }: { principal: Principal }) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {principal.resellers.map(
+                                            {principal.resellers.data.map(
                                                 (reseller) => (
                                                     <tr
                                                         key={reseller.id}
@@ -158,12 +215,32 @@ export default function Show({ principal }: { principal: Principal }) {
                                             )}
                                         </tbody>
                                     </table>
-                                    {!principal.resellers.length && (
+                                    {!principal.resellers.data.length && (
                                         <p className="p-8 text-center text-sm text-slate-500">
                                             Belum ada reseller.
                                         </p>
                                     )}
                                 </div>
+
+                                {principal.resellers.data.length > 0 &&
+                                    principal.resellers.last_page > 1 && (
+                                        <div className="mt-5">
+                                            <Pagination
+                                                current_page={
+                                                    principal.resellers
+                                                        .current_page
+                                                }
+                                                next_page_url={
+                                                    principal.resellers
+                                                        .next_page_url
+                                                }
+                                                prev_page_url={
+                                                    principal.resellers
+                                                        .prev_page_url
+                                                }
+                                            />
+                                        </div>
+                                    )}
                             </section>
                         </div>
                     </div>

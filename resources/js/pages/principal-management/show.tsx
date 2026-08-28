@@ -8,11 +8,13 @@ import {
     Hash,
     Pencil,
     Plus,
+    Search,
     Trash2,
     UserRound,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
+import Pagination from '@/components/custom-components/Pagination';
 import DocumentFormModal from '@/components/principal-management/DocumentFormModal';
 import ResellerDetailModal from '@/components/principal-management/ResellerDetailModal';
 import ResellerFormModal from '@/components/principal-management/ResellerFormModal';
@@ -35,6 +37,14 @@ type Reseller = {
     reference_code: string | null;
     reference_link: string | null;
 };
+type Resellers = {
+    data: Reseller[];
+    current_page: number;
+    last_page: number;
+    total: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+};
 type PrincipalDocument = {
     id: number;
     name: {
@@ -49,7 +59,8 @@ type Principal = {
     notes: string | null;
     npwp_number: string | null;
     nib: string | null;
-    resellers: Reseller[];
+    resellers_total: number;
+    resellers: Resellers;
     documents: PrincipalDocument[];
 };
 
@@ -68,6 +79,31 @@ export default function Show({ principal, document_types }: { principal: Princip
     const [documentModalOpen, setDocumentModalOpen] = useState(false);
     const [viewingReseller, setViewingReseller] =
         useState<Reseller | null>(null);
+    const [search, setSearch] = useState('');
+    const initial = useRef(true);
+
+    useEffect(() => {
+        if (initial.current) {
+            initial.current = false;
+
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            router.get(
+                principalManagement.show(principal.id),
+                { search: search.trim(), page: 1 },
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    replace: true,
+                    only: ['principal'],
+                },
+            );
+        }, 400);
+
+        return () => clearTimeout(timeout);
+    }, [search, principal.id]);
 
     const remove = (url: string, label: string) => {
         Swal.fire({
@@ -115,7 +151,7 @@ export default function Show({ principal, document_types }: { principal: Princip
         {
             icon: UserRound,
             label: 'Reseller',
-            value: `${principal.resellers.length} reseller`,
+            value: `${principal.resellers_total} reseller`,
         },
     ];
 
@@ -158,7 +194,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                 </div>
                             </div>
 
-                            <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+                            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
                                 {infoItems.map((item) => (
                                     <div
                                         key={item.label}
@@ -186,7 +222,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                     </div>
 
                     <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-                        <div className="flex items-center justify-between border-b border-slate-100 px-8 py-5">
+                        <div className="flex flex-col gap-4 border-b border-slate-100 px-8 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-1">
                             <div>
                                 <h2 className="text-lg font-semibold text-slate-900">
                                     Dokumen Principal
@@ -209,7 +245,7 @@ export default function Show({ principal, document_types }: { principal: Princip
 
                         <div className="p-8">
                             {principal.documents.length ? (
-                                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                                     {principal.documents.map((document) => (
                                         <div
                                             key={document.id}
@@ -232,7 +268,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                     Lihat file
                                                 </a>
                                             </div>
-                                            <div className="flex gap-1 opacity-0 transition group-hover:opacity-100">
+                                            <div className="flex gap-1 lg:opacity-0 lg:transition lg:group-hover:opacity-100">
                                                 <button
                                                     title="Edit"
                                                     onClick={() => {
@@ -243,7 +279,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                             true,
                                                         );
                                                     }}
-                                                    className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600"
+                                                    className="rounded-lg p-1 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600 lg:p-2"
                                                 >
                                                     <Pencil size={16} />
                                                 </button>
@@ -262,7 +298,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                             'dokumen',
                                                         )
                                                     }
-                                                    className="rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
+                                                    className="rounded-lg p-1 text-slate-400 transition hover:bg-red-50 hover:text-red-500 lg:p-2"
                                                 >
                                                     <Trash2 size={16} />
                                                 </button>
@@ -289,7 +325,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                     </section>
 
                     <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-                        <div className="flex items-center justify-between border-b border-slate-100 px-8 py-5">
+                        <div className="flex flex-col gap-4 border-b border-slate-100 px-8 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-1">
                             <div>
                                 <h2 className="text-lg font-semibold text-slate-900">
                                     Reseller
@@ -311,7 +347,19 @@ export default function Show({ principal, document_types }: { principal: Princip
                         </div>
 
                         <div className="p-8">
-                            {principal.resellers.length ? (
+                            <div className="mb-4 flex items-center gap-3 rounded-xl border bg-slate-50/60 px-4 py-2.5 lg:w-1/2">
+                                <Search
+                                    size={16}
+                                    className="shrink-0 text-slate-400"
+                                />
+                                <input
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="Cari nama reseller..."
+                                    className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+                                />
+                            </div>
+                            {principal.resellers.data.length ? (
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-left text-sm">
                                         <thead>
@@ -323,7 +371,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {principal.resellers.map(
+                                            {principal.resellers.data.map(
                                                 (reseller, index) => (
                                                     <tr
                                                         key={reseller.id}
@@ -342,9 +390,11 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                             </div>
                                                         </td>
                                                         <td className="p-4">
-                                                            <div className="flex justify-end gap-1 opacity-0 transition group-hover:opacity-100">
+                                                            <div className="flex justify-end gap-1 transition lg:opacity-0 lg:group-hover:opacity-100">
                                                                 <Tooltip>
-                                                                    <TooltipTrigger asChild>
+                                                                    <TooltipTrigger
+                                                                        asChild
+                                                                    >
                                                                         <button
                                                                             title="Detail"
                                                                             onClick={() =>
@@ -352,7 +402,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                                                     reseller,
                                                                                 )
                                                                             }
-                                                                            className="cursor-pointer rounded-lg p-2 text-blue-500 transition hover:bg-blue-50"
+                                                                            className="cursor-pointer rounded-lg p-1 text-blue-500 transition hover:bg-blue-50 lg:p-2"
                                                                         >
                                                                             <Eye
                                                                                 size={
@@ -371,7 +421,9 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                                     </TooltipContent>
                                                                 </Tooltip>
                                                                 <Tooltip>
-                                                                    <TooltipTrigger asChild>
+                                                                    <TooltipTrigger
+                                                                        asChild
+                                                                    >
                                                                         <button
                                                                             title="Ubah"
                                                                             onClick={() => {
@@ -382,7 +434,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                                                     true,
                                                                                 );
                                                                             }}
-                                                                            className="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600"
+                                                                            className="cursor-pointer rounded-lg p-1 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600 lg:p-2"
                                                                         >
                                                                             <Pencil
                                                                                 size={
@@ -401,7 +453,9 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                                     </TooltipContent>
                                                                 </Tooltip>
                                                                 <Tooltip>
-                                                                    <TooltipTrigger asChild>
+                                                                    <TooltipTrigger
+                                                                        asChild
+                                                                    >
                                                                         <button
                                                                             title="Hapus"
                                                                             onClick={() =>
@@ -417,7 +471,7 @@ export default function Show({ principal, document_types }: { principal: Princip
                                                                                     'reseller',
                                                                                 )
                                                                             }
-                                                                            className="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
+                                                                            className="cursor-pointer rounded-lg p-1 text-slate-400 transition hover:bg-red-50 hover:text-red-500 lg:p-2"
                                                                         >
                                                                             <Trash2
                                                                                 size={
@@ -457,6 +511,24 @@ export default function Show({ principal, document_types }: { principal: Princip
                                     </p>
                                 </div>
                             )}
+                            {principal.resellers.data.length > 0 &&
+                                principal.resellers.last_page > 1 && (
+                                    <div className="mt-6">
+                                        <Pagination
+                                            current_page={
+                                                principal.resellers.current_page
+                                            }
+                                            next_page_url={
+                                                principal.resellers
+                                                    .next_page_url
+                                            }
+                                            prev_page_url={
+                                                principal.resellers
+                                                    .prev_page_url
+                                            }
+                                        />
+                                    </div>
+                                )}
                         </div>
                     </section>
                 </div>

@@ -6,7 +6,9 @@ use App\Enums\PrincipalDocumentType;
 use App\Http\Requests\StorePrincipalRequest;
 use App\Http\Requests\UpdatePrincipalRequest;
 use App\Models\Principal;
+use App\Models\Reseller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,12 +30,12 @@ class PrincipalManagementController extends Controller
         ]);
     }
 
-    public function show(Principal $principal): Response
+    public function show(Request $request, Principal $principal): Response
     {
-        $principal->load('resellers', 'documents');
+        $principal->load('documents');
 
         return Inertia::render('principal-management/show', [
-            'principal' => $this->payload($principal),
+            'principal' => $this->payload($principal, $request),
             'document_types' => PrincipalDocumentType::cases(),
         ]);
     }
@@ -59,23 +61,40 @@ class PrincipalManagementController extends Controller
         return back()->with('success', 'Principal berhasil dihapus.');
     }
 
-    public function payload(Principal $principal): array
+    public function payload(Principal $principal, Request $request): array
     {
+        $resellers = Reseller::query()
+            ->where('principal_id', $principal->id)
+            ->when($request->string('search')->value(), fn ($query, $search) => $query->searchByName($search))
+            ->latest('id')
+            ->select(['id', 'name', 'npwp_number', 'document_number', 'document_path', 'reference_code'])
+            ->paginate(10)
+            ->withQueryString();
+
         return [
             'id' => $principal->id,
             'name' => $principal->name,
             'notes' => $principal->notes,
             'npwp_number' => $principal->npwp_number,
             'nib' => $principal->nib,
-            'resellers' => $principal->resellers->map(fn ($reseller) => [
-                'id' => $reseller->id,
-                'name' => $reseller->name,
-                'npwp_number' => $reseller->npwp_number,
-                'document_number' => $reseller->document_number,
-                'document_path' => $reseller->document_path ? asset('storage/'.$reseller->document_path) : null,
-                'reference_code' => $reseller->reference_code,
-                'reference_link' => $reseller->reference_link,
-            ])->values()->all(),
+            'resellers_total' => (int) $principal->resellers()->count(),
+            'resellers' => [
+                'data' => collect($resellers->items())->map(fn (Reseller $reseller) => [
+                    'id' => $reseller->id,
+                    'name' => $reseller->name,
+                    'npwp_number' => $reseller->npwp_number,
+                    'document_number' => $reseller->document_number,
+                    'document_path' => $reseller->document_path ? asset('storage/'.$reseller->document_path) : null,
+                    'reference_code' => $reseller->reference_code,
+                    'reference_link' => $reseller->reference_link,
+                ])->values()->all(),
+                'current_page' => $resellers->currentPage(),
+                'last_page' => $resellers->lastPage(),
+                'total' => $resellers->total(),
+                'per_page' => $resellers->perPage(),
+                'next_page_url' => $resellers->nextPageUrl(),
+                'prev_page_url' => $resellers->previousPageUrl(),
+            ],
             'documents' => $principal->documents->map(fn ($document) => [
                 'id' => $document->id,
                 'name' => $document->name,

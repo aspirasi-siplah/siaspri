@@ -19,13 +19,19 @@ test('visitors can browse principals and their public detail', function () {
     $this->get(route('principals.show', $principal))->assertSuccessful()
         ->assertInertia(fn (Assert $page) => $page
             ->component('principals/show-landing')
-            ->has('principal.resellers', 1)
-            ->has('principal.resellers.0.reference_link')
+            ->has('principal.resellers.data', 1)
+            ->has('principal.resellers.data.0.reference_link')
+            ->where('principal.resellers_total', 1)
             ->missing('principal.documents')
             ->missing('principal.npwp_number')
             ->missing('principal.nib')
-            ->missing('principal.resellers.0.npwp_number')
-            ->missing('principal.resellers.0.document_path'));
+            ->missing('principal.resellers.data.0.npwp_number')
+            ->missing('principal.resellers.data.0.document_path'));
+
+    $this->get(route('principals.show', $principal).'?search=notfound')->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('principals/show-landing')
+            ->has('principal.resellers.data', 0));
 
     $reseller = Reseller::first();
 
