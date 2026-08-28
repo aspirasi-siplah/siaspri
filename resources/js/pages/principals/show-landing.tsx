@@ -86,15 +86,12 @@ export default function Show({ principal }: { principal: Principal }) {
                                         <span className="flex size-11 items-center justify-center rounded-2xl bg-blue-500/20 ring-1 ring-blue-300/20 ring-inset">
                                             <Building2 size={23} />
                                         </span>
-                                        <span className="text-xs font-semibold tracking-[0.2em] uppercase">
-                                            Profil Principal
-                                        </span>
                                     </div>
                                     <h1 className="mt-6 text-3xl leading-tight font-bold tracking-tight sm:text-5xl">
                                         {principal.name}
                                     </h1>
                                     {principal.notes && (
-                                        <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+                                        <p className="mt-5 max-w-2xl leading-7 text-slate-300 text-sm">
                                             {principal.notes}
                                         </p>
                                     )}
@@ -108,7 +105,7 @@ export default function Show({ principal }: { principal: Principal }) {
                                         {principal.resellers_total}
                                     </p>
                                     <p className="mt-1 text-xs leading-5 text-slate-300">
-                                        Reseller terdaftar
+                                        Reseller
                                     </p>
                                 </div>
                             </div>
@@ -118,14 +115,11 @@ export default function Show({ principal }: { principal: Principal }) {
                             <section aria-labelledby="resellers-heading">
                                 <div className="flex items-end justify-between gap-4">
                                     <div>
-                                        <p className="text-xs font-semibold tracking-[0.18em] text-emerald-600 uppercase">
-                                            Jaringan usaha
-                                        </p>
                                         <h2
                                             id="resellers-heading"
                                             className="mt-2 text-2xl font-bold tracking-tight text-slate-900"
                                         >
-                                            Reseller terdaftar
+                                            Daftar Reseller
                                         </h2>
                                     </div>
                                     <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">

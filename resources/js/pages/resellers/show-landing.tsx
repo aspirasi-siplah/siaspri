@@ -6,7 +6,7 @@ import {
     Copy,
     FileCheck2,
     Link2,
-    UserRound,
+    Store,
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { useClipboard } from '@/hooks/use-clipboard';
@@ -50,15 +50,11 @@ export default function Show({ reseller }: { reseller: Reseller }) {
                     <div className="mx-auto max-w-4xl px-6">
                         <div className="mb-10 text-center">
                             <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-blue-100">
-                                <UserRound size={48} className="text-blue-600" />
+                                <Store size={48} className="text-blue-600" />
                             </div>
                             <h1 className="mt-6 text-4xl font-bold">
                                 {reseller.name}
                             </h1>
-                            <p className="mx-auto mt-3 max-w-xl text-lg text-slate-600">
-                                Reseller terdaftar dan terverifikasi dalam
-                                sistem kami.
-                            </p>
                         </div>
 
                         <div className="overflow-hidden rounded-3xl border bg-white shadow-sm">

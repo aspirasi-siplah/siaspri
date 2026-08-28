@@ -42,9 +42,9 @@ class PrincipalManagementController extends Controller
 
     public function store(StorePrincipalRequest $request): RedirectResponse
     {
-        Principal::create($request->validated());
+        $principal = Principal::create($request->validated());
 
-        return back()->with('success', 'Principal berhasil ditambahkan.');
+        return to_route('principal-management.show', $principal)->with('success', 'Principal berhasil ditambahkan.');
     }
 
     public function update(UpdatePrincipalRequest $request, Principal $principal): RedirectResponse

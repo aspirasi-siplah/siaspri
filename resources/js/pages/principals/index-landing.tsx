@@ -54,16 +54,12 @@ export default function Index({
                                         <span className="flex size-11 items-center justify-center rounded-2xl bg-blue-500/20 ring-1 ring-blue-300/20 ring-inset">
                                             <Building2 size={23} />
                                         </span>
-                                        <span className="text-xs font-semibold tracking-[0.2em] uppercase">
-                                            Direktori Principal
-                                        </span>
                                     </div>
                                     <h1 className="mt-6 text-3xl leading-tight font-bold tracking-tight sm:text-5xl">
                                         Principal dan jaringan resellernya
                                     </h1>
                                     <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-                                        Temukan informasi Principal dan dokumen
-                                        pendukung yang tersedia untuk publik.
+                                        Temukan informasi Principal dan Resellernya
                                     </p>
                                 </div>
 
@@ -92,14 +88,11 @@ export default function Index({
                         <section aria-labelledby="principals-heading" className="pt-12">
                             <div className="flex items-end justify-between gap-4">
                                 <div>
-                                    <p className="text-xs font-semibold tracking-[0.18em] text-emerald-600 uppercase">
-                                        Direktori usaha
-                                    </p>
                                     <h2
                                         id="principals-heading"
                                         className="mt-2 text-2xl font-bold tracking-tight text-slate-900"
                                     >
-                                        Principal terdaftar
+                                        Daftar Principal
                                     </h2>
                                 </div>
                                 <span className="hidden rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 sm:inline-flex">
@@ -118,9 +111,6 @@ export default function Index({
                                                 <span className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 text-white shadow-lg shadow-blue-600/20">
                                                     <Building2 size={24} />
                                                 </span>
-                                                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                                    Terdaftar
-                                                </span>
                                             </div>
                                             <h3 className="mt-5 text-xl font-bold text-slate-900">
                                                 {principal.name}
@@ -137,14 +127,6 @@ export default function Index({
                                                     />
                                                     {principal.resellers_count}{' '}
                                                     Reseller
-                                                </span>
-                                                <span className="inline-flex items-center gap-1.5">
-                                                    <FileCheck2
-                                                        size={15}
-                                                        className="text-blue-600"
-                                                    />
-                                                    {principal.documents_count}{' '}
-                                                    Dokumen
                                                 </span>
                                             </div>
                                             <Link
