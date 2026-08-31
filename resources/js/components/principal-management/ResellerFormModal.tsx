@@ -147,7 +147,7 @@ export default function ResellerFormModal({
                             onChange={(e) =>
                                 form.setData(
                                     'npwp_number',
-                                    e.target.value.replace(/\D/g, ''),
+                                    e.target.value,
                                 )
                             }
                         />

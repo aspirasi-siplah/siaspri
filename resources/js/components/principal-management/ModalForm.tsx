@@ -151,7 +151,7 @@ export default function ModalForm({ principal }: Props) {
                                 ) =>
                                     form.setData(
                                         'npwp_number',
-                                        e.target.value.replace(/\D/g, ''),
+                                        e.target.value,
                                     )
                                 }
                                 error={form.errors.npwp_number}
@@ -168,7 +168,7 @@ export default function ModalForm({ principal }: Props) {
                                 ) =>
                                     form.setData(
                                         'nib',
-                                        e.target.value.replace(/\D/g, ''),
+                                        e.target.value,
                                     )
                                 }
                                 error={form.errors.nib}
