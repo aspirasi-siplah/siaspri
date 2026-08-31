@@ -148,7 +148,12 @@ export default function ModalForm({ principal }: Props) {
                                 value={form.data.npwp_number}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLInputElement>,
-                                ) => form.setData('npwp_number', e.target.value)}
+                                ) =>
+                                    form.setData(
+                                        'npwp_number',
+                                        e.target.value.replace(/\D/g, ''),
+                                    )
+                                }
                                 error={form.errors.npwp_number}
                                 info="Opsional"
                             />
@@ -160,7 +165,12 @@ export default function ModalForm({ principal }: Props) {
                                 value={form.data.nib}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLInputElement>,
-                                ) => form.setData('nib', e.target.value)}
+                                ) =>
+                                    form.setData(
+                                        'nib',
+                                        e.target.value.replace(/\D/g, ''),
+                                    )
+                                }
                                 error={form.errors.nib}
                                 info="Opsional"
                             />
