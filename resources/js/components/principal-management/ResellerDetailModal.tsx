@@ -1,8 +1,8 @@
 import {
     Check,
     Copy,
-    Download,
     ExternalLink,
+    Eye,
     FileText,
     Hash,
     Link2,
@@ -170,8 +170,8 @@ export default function ResellerDetailModal({
                             rel="noopener noreferrer"
                             className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700"
                         >
-                            <Download size={12} />
-                            Unduh
+                            <Eye size={12} />
+                            Lihat
                         </a>
                     </div>
                 )}

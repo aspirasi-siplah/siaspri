@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
-import { FileUp, Upload } from 'lucide-react';
-import { useEffect } from 'react';
+import { Eye, FileText, FileUp, Upload } from 'lucide-react';
+import { useEffect, useMemo } from 'react';
 import Swal from 'sweetalert2';
 import resellers from '@/routes/principal-management/resellers';
 import CustomModal from '../custom-components/CustomModal';
@@ -50,6 +50,24 @@ export default function ResellerFormModal({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, editingReseller]);
+
+    const blobUrl = useMemo(
+        () => (form.data.file ? URL.createObjectURL(form.data.file) : null),
+        [form.data.file],
+    );
+
+    useEffect(() => {
+        if (!blobUrl) {
+            return;
+        }
+
+        return () => URL.revokeObjectURL(blobUrl);
+    }, [blobUrl]);
+
+    const previewUrl = blobUrl ?? editingReseller?.document_path ?? null;
+    const previewName =
+        form.data.file?.name ??
+        (editingReseller ? 'Lampiran dokumen reseller' : '');
 
     const handleClose = () => {
         onClose();
@@ -127,7 +145,10 @@ export default function ResellerFormModal({
                             placeholder="Masukkan nomor NPWP"
                             value={form.data.npwp_number}
                             onChange={(e) =>
-                                form.setData('npwp_number', e.target.value)
+                                form.setData(
+                                    'npwp_number',
+                                    e.target.value.replace(/\D/g, ''),
+                                )
                             }
                         />
                         {form.errors.npwp_number && (
@@ -169,6 +190,28 @@ export default function ResellerFormModal({
                                 className="hidden"
                             />
                         </label>
+                        {previewUrl && (
+                            <div className="flex items-center gap-3 rounded-lg border border-blue-100 bg-blue-50/60 px-4 py-2.5">
+                                <FileText
+                                    size={16}
+                                    className="shrink-0 text-blue-600"
+                                />
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-sm font-medium text-slate-700">
+                                        {previewName}
+                                    </p>
+                                </div>
+                                <a
+                                    href={previewUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700"
+                                >
+                                    <Eye size={12} />
+                                    Lihat
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
 
