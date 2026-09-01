@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     Ban,
     Building2,
@@ -6,6 +6,7 @@ import {
     House,
     LayoutGrid,
     Newspaper,
+    UserPlus,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 // import { NavFooter } from '@/components/nav-footer';
@@ -26,12 +27,14 @@ import categories from '@/routes/categories';
 import newsManagement from '@/routes/news-management';
 import principalManagement from '@/routes/principal-management';
 import templateDocumentsManagement from '@/routes/template-documents-management';
+import userManagement from '@/routes/user-management';
 import type { NavItem } from '@/types';
 
 type ActiveKey = 'currentUrl' | 'startsWith' | 'includes';
 
 type ItemsProps = (NavItem & {
     activeKey?: ActiveKey;
+    adminOnly?: boolean;
 })[];
 
 const mainNavItems: ItemsProps = [
@@ -40,6 +43,13 @@ const mainNavItems: ItemsProps = [
         href: dashboard(),
         icon: House,
         activeKey: 'currentUrl',
+    },
+    {
+        title: 'Tambah Pengguna',
+        href: userManagement.index(),
+        icon: UserPlus,
+        activeKey: 'startsWith',
+        adminOnly: true,
     },
     {
         title: 'Kategori Berita',
@@ -87,6 +97,12 @@ const mainNavItems: ItemsProps = [
 // ];
 
 export function AppSidebar() {
+    const { props } = usePage<{ auth: { role?: string | null } }>();
+    const isAdmin = props.auth?.role === 'admin';
+    const visibleNavItems = mainNavItems.filter(
+        (item) => !item.adminOnly || isAdmin,
+    );
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -102,7 +118,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain label="Fitur Utama" items={mainNavItems} />
+                <NavMain label="Fitur Utama" items={visibleNavItems} />
             </SidebarContent>
 
             <SidebarFooter>
