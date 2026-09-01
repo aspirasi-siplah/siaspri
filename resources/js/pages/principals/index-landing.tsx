@@ -2,7 +2,8 @@ import { Head, Link, router } from '@inertiajs/react';
 import {
     ArrowRight,
     Building2,
-    FileCheck2,
+    Download,
+    FileText,
     Search,
     UsersRound,
 } from 'lucide-react';
@@ -10,6 +11,7 @@ import { useState } from 'react';
 import Pagination from '@/components/custom-components/Pagination';
 import LandingLayout from '@/layouts/landing-layout';
 import principals from '@/routes/principals';
+import templateDocuments from '@/routes/template-documents';
 
 type Principal = {
     id: number;
@@ -18,8 +20,18 @@ type Principal = {
     resellers_count: number;
     documents_count: number;
 };
+
+type TemplateDocument = {
+    id: string;
+    label: string;
+    file_name: string;
+    file_path: string;
+    updated_at: string;
+};
+
 export default function Index({
     principals: data,
+    template_documents,
 }: {
     principals: {
         data: Principal[];
@@ -28,6 +40,7 @@ export default function Index({
         next_page_url: string | null;
         prev_page_url: string | null;
     };
+    template_documents: TemplateDocument[];
 }) {
     const [search, setSearch] = useState('');
     const submit = (event: React.FormEvent) => {
@@ -59,7 +72,8 @@ export default function Index({
                                         Principal dan jaringan resellernya
                                     </h1>
                                     <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-                                        Temukan informasi Principal dan Resellernya
+                                        Temukan informasi Principal dan
+                                        Resellernya
                                     </p>
                                 </div>
 
@@ -71,7 +85,10 @@ export default function Index({
                                         Cari Principal
                                     </label>
                                     <div className="mt-3 flex items-center gap-2 rounded-xl bg-white px-3.5 py-2.5 shadow-sm">
-                                        <Search size={16} className="shrink-0 text-slate-400" />
+                                        <Search
+                                            size={16}
+                                            className="shrink-0 text-slate-400"
+                                        />
                                         <input
                                             value={search}
                                             onChange={(e) =>
@@ -85,7 +102,59 @@ export default function Index({
                             </div>
                         </header>
 
-                        <section aria-labelledby="principals-heading" className="pt-12">
+                        {template_documents.length > 0 && (
+                            <section
+                                aria-labelledby="templates-heading"
+                                className="pt-12"
+                            >
+                                <div>
+                                    <h2
+                                        id="templates-heading"
+                                        className="mt-2 text-2xl font-bold tracking-tight text-slate-900"
+                                    >
+                                        Unduh Dokumen Template
+                                    </h2>
+                                    <p className="mt-1 text-sm text-slate-500">
+                                        Unduh dokumen template yang disediakan
+                                        untuk Anda.
+                                    </p>
+                                </div>
+                                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                                    {template_documents.map((doc, index) => (
+                                        <div
+                                            key={doc.id}
+                                            className={`flex items-center justify-between gap-4 overflow-hidden rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm`}
+                                        >
+                                            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                                                <FileText size={17} />
+                                            </span>
+                                            <div className="w-full">
+                                                <p className="truncate text-sm font-medium text-slate-800">
+                                                    {doc.label}
+                                                </p>
+                                                <a
+                                                    href={
+                                                        templateDocuments.download(
+                                                            doc.id,
+                                                        ).url
+                                                    }
+                                                    title={`Unduh ${doc.label}`}
+                                                    className="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium hover:text-blue-600 text-gray-500"
+                                                >
+                                                    <Download size={13} />
+                                                    Unduh
+                                                </a>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        <section
+                            aria-labelledby="principals-heading"
+                            className="pt-12"
+                        >
                             <div className="flex items-end justify-between gap-4">
                                 <div>
                                     <h2

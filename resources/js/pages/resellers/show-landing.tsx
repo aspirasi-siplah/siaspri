@@ -60,7 +60,10 @@ export default function Show({ reseller }: { reseller: Reseller }) {
                         <div className="overflow-hidden rounded-3xl border bg-white shadow-sm">
                             <div className="flex items-center justify-between border-b bg-slate-50 px-8 py-4">
                                 <div className="flex items-center gap-3">
-                                    <Building2 size={20} className="text-blue-600" />
+                                    <Building2
+                                        size={20}
+                                        className="text-blue-600"
+                                    />
                                     <h2 className="text-lg font-semibold">
                                         Detail Reseller
                                     </h2>
@@ -72,9 +75,7 @@ export default function Show({ reseller }: { reseller: Reseller }) {
                                     <DetailRow
                                         icon={<Building2 size={16} />}
                                         label="Principal"
-                                        value={
-                                            reseller.principal_name || '-'
-                                        }
+                                        value={reseller.principal_name || '-'}
                                     />
                                     <DetailRow
                                         icon={<FileCheck2 size={16} />}
@@ -100,6 +101,11 @@ export default function Show({ reseller }: { reseller: Reseller }) {
                                             )}
                                         </div>
                                     </div>
+                                    <DetailRow
+                                        icon={<FileCheck2 size={16} />}
+                                        label="NPWP"
+                                        value={reseller.npwp_number || '-'}
+                                    />
                                 </div>
                             </div>
                         </div>
