@@ -1,7 +1,7 @@
 <?php
 
 test('docker compose uses checked-in defaults instead of requiring a local env file', function () {
-    $compose = file_get_contents(dirname(__DIR__, 2) . '/docker-compose.yml');
+    $compose = file_get_contents(dirname(__DIR__, 2).'/docker-compose.yml');
 
     expect($compose)
         ->toContain("- .env\n")
@@ -15,7 +15,7 @@ test('docker compose uses checked-in defaults instead of requiring a local env f
 });
 
 test('docker defaults are production ready for first boot', function () {
-    $environmentDefaults = file_get_contents(dirname(__DIR__, 2) . '/.env.example');
+    $environmentDefaults = file_get_contents(dirname(__DIR__, 2).'/.env.example');
 
     expect($environmentDefaults)
         ->toContain('APP_ENV=production')
@@ -31,10 +31,10 @@ test('docker defaults are production ready for first boot', function () {
 
 test('container bootstrap scripts automate first-run tasks', function () {
     $projectRoot = dirname(__DIR__, 2);
-    $dockerIgnore = file_get_contents($projectRoot . '/.dockerignore');
-    $bootstrapScript = file_get_contents($projectRoot . '/docker/php/docker-bootstrap.sh');
-    $entrypointScript = file_get_contents($projectRoot . '/docker/php/docker-entrypoint.sh');
-    $dockerfile = file_get_contents($projectRoot . '/docker/php/Dockerfile');
+    $dockerIgnore = file_get_contents($projectRoot.'/.dockerignore');
+    $bootstrapScript = file_get_contents($projectRoot.'/docker/php/docker-bootstrap.sh');
+    $entrypointScript = file_get_contents($projectRoot.'/docker/php/docker-entrypoint.sh');
+    $dockerfile = file_get_contents($projectRoot.'/docker/php/Dockerfile');
 
     expect($bootstrapScript)
         ->toContain('php artisan migrate --force --no-interaction')

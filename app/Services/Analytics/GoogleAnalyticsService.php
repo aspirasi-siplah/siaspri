@@ -45,7 +45,7 @@ class GoogleAnalyticsService implements AnalyticsServiceInterface
         return Analytics::fetchVisitorsAndPageViewsByDate(
             Period::days($days)
         )
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'date' => $item['date'],
                 'visitors' => $item['activeUsers'],
             ])
@@ -60,7 +60,7 @@ class GoogleAnalyticsService implements AnalyticsServiceInterface
             Period::days(30),
             $limit
         )
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'page' => $item['pageTitle']
                     ?: $item['fullPageUrl'],
 

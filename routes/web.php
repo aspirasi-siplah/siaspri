@@ -15,6 +15,7 @@ use App\Http\Controllers\PrincipalReferenceDocumentManagementController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\ResellerManagementController;
 use App\Http\Controllers\TemplateDocumentManagementController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -142,6 +143,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [TemplateDocumentManagementController::class, 'store'])->name('template-documents-management.store');
         Route::put('/{id}', [TemplateDocumentManagementController::class, 'update'])->name('template-documents-management.update');
         Route::delete('/{id}/delete', [TemplateDocumentManagementController::class, 'destroy'])->name('template-documents-management.destroy');
+    });
+
+    Route::prefix('user-management')->middleware('admin')->group(function () {
+        Route::get('/', [UserManagementController::class, 'index'])->name('user-management.index');
+        Route::post('/', [UserManagementController::class, 'store'])->name('user-management.store');
+        Route::put('/{id}', [UserManagementController::class, 'update'])->name('user-management.update');
+        Route::delete('/{id}/delete', [UserManagementController::class, 'destroy'])->name('user-management.destroy');
     });
 });
 
