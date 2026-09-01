@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TemplateDocumentType;
 use App\Models\Principal;
 use App\Models\Reseller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,6 +18,7 @@ class PrincipalController extends Controller
             'principals' => Principal::query()->withCount(['resellers', 'documents'])
                 ->when($request->string('search')->value(), fn ($query, $search) => $query->where('name', 'ILIKE', '%'.$search.'%'))
                 ->latest()->paginate(12)->withQueryString(),
+            'template_documents' => $this->templateDocuments(),
         ]);
     }
 
@@ -52,5 +55,28 @@ class PrincipalController extends Controller
                 ],
             ],
         ]);
+    }
+
+    private function templateDocuments(): array
+    {
+        $jsonPath = storage_path('app/template-documents.json');
+
+        if (! File::exists($jsonPath)) {
+            return [];
+        }
+
+        $documents = json_decode(File::get($jsonPath), true) ?? [];
+
+        return collect($documents)->map(function (array $document) {
+            $type = TemplateDocumentType::tryFrom($document['label']);
+
+            return [
+                'id' => $document['id'],
+                'label' => $type?->label() ?? $document['label'],
+                'file_name' => $document['file_name'],
+                'file_path' => $document['file_path'],
+                'updated_at' => $document['updated_at'],
+            ];
+        })->values()->all();
     }
 }

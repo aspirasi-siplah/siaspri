@@ -14,6 +14,7 @@ use App\Http\Controllers\PrincipalReferenceDocumentController;
 use App\Http\Controllers\PrincipalReferenceDocumentManagementController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\ResellerManagementController;
+use App\Http\Controllers\TemplateDocumentManagementController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,6 +53,29 @@ Route::prefix('reference-documents')->group(function () {
     Route::get('/{referenceId}', [PrincipalReferenceDocumentController::class, 'show'])->name('reference-documents.show');
     Route::get('/{referenceId}/verify', [PrincipalReferenceDocumentController::class, 'verify'])->name('reference-documents.verify');
 });
+
+Route::get('/template-documents/{id}/download', function (string $id) {
+    $jsonPath = storage_path('app/template-documents.json');
+
+    if (! file_exists($jsonPath)) {
+        abort(404);
+    }
+
+    $documents = json_decode(file_get_contents($jsonPath), true) ?? [];
+    $document = collect($documents)->firstWhere('id', $id);
+
+    if (! $document) {
+        abort(404);
+    }
+
+    $filePath = storage_path('app/public/'.$document['file_path']);
+
+    if (! file_exists($filePath)) {
+        abort(404);
+    }
+
+    return response()->download($filePath, $document['file_name']);
+})->name('template-documents.download');
 
 Route::get('/about', function () {
     return Inertia::render('about-us');
@@ -111,6 +135,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('editors')->group(function () {
         Route::post('/upload-images', [EditorController::class, 'uploadImages'])->name('news-management.upload-images');
+    });
+
+    Route::prefix('template-documents-management')->group(function () {
+        Route::get('/', [TemplateDocumentManagementController::class, 'index'])->name('template-documents-management.index');
+        Route::post('/', [TemplateDocumentManagementController::class, 'store'])->name('template-documents-management.store');
+        Route::put('/{id}', [TemplateDocumentManagementController::class, 'update'])->name('template-documents-management.update');
+        Route::delete('/{id}/delete', [TemplateDocumentManagementController::class, 'destroy'])->name('template-documents-management.destroy');
     });
 });
 

@@ -1,5 +1,12 @@
 import { Link } from '@inertiajs/react';
-import { Ban, Building2, House, LayoutGrid, Newspaper } from 'lucide-react';
+import {
+    Ban,
+    Building2,
+    FileText,
+    House,
+    LayoutGrid,
+    Newspaper,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 // import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -18,6 +25,7 @@ import blacklistMerchants from '@/routes/blacklist-merchants';
 import categories from '@/routes/categories';
 import newsManagement from '@/routes/news-management';
 import principalManagement from '@/routes/principal-management';
+import templateDocumentsManagement from '@/routes/template-documents-management';
 import type { NavItem } from '@/types';
 
 type ActiveKey = 'currentUrl' | 'startsWith' | 'includes';
@@ -55,6 +63,12 @@ const mainNavItems: ItemsProps = [
         title: 'Principal',
         href: principalManagement.index(),
         icon: Building2,
+        activeKey: 'startsWith',
+    },
+    {
+        title: 'Template Dokumen',
+        href: templateDocumentsManagement.index(),
+        icon: FileText,
         activeKey: 'startsWith',
     },
 ];

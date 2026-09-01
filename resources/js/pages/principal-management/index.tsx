@@ -118,10 +118,10 @@ export default function Index({ principals }: Props) {
                                             </p>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-1 text-sm font-medium text-gray-700">
+                                    <td className="px-4 py-1 text-sm font-medium text-gray-700 text-center">
                                         {principal.resellers_count}
                                     </td>
-                                    <td className="px-4 py-1 text-sm text-gray-600">
+                                    <td className="px-4 py-1 text-sm text-gray-600 text-center">
                                         {principal.documents_count}
                                     </td>
                                     <td className="px-4 py-1">
