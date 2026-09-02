@@ -76,7 +76,7 @@ function DetailModal({
             size="lg"
         >
             {item && (
-                <div className="space-y-5">
+                <div className="space-y-5 max-h-[70vh] overflow-y-auto">
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div>
                             <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
