@@ -29,6 +29,7 @@ yarn-error.log
 /.vscode
 /.zed
 /.agents
+/.github/skills
 AGENTS.md
 opencode.json
 docker/nginx/ssl/*

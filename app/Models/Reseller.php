@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\LogsModelActivity;
 use Database\Factories\ResellerFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reseller extends Model
 {
     /** @use HasFactory<ResellerFactory> */
-    use HasFactory;
+    use HasFactory, LogsModelActivity;
 
     protected $fillable = ['principal_id', 'name', 'npwp_number', 'document_number', 'document_path', 'reference_code'];
 

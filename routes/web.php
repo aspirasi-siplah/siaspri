@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\BlacklistMerchantController;
 use App\Http\Controllers\BlacklistMerchantManagementController;
 use App\Http\Controllers\CategoryController;
@@ -88,6 +89,8 @@ Route::get('/contact', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, '__invoke'])->name('dashboard');
+
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
 
     Route::prefix('news-management')->group(function () {
         Route::get('/', [NewsManagementController::class, 'index'])->name('news-management.index');

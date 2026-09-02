@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\LogsModelActivity;
 use Database\Factories\PrincipalReferenceDocumentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class PrincipalReferenceDocument extends Model
 {
     /** @use HasFactory<PrincipalReferenceDocumentFactory> */
-    use HasFactory;
+    use HasFactory, LogsModelActivity;
 
     const STATUS_ACTIVE = 'active';
 

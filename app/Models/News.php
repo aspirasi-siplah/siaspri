@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\LogsModelActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class News extends Model
 {
+    use LogsModelActivity;
+
     const STATUS_DRAFT = 'draft';
 
     const STATUS_PUBLISHED = 'published';
