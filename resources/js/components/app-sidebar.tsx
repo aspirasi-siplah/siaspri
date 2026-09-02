@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
+    Activity,
     Ban,
     Building2,
     FileText,
@@ -22,6 +23,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import activityLog from '@/routes/activity-log';
 import blacklistMerchants from '@/routes/blacklist-merchants';
 import categories from '@/routes/categories';
 import newsManagement from '@/routes/news-management';
@@ -79,6 +81,12 @@ const mainNavItems: ItemsProps = [
         title: 'Template Dokumen',
         href: templateDocumentsManagement.index(),
         icon: FileText,
+        activeKey: 'startsWith',
+    },
+    {
+        title: 'Log Aktivitas',
+        href: activityLog.index(),
+        icon: Activity,
         activeKey: 'startsWith',
     },
 ];

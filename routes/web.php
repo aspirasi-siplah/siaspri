@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\BlacklistMerchantController;
 use App\Http\Controllers\BlacklistMerchantManagementController;
 use App\Http\Controllers\CategoryController;
@@ -23,12 +24,6 @@ use Spatie\Analytics\Facades\Analytics;
 use Spatie\Analytics\Period;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
-
-// Route::get('/ga-test', function () {
-//     return Analytics::fetchTotalVisitorsAndPageViews(
-//         Period::days(30)
-//     );
-// });
 
 Route::prefix('news')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('news.index');
@@ -88,6 +83,8 @@ Route::get('/contact', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, '__invoke'])->name('dashboard');
+
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
 
     Route::prefix('news-management')->group(function () {
         Route::get('/', [NewsManagementController::class, 'index'])->name('news-management.index');
