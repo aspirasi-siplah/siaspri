@@ -1,10 +1,11 @@
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     BadgeCheck,
     Building2,
     Download,
     Eye,
     FileText,
+    FileUp,
     Hash,
     Pencil,
     Plus,
@@ -69,7 +70,13 @@ type PrincipalDocumentType = {
     label: string;
 };
 
-export default function Show({ principal, document_types }: { principal: Principal, document_types: PrincipalDocumentType[] }) {
+export default function Show({
+    principal,
+    document_types,
+}: {
+    principal: Principal;
+    document_types: PrincipalDocumentType[];
+}) {
     const [editingReseller, setEditingReseller] = useState<Reseller | null>(
         null,
     );
@@ -77,8 +84,9 @@ export default function Show({ principal, document_types }: { principal: Princip
         useState<PrincipalDocument | null>(null);
     const [resellerModalOpen, setResellerModalOpen] = useState(false);
     const [documentModalOpen, setDocumentModalOpen] = useState(false);
-    const [viewingReseller, setViewingReseller] =
-        useState<Reseller | null>(null);
+    const [viewingReseller, setViewingReseller] = useState<Reseller | null>(
+        null,
+    );
     const [search, setSearch] = useState('');
     const initial = useRef(true);
 
@@ -334,16 +342,25 @@ export default function Show({ principal, document_types }: { principal: Princip
                                     Daftar reseller terdaftar pada principal ini
                                 </p>
                             </div>
-                            <button
-                                onClick={() => {
-                                    setEditingReseller(null);
-                                    setResellerModalOpen(true);
-                                }}
-                                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white shadow-sm transition hover:bg-blue-700"
-                            >
-                                <Plus size={16} />
-                                Tambah Reseller
-                            </button>
+                            <div className="flex flex-col md:flex-row md:flex-wrap md:items-center gap-2">
+                                <button
+                                    onClick={() => {
+                                        setEditingReseller(null);
+                                        setResellerModalOpen(true);
+                                    }}
+                                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white shadow-sm transition hover:bg-blue-700"
+                                >
+                                    <Plus size={16} />
+                                    Tambah Reseller
+                                </button>
+                                <Link
+                                    href={resellers.import(principal.id)}
+                                    className="inline-flex items-center gap-2 rounded-lg border border-blue-500 px-4 py-[7px] text-sm text-blue-600 font-medium transition hover:bg-blue-600 hover:text-white"
+                                >
+                                    <FileUp size={16} />
+                                    Bulk Import
+                                </Link>
+                            </div>
                         </div>
 
                         <div className="p-8">
