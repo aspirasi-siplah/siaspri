@@ -25,12 +25,6 @@ use Spatie\Analytics\Period;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
-// Route::get('/ga-test', function () {
-//     return Analytics::fetchTotalVisitorsAndPageViews(
-//         Period::days(30)
-//     );
-// });
-
 Route::prefix('news')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('news.index');
     Route::get('/{news:slug}', [NewsController::class, 'show'])->name('news.show');

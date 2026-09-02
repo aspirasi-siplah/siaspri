@@ -79,7 +79,7 @@ function DetailModal({
                 <div className="space-y-5">
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
                                 Pengguna
                             </p>
                             <p className="mt-1 text-sm font-medium text-gray-800">
@@ -90,7 +90,7 @@ function DetailModal({
                             </p>
                         </div>
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
                                 Modul
                             </p>
                             <p className="mt-1 text-sm font-medium text-gray-800">
@@ -98,7 +98,7 @@ function DetailModal({
                             </p>
                         </div>
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
                                 Aksi
                             </p>
                             <span
@@ -112,7 +112,7 @@ function DetailModal({
                             </span>
                         </div>
                         <div>
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
                                 Waktu
                             </p>
                             <p className="mt-1 text-sm font-medium text-gray-800">
@@ -122,7 +122,7 @@ function DetailModal({
                     </div>
 
                     <div className="border-t border-gray-100 pt-5">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
                             Detail Perubahan
                         </p>
 
