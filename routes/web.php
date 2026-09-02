@@ -20,8 +20,6 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Spatie\Analytics\Facades\Analytics;
-use Spatie\Analytics\Period;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
@@ -117,6 +115,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{principal}', [PrincipalManagementController::class, 'update'])->name('principal-management.update');
         Route::delete('/{principal}/delete', [PrincipalManagementController::class, 'destroy'])->name('principal-management.destroy');
         Route::post('/{principal}/resellers', [ResellerManagementController::class, 'store'])->name('principal-management.resellers.store');
+        Route::get('/{principal}/resellers/import', [ResellerManagementController::class, 'import'])->name('principal-management.resellers.import');
+        Route::post('/{principal}/resellers/import', [ResellerManagementController::class, 'importStore'])->name('principal-management.resellers.import.store');
+        Route::get('/{principal}/resellers/import/template', [ResellerManagementController::class, 'importTemplate'])->name('principal-management.resellers.import.template');
         Route::put('/{principal}/resellers/{reseller}', [ResellerManagementController::class, 'update'])->name('principal-management.resellers.update');
         Route::delete('/{principal}/resellers/{reseller}/delete', [ResellerManagementController::class, 'destroy'])->name('principal-management.resellers.destroy');
         Route::post('/{principal}/documents', [PrincipalDocumentManagementController::class, 'store'])->name('principal-management.documents.store');
