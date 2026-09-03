@@ -139,9 +139,33 @@ test('admin can download the bulk import template', function () {
         ->assertDownload('reseller-import-template.xlsx');
 });
 
+test('import skips the Keterangan legend rows from the template', function () {
+    Storage::fake('local');
+    $user = User::factory()->create();
+    $principal = Principal::factory()->create();
+    $path = buildTemplateXlsx([
+        ['PT Contoh Reseller', '123456789012345', 'DOC-001', null],
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('principal-management.resellers.import.store', $principal), [
+            'file' => new UploadedFile($path, 'resellers.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', null, true),
+        ])
+        ->assertRedirect();
+
+    $import = ResellerImport::query()->where('principal_id', $principal->id)->first();
+
+    expect($principal->fresh()->resellers)->toHaveCount(1)
+        ->and($principal->fresh()->resellers->first()->name)->toBe('PT Contoh Reseller')
+        ->and($import->status)->toBe('completed')
+        ->and($import->result['imported'])->toBe(1)
+        ->and($import->result['failures'])->toBe([]);
+});
+
 /**
- * Build an xlsx file matching the urgent template layout:
- * row 1 = title, row 2 = headings (Indonesian), data starting row 3.
+ * Build an xlsx file matching the template layout:
+ * row 1 = title + Keterangan heading, row 2 = headings (Indonesian),
+ * Keterangan legend on rows 3-5 (columns F-G), data starting row 6.
  */
 function buildTemplateXlsx(array $rows): string
 {
@@ -149,9 +173,14 @@ function buildTemplateXlsx(array $rows): string
     $sheet = $spreadsheet->getActiveSheet();
 
     $sheet->setCellValue('A1', 'Data Reseller');
+    $sheet->setCellValue('F1', 'Keterangan');
     $sheet->fromArray(['Nama Reseller', 'NPWP', 'Nomor Dokumen', 'Nama File Dokumen'], null, 'A2');
+    $sheet->fromArray(['Nama Reseller', 'Wajib Diisi'], null, 'F2');
+    $sheet->fromArray(['NPWP', 'Opsional'], null, 'F3');
+    $sheet->fromArray(['Nomor Dokumen', 'Opsional'], null, 'F4');
+    $sheet->fromArray(['Nama File Dokumen', 'Opsional'], null, 'F5');
 
-    $rowIndex = 3;
+    $rowIndex = 6;
     foreach ($rows as $row) {
         $sheet->fromArray($row, null, 'A'.$rowIndex);
         $rowIndex++;
