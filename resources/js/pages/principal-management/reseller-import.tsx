@@ -1,4 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import axios from 'axios';
 import {
     ArrowLeft,
     CheckCircle2,
@@ -9,7 +10,7 @@ import {
     Upload,
     X,
 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import AppLayout from '@/layouts/app-layout';
 import principalManagement from '@/routes/principal-management';
@@ -30,8 +31,14 @@ interface Props {
         id: number;
         name: string;
     };
-    result: ImportResult;
+    activeImport: ActiveImport | null;
 }
+
+type ActiveImport = {
+    id: number;
+    status: 'processing' | 'completed' | 'failed';
+    result: ImportResult;
+};
 
 const columns = [
     { key: 'Nama Reseller', label: 'Nama Reseller', note: 'Wajib diisi' },
@@ -126,11 +133,46 @@ function FileUploadArea({
     );
 }
 
-export default function ResellerImport({ principal, result }: Props) {
+export default function ResellerImport({ principal, activeImport }: Props) {
     const form = useForm({
         file: null as File | null,
         document_zip: null as File | null,
     });
+
+    const [importStatus, setImportStatus] = useState(
+        activeImport?.status ?? null,
+    );
+    const [result, setResult] = useState<ImportResult>(
+        activeImport?.result ?? null,
+    );
+
+    useEffect(() => {
+        if (activeImport?.status !== 'processing') {
+            return;
+        }
+
+        const poll = setInterval(async () => {
+            try {
+                const { data } = await axios.get(
+                    principalManagement.resellers.import.status.url({
+                        principal: principal.id,
+                        import: activeImport.id,
+                    }),
+                );
+
+                setImportStatus(data.status);
+                setResult(data.result);
+
+                if (data.status !== 'processing') {
+                    clearInterval(poll);
+                }
+            } catch {
+                clearInterval(poll);
+            }
+        }, 3000);
+
+        return () => clearInterval(poll);
+    }, [activeImport?.id, activeImport?.status, principal.id]);
 
     const handleExcel = (file: File | undefined) => {
         if (!file) {
@@ -231,7 +273,35 @@ export default function ResellerImport({ principal, result }: Props) {
                         </Link>
                     </div>
 
-                    {result && (
+                    {importStatus === 'processing' && (
+                        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                            <div className="border-b border-slate-100 bg-neutral-50/60 px-8 py-5">
+                                <h2 className="text-lg font-semibold text-slate-900">
+                                    Status Import
+                                </h2>
+                            </div>
+                            <div className="p-8">
+                                <div className="flex items-center gap-4 rounded-xl border border-blue-200 bg-blue-50/60 p-5">
+                                    <Loader2
+                                        size={28}
+                                        className="shrink-0 animate-spin text-blue-600"
+                                    />
+                                    <div>
+                                        <p className="font-semibold text-blue-800">
+                                            Data sedang diproses
+                                        </p>
+                                        <p className="mt-0.5 text-sm text-blue-700">
+                                            Import reseller sedang dikerjakan
+                                            oleh server. Halaman ini akan
+                                            memperbarui otomatis jika selesai.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {result && importStatus !== 'processing' && (
                         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                             <div className="border-b border-slate-100 bg-neutral-50/60 px-8 py-5">
                                 <h2 className="text-lg font-semibold text-slate-900">

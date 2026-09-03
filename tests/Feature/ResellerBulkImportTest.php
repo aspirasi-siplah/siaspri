@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Principal;
+use App\Models\ResellerImport;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -40,6 +41,12 @@ test('admin can bulk import resellers from the template', function () {
         ->and($principal->fresh()->resellers->first()->npwp_number)->toBe('123456789012345')
         ->and($principal->fresh()->resellers->first()->document_number)->toBe('DOC-001')
         ->and($principal->fresh()->resellers->first()->document_path)->toBeNull();
+
+    $import = ResellerImport::query()->where('principal_id', $principal->id)->first();
+
+    expect($import)->not->toBeNull()
+        ->and($import->status)->toBe('completed')
+        ->and($import->result['imported'])->toBe(1);
 });
 
 test('admin can bulk import resellers together with their document files from a zip', function () {
@@ -85,7 +92,41 @@ test('bulk import validates the uploaded file', function () {
         ->assertSessionHasErrors('file')
         ->assertRedirect();
 
-    expect($principal->fresh()->resellers)->toHaveCount(0);
+    expect($principal->fresh()->resellers)->toHaveCount(0)
+        ->and(ResellerImport::query()->count())->toBe(0);
+});
+
+test('user can fetch the import status endpoint while it is processing', function () {
+    Storage::fake('local');
+    $user = User::factory()->create();
+    $principal = Principal::factory()->create();
+    $import = ResellerImport::create([
+        'principal_id' => $principal->id,
+        'status' => 'processing',
+    ]);
+
+    $this->actingAs($user)
+        ->getJson(route('principal-management.resellers.import.status', [$principal, $import]))
+        ->assertOk()
+        ->assertJson([
+            'id' => $import->id,
+            'status' => 'processing',
+            'result' => null,
+        ]);
+});
+
+test('import status endpoint is scoped to the principal', function () {
+    $user = User::factory()->create();
+    $principal = Principal::factory()->create();
+    $other = Principal::factory()->create();
+    $import = ResellerImport::create([
+        'principal_id' => $other->id,
+        'status' => 'processing',
+    ]);
+
+    $this->actingAs($user)
+        ->getJson(route('principal-management.resellers.import.status', [$principal, $import]))
+        ->assertNotFound();
 });
 
 test('admin can download the bulk import template', function () {
