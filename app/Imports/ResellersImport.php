@@ -7,10 +7,11 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithColumnLimit;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ResellersImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
+class ResellersImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithColumnLimit, WithHeadingRow, WithValidation
 {
     use SkipsFailures;
 
@@ -28,12 +29,19 @@ class ResellersImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithHe
 
     public function __construct(private readonly int $principalId) {}
 
-    /**
-     * The heading row of the template is on row 2, so data starts at row 3.
-     */
     public function headingRow(): int
     {
         return 2;
+    }
+
+    public function endColumn(): string
+    {
+        return 'D';
+    }
+
+    public function isEmptyWhen(array $row): bool
+    {
+        return collect($row)->every(fn($value) => $value === null || trim((string) $value) === '');
     }
 
     public function model(array $row): ?Reseller
@@ -76,20 +84,20 @@ class ResellersImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithHe
     {
         return [
             'nama_reseller.required' => 'Kolom Nama Reseller wajib diisi.',
-            'nama_reseller.string'   => 'Kolom Nama Reseller harus berupa teks.',
-            'nama_reseller.max'      => 'Kolom Nama Reseller maksimal :max karakter.',
-            'npwp.max'               => 'Kolom NPWP maksimal :max karakter.',
-            'nomor_dokumen.max'      => 'Kolom Nomor Dokumen maksimal :max karakter.',
-            'nama_file_dokumen.max'  => 'Kolom Nama File Dokumen maksimal :max karakter.',
+            'nama_reseller.string' => 'Kolom Nama Reseller harus berupa teks.',
+            'nama_reseller.max' => 'Kolom Nama Reseller maksimal :max karakter.',
+            'npwp.max' => 'Kolom NPWP maksimal :max karakter.',
+            'nomor_dokumen.max' => 'Kolom Nomor Dokumen maksimal :max karakter.',
+            'nama_file_dokumen.max' => 'Kolom Nama File Dokumen maksimal :max karakter.',
         ];
     }
 
     public function customValidationAttributes(): array
     {
         return [
-            'nama_reseller'     => 'Nama Reseller',
-            'npwp'              => 'NPWP',
-            'nomor_dokumen'     => 'Nomor Dokumen',
+            'nama_reseller' => 'Nama Reseller',
+            'npwp' => 'NPWP',
+            'nomor_dokumen' => 'Nomor Dokumen',
             'nama_file_dokumen' => 'Nama File Dokumen',
         ];
     }

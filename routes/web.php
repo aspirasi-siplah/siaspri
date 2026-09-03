@@ -117,6 +117,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{principal}/resellers', [ResellerManagementController::class, 'store'])->name('principal-management.resellers.store');
         Route::get('/{principal}/resellers/import', [ResellerManagementController::class, 'import'])->name('principal-management.resellers.import');
         Route::post('/{principal}/resellers/import', [ResellerManagementController::class, 'importStore'])->name('principal-management.resellers.import.store');
+        Route::get('/{principal}/resellers/import/{import}/status', [ResellerManagementController::class, 'importStatus'])->name('principal-management.resellers.import.status');
         Route::get('/{principal}/resellers/import/template', [ResellerManagementController::class, 'importTemplate'])->name('principal-management.resellers.import.template');
         Route::put('/{principal}/resellers/{reseller}', [ResellerManagementController::class, 'update'])->name('principal-management.resellers.update');
         Route::delete('/{principal}/resellers/{reseller}/delete', [ResellerManagementController::class, 'destroy'])->name('principal-management.resellers.destroy');
