@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
     pdo \
     pdo_pgsql \
     bcmath \
-    gd
+    gd \
+    zip
 
 RUN pecl install redis \
     && docker-php-ext-enable redis
@@ -78,7 +79,8 @@ RUN apt-get update && apt-get install -y \
     pdo \
     pdo_pgsql \
     bcmath \
-    gd
+    gd \
+    zip
 
 RUN pecl install redis \
     && docker-php-ext-enable redis
