@@ -7,7 +7,7 @@ const partners = [
     },
     {
         name: 'Eureka Bookhouse',
-        logo: '/images/siplah/eureka.png',
+        logo: '/images/siplah/eureka-2.png',
     },
     {
         name: 'Telkom',
