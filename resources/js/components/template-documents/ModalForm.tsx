@@ -14,17 +14,11 @@ interface TemplateDocument {
     updated_at: string;
 }
 
-interface LabelOption {
-    value: string;
-    label: string;
-}
-
 interface Props {
     document?: TemplateDocument;
-    labelOptions: LabelOption[];
 }
 
-export default function ModalForm({ document, labelOptions }: Props) {
+export default function ModalForm({ document }: Props) {
     const [open, setOpen] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(
         document?.view_url ?? null,
@@ -154,25 +148,20 @@ export default function ModalForm({ document, labelOptions }: Props) {
                 <form onSubmit={submit} className="space-y-6">
                     <div className="flex w-full flex-col gap-1">
                         <label className="text-sm font-medium text-gray-600">
-                            Label <span className="text-[13px] text-red-500">*</span>
+                            Label{' '}
+                            <span className="text-[13px] text-red-500">*</span>
                         </label>
-                        <select
+                        <input
+                            type="text"
                             name="label"
                             value={form.data.label}
                             onChange={(
-                                e: React.ChangeEvent<HTMLSelectElement>,
+                                e: React.ChangeEvent<HTMLInputElement>,
                             ) => form.setData('label', e.target.value)}
+                            maxLength={255}
+                            placeholder="Masukkan label dokumen"
                             className="h-11 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-800 focus:border-blue-500 focus:outline-none"
-                        >
-                            <option value="" disabled>
-                                Pilih label dokumen
-                            </option>
-                            {labelOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
+                        />
                         {form.errors.label && (
                             <span className="text-xs text-red-500">
                                 {form.errors.label}
@@ -184,7 +173,9 @@ export default function ModalForm({ document, labelOptions }: Props) {
                         <label className="text-sm font-medium text-gray-600">
                             File{' '}
                             {!isEdit && (
-                                <span className="text-[13px] text-red-500">*</span>
+                                <span className="text-[13px] text-red-500">
+                                    *
+                                </span>
                             )}
                         </label>
                         <div

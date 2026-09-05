@@ -54,7 +54,7 @@ test('admin can store a template document', function () {
 
     expect($documents)->toHaveCount(1)
         ->and($documents[0]['label'])->toBe('SURAT_PERNYATAAN')
-        ->and($documents[0]['file_name'])->toBe('SURAT_PERNYATAAN.pdf');
+        ->and($documents[0]['file_name'])->toBe('surat-pernyataan.pdf');
 
     Storage::disk('public')->assertExists($documents[0]['file_path']);
 });
@@ -112,16 +112,16 @@ test('a different label creates a separate document', function () {
     $documents = json_decode(File::get($this->jsonPath), true);
 
     expect($documents)->toHaveCount(2)
-        ->and($documents[0]['file_name'])->toBe('SURAT_PERNYATAAN.pdf')
-        ->and($documents[1]['file_name'])->toBe('SURAT_DUKUNGAN.pdf');
+        ->and($documents[0]['file_name'])->toBe('surat-pernyataan.pdf')
+        ->and($documents[1]['file_name'])->toBe('surat-dukungan.pdf');
 });
 
-test('an invalid label gets a validation error', function () {
+test('a label longer than 255 characters gets a validation error', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
     $this->post(route('template-documents-management.store'), [
-        'label' => 'LABEL_TIDAK_ADA',
+        'label' => str_repeat('a', 256),
         'file' => UploadedFile::fake()->create('a.pdf', 100, 'application/pdf'),
     ])->assertSessionHasErrors('label');
 });
@@ -169,7 +169,7 @@ test('admin can update a template document with a new file', function () {
     $documents = json_decode(File::get($this->jsonPath), true);
 
     expect($documents)->toHaveCount(1)
-        ->and($documents[0]['file_name'])->toBe('SURAT_PERNYATAAN.pdf');
+        ->and($documents[0]['file_name'])->toBe('surat-pernyataan.pdf');
 
     Storage::disk('public')->assertExists($oldPath);
 });

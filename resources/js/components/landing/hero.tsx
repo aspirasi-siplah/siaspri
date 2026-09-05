@@ -17,9 +17,10 @@ export default function Hero() {
                             <span className="text-blue-600"> Mitra SIPLah</span>
                         </h1>
                         <p className="mt-6 text-lg text-slate-600">
-                            Sampaikan kritik, saran, ide, dan aspirasi dengan
-                            mudah melalui platform digital yang transparan dan
-                            terpercaya.
+                            Platform Asosiasi Pasar Daring Mitra SIPLah
+                            (Aspirasi) yang membantu masyarakat menyampaikan
+                            masukan, serta memperoleh informasi secara
+                            transparan dan terpercaya.
                         </p>
                         <div className="mt-8 flex flex-wrap gap-4">
                             <Link

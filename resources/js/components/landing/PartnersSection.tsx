@@ -29,10 +29,6 @@ const partners = [
         name: 'Temprina',
         logo: '/images/siplah/temprina.png',
     },
-    {
-        name: 'Blibli',
-        logo: '/images/siplah/blibli.png',
-    },
 ];
 
 export default function PartnersSection() {
@@ -56,14 +52,14 @@ export default function PartnersSection() {
                     {partners.map((partner) => (
                         <div
                             key={partner.name}
-                            className="group flex flex-col h-36 items-center justify-center rounded-3xl border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                            className="group flex h-32 flex-col items-center justify-center rounded-3xl border bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                         >
                             <img
                                 src={partner.logo}
                                 alt={partner.name}
-                                className="h-[35px] w-[170px] object-contain"
+                                className="h-[32px] w-[160px] object-contain"
                             />
-                            <p className="mt-4 text-[13px] font-medium text-slate-500">
+                            <p className="mt-3 text-[13px] font-medium text-slate-500">
                                 {partner.name}
                             </p>
                         </div>

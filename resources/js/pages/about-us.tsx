@@ -18,35 +18,11 @@ export default function AboutUs() {
                                 Transparan, dan Terpercaya
                             </h1>
                         </div>
-                        <p className="mt-10 text-lg text-slate-600 md:mt-32">
-                            Asosiasi Marketplace Indonesia hadir sebagai wadah
-                            informasi, edukasi, dan kolaborasi antar pelaku
-                            marketplace, sekaligus menyediakan data merchant
-                            yang terindikasi melakukan pelanggaran untuk
-                            meningkatkan keamanan transaksi digital.
-                        </p>
-                    </div>
-                </section>
-                <section className="bg-white py-24">
-                    <div className="mx-auto max-w-7xl px-6">
-                        <h2 className="text-3xl font-bold">
-                            Tentang Asosiasi Marketplace Indonesia
-                        </h2>
-                        <p className="mt-12 max-w-5xl leading-8 text-slate-600">
-                            Website ini merupakan media resmi Asosiasi
-                            Marketplace Indonesia yang bertujuan menyediakan
-                            informasi terpercaya seputar perkembangan industri
-                            marketplace, publikasi berita, edukasi bagi pelaku
-                            usaha, serta daftar merchant yang telah dikenai
-                            sanksi atau masuk dalam blacklist berdasarkan hasil
-                            verifikasi dan ketentuan yang berlaku.
-                        </p>
-                        <p className="mt-10 max-w-5xl leading-8 text-slate-600">
-                            Melalui platform ini, kami berharap dapat
-                            meningkatkan kepercayaan antara penjual, pembeli,
-                            dan penyedia layanan marketplace sehingga tercipta
-                            ekosistem perdagangan digital yang sehat,
-                            profesional, dan berintegritas.
+                        <p className="mt-10 text-lg text-slate-600">
+                            Aspirasi (Asosiasi Pasar Daring Mitra SIPLah) adalah
+                            wadah bagi Mitra SIPLah untuk bermusyawarah dan
+                            berkomunikasi dalam meningkatkan kinerja layanan
+                            serta mengatasi berbagai tantangan yang dihadapi.
                         </p>
                     </div>
                 </section>
@@ -57,12 +33,12 @@ export default function AboutUs() {
                                 Arah Organisasi
                             </span>
                             <h2 className="mt-12 text-4xl font-bold text-slate-900">
-                                Visi & Misi
+                                Peran & Tujuan
                             </h2>
                             <p className="mx-auto mt-6 max-w-2xl text-slate-600">
-                                Komitmen Asosiasi Marketplace Indonesia dalam
-                                membangun ekosistem perdagangan digital yang
-                                aman, transparan, profesional, dan terpercaya.
+                                Komitmen Aspirasi dalam membangun ekosistem
+                                pasar daring yang sehat, transparan, dan
+                                terpercaya.
                             </p>
                         </div>
                         <div className="grid gap-8 lg:grid-cols-2">
@@ -73,20 +49,55 @@ export default function AboutUs() {
                                     </div>
                                     <div>
                                         <h3 className="text-2xl font-bold text-slate-900">
-                                            Visi
+                                            Peran
                                         </h3>
                                         <p className="text-sm text-slate-500">
-                                            Tujuan jangka panjang organisasi.
+                                            Kontribusi Asosiasi dalam ekosistem
+                                            pasar daring.
                                         </p>
                                     </div>
                                 </div>
                                 <div className="my-8 h-px bg-slate-100" />
-                                <p className="leading-8 text-slate-600">
-                                    Menjadi pusat informasi dan referensi
-                                    terpercaya dalam mendukung terciptanya
-                                    ekosistem marketplace Indonesia yang aman,
-                                    transparan, profesional, dan berdaya saing.
-                                </p>
+                                <ul className="space-y-5">
+                                    <li className="flex items-start gap-4">
+                                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-blue-500" />
+                                        <span className="leading-7 text-slate-600">
+                                            Meningkatkan kualitas layanan dan
+                                            kuantitas transaksi pada SIPLah
+                                            Kemendikbudristek.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-blue-500" />
+                                        <span className="leading-7 text-slate-600">
+                                            Memperjuangkan kepentingan anggota
+                                            dan industri pasar daring.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-blue-500" />
+                                        <span className="leading-7 text-slate-600">
+                                            Membina kerja sama dengan semua
+                                            pihak yang berhubungan dengan pasar
+                                            daring.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-blue-500" />
+                                        <span className="leading-7 text-slate-600">
+                                            Memprakarsai, mendorong dan ikut
+                                            serta dalam kegiatan pasar daring.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-blue-500" />
+                                        <span className="leading-7 text-slate-600">
+                                            Mengadakan kegiatan yang sah serta
+                                            tidak bertentangan dengan tujuan
+                                            Asosiasi.
+                                        </span>
+                                    </li>
+                                </ul>
                             </div>
                             <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                                 <div className="flex items-center gap-4">
@@ -95,10 +106,10 @@ export default function AboutUs() {
                                     </div>
                                     <div>
                                         <h3 className="text-2xl font-bold text-slate-900">
-                                            Misi
+                                            Tujuan
                                         </h3>
                                         <p className="text-sm text-slate-500">
-                                            Langkah nyata untuk mewujudkan visi.
+                                            Arah bersama yang ingin dicapai.
                                         </p>
                                     </div>
                                 </div>
@@ -107,33 +118,42 @@ export default function AboutUs() {
                                     <li className="flex items-start gap-4">
                                         <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-green-500" />
                                         <span className="leading-7 text-slate-600">
-                                            Menyediakan informasi dan berita
-                                            terkini mengenai perkembangan
-                                            industri marketplace.
+                                            Membangun hubungan kerjasama yang
+                                            sehat dan berkelanjutan antar para
+                                            anggotanya.
                                         </span>
                                     </li>
                                     <li className="flex items-start gap-4">
                                         <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-green-500" />
                                         <span className="leading-7 text-slate-600">
-                                            Meningkatkan literasi digital
-                                            melalui edukasi bagi merchant dan
-                                            masyarakat.
+                                            Menyelenggarakan kegiatan-kegiatan
+                                            untuk peningkatan kualitas layanan
+                                            dan keamanan dalam ekosistem pasar
+                                            daring.
                                         </span>
                                     </li>
                                     <li className="flex items-start gap-4">
                                         <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-green-500" />
                                         <span className="leading-7 text-slate-600">
-                                            Menyediakan informasi merchant yang
-                                            masuk daftar blacklist sebagai
-                                            bentuk perlindungan bagi pengguna.
+                                            Menjadi wadah bagi anggota untuk
+                                            berbagi pengalaman, pengetahuan, dan
+                                            inovasi di bidang pasar daring.
                                         </span>
                                     </li>
                                     <li className="flex items-start gap-4">
                                         <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-green-500" />
                                         <span className="leading-7 text-slate-600">
-                                            Mendorong terciptanya praktik
-                                            perdagangan digital yang adil,
-                                            transparan, dan bertanggung jawab.
+                                            Mewakili dan memperjuangkan
+                                            kepentingan bersama anggota Asosiasi
+                                            di tingkat nasional.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-green-500" />
+                                        <span className="leading-7 text-slate-600">
+                                            Menyelenggarakan program pelatihan
+                                            dan pendidikan untuk meningkatkan
+                                            kompetensi anggotanya.
                                         </span>
                                     </li>
                                 </ul>

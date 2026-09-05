@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\TemplateDocumentType;
 use App\Models\Principal;
 use App\Models\Reseller;
 use Illuminate\Http\Request;
@@ -68,11 +67,9 @@ class PrincipalController extends Controller
         $documents = json_decode(File::get($jsonPath), true) ?? [];
 
         return collect($documents)->map(function (array $document) {
-            $type = TemplateDocumentType::tryFrom($document['label']);
-
             return [
                 'id' => $document['id'],
-                'label' => $type?->label() ?? $document['label'],
+                'label' => $document['label'],
                 'file_name' => $document['file_name'],
                 'file_path' => $document['file_path'],
                 'updated_at' => $document['updated_at'],

@@ -1,9 +1,8 @@
 import { Link } from '@inertiajs/react';
-import { Mail, Phone, MapPin, MessageSquareText } from 'lucide-react';
+import { Mail, MessageSquareText } from 'lucide-react';
 
 const marketplaceLinks = [
     { name: 'Siplah Tokoladang', url: 'https://siplah.tokoladang.co.id/' },
-    { name: 'Siplah Blibli', url: 'https://siplah.blibli.com/' },
     { name: 'Siplah Telkom', url: 'https://siplahtelkom.com/' },
     { name: 'Siplah Eureka', url: 'https://siplah.eurekabookhouse.co.id/' },
     { name: 'Siplah Gramedia', url: 'https://siplahgramedia.id/' },
@@ -99,19 +98,9 @@ export default function Footer() {
                         </h4>
                         <div className="space-y-4 text-slate-400">
                             <div className="flex gap-3">
-                                <MapPin size={18} className="mt-1 shrink-0" />
-
-                                <span>Surabaya, Jawa Timur, Indonesia</span>
-                            </div>
-                            <div className="flex gap-3">
                                 <Mail size={18} className="shrink-0" />
 
-                                <span>info@aspirasiku.id</span>
-                            </div>
-                            <div className="flex gap-3">
-                                <Phone size={18} className="shrink-0" />
-
-                                <span>+62 812 3456 7890</span>
+                                <span>Info.siaspri@gmail.com</span>
                             </div>
                         </div>
                     </div>

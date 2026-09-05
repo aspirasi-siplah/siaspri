@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\TemplateDocumentType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,20 +32,18 @@ class TemplateDocumentManagementController extends Controller
 
         return Inertia::render('template-documents/index-template-document', [
             'documents' => $documents,
-            'label_options' => collect(TemplateDocumentType::cases())->map(
-                fn (TemplateDocumentType $type) => $type->toArray()
-            )->values()->all(),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'label' => ['required', Rule::enum(TemplateDocumentType::class)],
+            'label' => 'required|string|max:255',
             'file' => 'required|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,rar',
         ], [
             'label.required' => 'Label harus diisi.',
-            'label.enum' => 'Label yang dipilih tidak valid.',
+            'label.string' => 'Label harus berupa teks.',
+            'label.max' => 'Label maksimal berukuran 255 karakter.',
             'file.required' => 'File harus diupload.',
             'file.file' => 'Harus berupa file.',
             'file.max' => 'Ukuran file maksimal 10MB.',
@@ -56,7 +52,7 @@ class TemplateDocumentManagementController extends Controller
 
         $documents = $this->getDocuments();
         $label = $request->input('label');
-        $fileName = $this->generateFileName(TemplateDocumentType::from($label), $request->file('file'));
+        $fileName = $this->generateFileName($label, $request->file('file'));
 
         $existingIndex = collect($documents)->search(fn ($doc) => $doc['label'] === $label);
 
@@ -95,11 +91,12 @@ class TemplateDocumentManagementController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $request->validate([
-            'label' => ['required', Rule::enum(TemplateDocumentType::class)],
+            'label' => 'required|string|max:255',
             'file' => 'nullable|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,rar',
         ], [
             'label.required' => 'Label harus diisi.',
-            'label.enum' => 'Label yang dipilih tidak valid.',
+            'label.string' => 'Label harus berupa teks.',
+            'label.max' => 'Label maksimal berukuran 255 karakter.',
             'file.file' => 'Harus berupa file.',
             'file.max' => 'Ukuran file maksimal 10MB.',
             'file.mimes' => 'Format file tidak didukung.',
@@ -120,7 +117,7 @@ class TemplateDocumentManagementController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
 
-            $fileName = $this->generateFileName(TemplateDocumentType::from($label), $request->file('file'));
+            $fileName = $this->generateFileName($label, $request->file('file'));
             $path = $this->storeFile($request->file('file'), $fileName);
             $documents[$index]['file_path'] = $path;
             $documents[$index]['file_name'] = $fileName;
@@ -170,9 +167,9 @@ class TemplateDocumentManagementController extends Controller
         File::put($this->jsonPath, json_encode($documents, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 
-    private function generateFileName(TemplateDocumentType $type, UploadedFile $file): string
+    private function generateFileName(string $label, UploadedFile $file): string
     {
-        return $type->value.'.'.$file->getClientOriginalExtension();
+        return Str::slug($label).'.'.$file->getClientOriginalExtension();
     }
 
     private function storeFile(UploadedFile $file, string $fileName): string

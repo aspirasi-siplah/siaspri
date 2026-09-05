@@ -15,26 +15,11 @@ interface TemplateDocument {
     updated_at: string;
 }
 
-interface LabelOption {
-    value: string;
-    label: string;
-}
-
 interface Props {
     documents: TemplateDocument[];
-    label_options: LabelOption[];
 }
 
-const labelMap: Record<string, string> = {
-    SURAT_PERNYATAAN: 'Surat Pernyataan',
-    SURAT_DUKUNGAN: 'Surat Dukungan',
-    PAKTA_INTEGRITAS: 'Pakta Integritas',
-};
-
-export default function IndexTemplateDocument({
-    documents,
-    label_options,
-}: Props) {
+export default function IndexTemplateDocument({ documents }: Props) {
     const handleDelete = (id: string) => {
         Swal.fire({
             title: 'Hapus Template Dokumen',
@@ -92,7 +77,7 @@ export default function IndexTemplateDocument({
                                 pengguna.
                             </p>
                         </div>
-                        <ModalForm labelOptions={label_options} />
+                        <ModalForm />
                     </div>
                     <CustomTable
                         title="Daftar Template Dokumen"
@@ -102,7 +87,12 @@ export default function IndexTemplateDocument({
                                 className="text-muted-foreground"
                             />
                         }
-                        header={['Label', 'Nama File', 'Terakhir Diperbarui', 'Aksi']}
+                        header={[
+                            'Label',
+                            'Nama File',
+                            'Terakhir Diperbarui',
+                            'Aksi',
+                        ]}
                         headerAlign={[
                             'text-left',
                             'text-left',
@@ -114,13 +104,15 @@ export default function IndexTemplateDocument({
                             documents.map((doc) => (
                                 <tr key={doc.id} className="border-t">
                                     <td className="px-4 py-3 text-sm font-medium">
-                                        {labelMap[doc.label] ?? doc.label}
+                                        {doc.label}
                                     </td>
                                     <td className="px-4 py-3 text-sm text-gray-600">
                                         {doc.file_name}
                                     </td>
                                     <td className="px-4 py-3 text-sm text-gray-600">
-                                        {new Date(doc.updated_at).toLocaleDateString('id-ID', {
+                                        {new Date(
+                                            doc.updated_at,
+                                        ).toLocaleDateString('id-ID', {
                                             day: 'numeric',
                                             month: 'long',
                                             year: 'numeric',
@@ -128,10 +120,7 @@ export default function IndexTemplateDocument({
                                     </td>
                                     <td className="px-4 py-3">
                                         <div className="flex justify-center gap-2">
-                                            <ModalForm
-                                                document={doc}
-                                                labelOptions={label_options}
-                                            />
+                                            <ModalForm document={doc} />
                                             <button
                                                 onClick={() =>
                                                     handleDelete(doc.id)
