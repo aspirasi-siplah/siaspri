@@ -605,7 +605,7 @@ export default function ResellerImport({ principal, activeImport }: Props) {
                                                 Kolom{' '}
                                                 <code>Nama File Dokumen</code>{' '}
                                                 berisi nama file (beserta
-                                                ekstensi) persis seperti nama
+                                                ekstensi, cth: <span className="font-mono font-semibold">file.pdf</span>) persis seperti nama
                                                 file di dalam ZIP.
                                             </li>
                                             <li>

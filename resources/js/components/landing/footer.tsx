@@ -21,7 +21,7 @@ export default function Footer() {
                         <p className="mt-4 text-sm leading-7 text-slate-400">
                             Platform Asosiasi Pasar Daring Mitra SIPLah
                             (Aspirasi) yang membantu masyarakat menyampaikan
-                            masukan, pengaduan, serta memperoleh informasi
+                            masukan serta memperoleh informasi
                             secara transparan dan terpercaya.
                         </p>
                         <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-slate-800 px-4 py-2 text-sm text-slate-300">
