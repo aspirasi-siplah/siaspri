@@ -100,7 +100,7 @@ export default function Footer() {
                             <div className="flex gap-3">
                                 <Mail size={18} className="shrink-0" />
 
-                                <span>Info.siaspri@gmail.com</span>
+                                <span>info.siaspri@gmail.com</span>
                             </div>
                         </div>
                     </div>

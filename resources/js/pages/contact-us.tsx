@@ -32,14 +32,14 @@ export default function ContactUs() {
                                     className="shrink-0 text-blue-600"
                                 />
                                 <a
-                                    href="mailto:Info.siaspri@gmail.com"
+                                    href="mailto:info.siaspri@gmail.com"
                                     className="text-lg font-medium text-slate-700 hover:text-blue-600"
                                 >
-                                    Info.siaspri@gmail.com
+                                    info.siaspri@gmail.com
                                 </a>
                             </div>
                             <a
-                                href="mailto:Info.siaspri@gmail.com"
+                                href="mailto:info.siaspri@gmail.com"
                                 className="mt-8 inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md"
                             >
                                 Kirim Email
