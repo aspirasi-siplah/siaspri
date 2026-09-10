@@ -1,7 +1,7 @@
 
 import { Head, Link, router } from '@inertiajs/react';
 
-import { CalendarDays, ArrowRight, Newspaper } from 'lucide-react';
+import { CalendarDays, ArrowRight, Newspaper, Image } from 'lucide-react';
 import { useState } from 'react';
 import LandingLayout from '@/layouts/landing-layout';
 import news from '@/routes/news';
@@ -115,11 +115,18 @@ return;
                                     className="group grid overflow-hidden rounded-3xl border bg-white shadow-sm transition hover:shadow-xl lg:grid-cols-2"
                                 >
                                     <div className="overflow-hidden">
-                                        <img
-                                            src={featured.thumbnail}
-                                            alt={featured.title}
-                                            className="h-full max-h-120 w-full object-cover transition duration-700 group-hover:scale-105"
-                                        />
+                                        {featured.thumbnail ? (
+                                            <img
+                                                src={featured.thumbnail}
+                                                alt={featured.title}
+                                                className="h-full max-h-120 w-full object-cover transition duration-700 group-hover:scale-105"
+                                            />
+                                        ): (
+                                            <div className="flex flex-col h-full max-h-120 w-full items-center justify-center bg-slate-100">
+                                                <Image size={48} className="text-slate-300" />
+                                                <p className="text-slate-400 text-xs font-medium mt-2">Tidak ada gambar</p>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex flex-col justify-center p-10">
                                         <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
