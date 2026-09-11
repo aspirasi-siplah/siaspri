@@ -37,7 +37,9 @@ class ResellerManagementController extends Controller
         $data = $request->validated();
         unset($data['file'], $data['reference_code']);
         if ($request->hasFile('file')) {
-            Storage::delete($reseller->document_path);
+            if ($reseller->document_path) {
+                Storage::delete($reseller->document_path);
+            }
             $data['document_path'] = $request->file('file')->store('resellers');
         }
         $reseller->update($data);
@@ -114,7 +116,11 @@ class ResellerManagementController extends Controller
     public function destroy(Principal $principal, Reseller $reseller): RedirectResponse
     {
         abort_unless($reseller->principal_id === $principal->id, 404);
-        Storage::delete($reseller->document_path);
+
+        if ($reseller->document_path) {
+            Storage::delete($reseller->document_path);
+        }
+
         $reseller->delete();
 
         return back()->with('success', 'Reseller berhasil dihapus.');
