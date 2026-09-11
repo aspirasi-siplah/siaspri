@@ -24,7 +24,7 @@ class Reseller extends Model
     {
         $driver = $query->getQuery()->getConnection()->getDriverName();
 
-        $query->where('name', $driver === 'pgsql' ? 'ILIKE' : 'LIKE', '%'.$search.'%');
+        $query->where('name', $driver === 'pgsql' ? 'ILIKE' : 'LIKE', '%' . $search . '%');
     }
 
     public function getReferenceLinkAttribute(): ?string
@@ -41,7 +41,7 @@ class Reseller extends Model
         $abbreviation = self::nameAbbreviation($name);
 
         do {
-            $referenceCode = 'ASPRI-'.$abbreviation.'-'.str_pad(
+            $referenceCode = 'ASPRI-' . $abbreviation . '-' . str_pad(
                 (string) random_int(0, 99999),
                 5,
                 '0',
@@ -56,12 +56,15 @@ class Reseller extends Model
     {
         $words = preg_split('/\s+/', trim($name), -1, PREG_SPLIT_NO_EMPTY);
 
+
         $abbreviation = '';
 
         foreach ($words as $word) {
             $abbreviation .= strtoupper(substr($word, 0, 1));
         }
 
-        return $abbreviation !== '' ? $abbreviation : 'X';
+        $newWords = preg_replace('/[^a-zA-Z]/', '', $abbreviation);
+
+        return $newWords !== '' ? $newWords : 'X';
     }
 }
