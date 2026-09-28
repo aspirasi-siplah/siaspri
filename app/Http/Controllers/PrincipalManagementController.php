@@ -7,6 +7,7 @@ use App\Http\Requests\StorePrincipalRequest;
 use App\Http\Requests\UpdatePrincipalRequest;
 use App\Models\Principal;
 use App\Models\Reseller;
+use App\Models\ResellerExport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,9 +15,16 @@ use Inertia\Response;
 
 class PrincipalManagementController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $export = ResellerExport::query()
+            ->latestForUser($request->user())
+            ->first();
+
         return Inertia::render('principal-management/index', [
+            'activeExport' => $export?->payload(),
+            'totalPrincipals' => Principal::query()->count(),
+            'totalResellers' => Reseller::query()->count(),
             'principals' => Principal::query()->withCount(['resellers', 'documents'])->latest()->paginate(10)->through(fn (Principal $principal) => [
                 'id' => $principal->id,
                 'name' => $principal->name,
@@ -61,6 +69,9 @@ class PrincipalManagementController extends Controller
         return back()->with('success', 'Principal berhasil dihapus.');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function payload(Principal $principal, Request $request): array
     {
         $resellers = Reseller::query()
