@@ -1,5 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Building2, Eye, Trash2 } from 'lucide-react';
+import { Building2, Download, Eye, Loader2, Trash2, Users } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import Swal from 'sweetalert2';
 import CustomTable from '@/components/custom-components/CustomTable';
 import Pagination from '@/components/custom-components/Pagination';
@@ -11,6 +13,9 @@ import {
 } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import principalManagement from '@/routes/principal-management';
+import resellersExport from '@/routes/resellers-export';
+import { Button } from '@/components/ui/button';
+import StatCard from '@/components/stat-card';
 
 interface Principal {
     id: number;
@@ -22,7 +27,16 @@ interface Principal {
     documents_count: number;
     created_at: string | null;
 }
+interface ActiveExport {
+    id: number;
+    status: 'processing' | 'completed' | 'failed';
+    total: number;
+    download_url: string | null;
+}
 interface Props {
+    activeExport: ActiveExport | null;
+    totalPrincipals: number | null;
+    totalResellers: number | null;
     principals: {
         data: Principal[];
         current_page: number;
@@ -34,7 +48,76 @@ interface Props {
     };
 }
 
-export default function Index({ principals }: Props) {
+export default function Index({ activeExport, totalPrincipals, totalResellers, principals }: Props) {
+    const [onExporting, setOnExporting] = useState(false);
+    const handledExportId = useRef<number | null>(null);
+
+    useEffect(() => {
+        if (
+            !activeExport ||
+            activeExport.status !== 'processing' ||
+            handledExportId.current === activeExport.id
+        ) {
+            return;
+        }
+
+        handledExportId.current = activeExport.id;
+        setOnExporting(true);
+
+        const poll = setInterval(async () => {
+            try {
+                const { data } = await axios.get(
+                    resellersExport.status.url(activeExport.id),
+                );
+
+                if (data.status === 'processing') {
+                    return;
+                }
+
+                clearInterval(poll);
+                setOnExporting(false);
+
+                if (data.status === 'completed') {
+                    if (data.download_url) {
+                        window.location.href = data.download_url;
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: `${data.total} data reseller berhasil diekspor.`,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Data reseller gagal diekspor.',
+                    });
+                }
+            } catch {
+                clearInterval(poll);
+                setOnExporting(false);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Status proses ekspor tidak dapat diperiksa.',
+                });
+            }
+        }, 3000);
+
+        return () => clearInterval(poll);
+    }, [activeExport]);
+
+    const exportResellers = () => {
+        setOnExporting(true);
+
+        router.post(resellersExport.store.url(), {
+            preserveScroll: true,
+            onError: () => setOnExporting(false),
+        });
+    };
+
     const destroy = (id: number) => {
         Swal.fire({
             title: 'Hapus Principal',
@@ -86,7 +169,40 @@ export default function Index({ principals }: Props) {
                                 pendukung.
                             </p>
                         </div>
-                        <ModalForm />
+                        <div className="flex items-center gap-2">
+                            <Button
+                                className="rounded-xl"
+                                onClick={exportResellers}
+                                disabled={onExporting}
+                            >
+                                {onExporting ? (
+                                    <Loader2
+                                        size={16}
+                                        className="animate-spin"
+                                    />
+                                ) : (
+                                    <Download size={16} />
+                                )}
+                                {onExporting ? 'Menyiapkan...' : 'Unduh .xlsx'}
+                            </Button>
+                            <ModalForm />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <StatCard
+                            title="Total Principal"
+                            value={totalPrincipals || 0}
+                            icon={
+                                <Building2 size={24} />
+                            }
+                        />
+                        <StatCard
+                            title="Total Reseller"
+                            value={totalResellers || 0}
+                            icon={
+                                <Users size={24} />
+                            }
+                        />
                     </div>
                     <CustomTable
                         title="Daftar Principal"
@@ -118,10 +234,10 @@ export default function Index({ principals }: Props) {
                                             </p>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-1 text-sm font-medium text-gray-700 text-center">
+                                    <td className="px-4 py-1 text-center text-sm font-medium text-gray-700">
                                         {principal.resellers_count}
                                     </td>
-                                    <td className="px-4 py-1 text-sm text-gray-600 text-center">
+                                    <td className="px-4 py-1 text-center text-sm text-gray-600">
                                         {principal.documents_count}
                                     </td>
                                     <td className="px-4 py-1">

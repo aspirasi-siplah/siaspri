@@ -14,6 +14,7 @@ use App\Http\Controllers\PrincipalManagementController;
 use App\Http\Controllers\PrincipalReferenceDocumentController;
 use App\Http\Controllers\PrincipalReferenceDocumentManagementController;
 use App\Http\Controllers\ResellerController;
+use App\Http\Controllers\ResellerExportController;
 use App\Http\Controllers\ResellerManagementController;
 use App\Http\Controllers\TemplateDocumentManagementController;
 use App\Http\Controllers\UserManagementController;
@@ -124,6 +125,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{principal}/documents', [PrincipalDocumentManagementController::class, 'store'])->name('principal-management.documents.store');
         Route::put('/{principal}/documents/{document}', [PrincipalDocumentManagementController::class, 'update'])->name('principal-management.documents.update');
         Route::delete('/{principal}/documents/{document}/delete', [PrincipalDocumentManagementController::class, 'destroy'])->name('principal-management.documents.destroy');
+    });
+
+    Route::prefix('resellers-export')->group(function () {
+        Route::post('/', [ResellerExportController::class, 'store'])->name('resellers-export.store');
+        Route::get('/{export}/status', [ResellerExportController::class, 'status'])->name('resellers-export.status');
+        Route::get('/{export}/download', [ResellerExportController::class, 'download'])->name('resellers-export.download');
     });
 
     Route::prefix('reference-documents-management')->group(function () {
