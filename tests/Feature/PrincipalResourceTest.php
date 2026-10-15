@@ -2,6 +2,7 @@
 
 use App\Models\Principal;
 use App\Models\PrincipalDocument;
+use App\Models\Program;
 use App\Models\Reseller;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -46,8 +47,15 @@ test('admin can create, manage children, and soft delete a principal', function 
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $this->post(route('principal-management.store'), ['name' => 'PT ASPRI'])->assertRedirect();
+    $program = Program::factory()->create();
+
+    $this->post(route('principal-management.store'), [
+        'name' => 'PT ASPRI',
+        'program_id' => $program->id,
+    ])->assertRedirect();
     $principal = Principal::firstOrFail();
+
+    expect($principal->program_id)->toBe($program->id);
 
     $this->post(route('principal-management.resellers.store', $principal), [
         'name' => 'PT Reseller',
@@ -67,4 +75,42 @@ test('admin can create, manage children, and soft delete a principal', function 
 
     $this->delete(route('principal-management.destroy', $principal))->assertRedirect();
     expect($principal->fresh()->trashed())->toBeTrue();
+});
+
+test('program is required when storing or updating a principal', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $this->post(route('principal-management.store'), ['name' => 'PT ASPRI'])
+        ->assertSessionHasErrors('program_id');
+
+    $principal = Principal::factory()->create();
+
+    $this->put(route('principal-management.update', $principal), ['name' => 'PT ASPRI'])
+        ->assertSessionHasErrors('program_id');
+});
+
+test('principals can be filtered by program on the management and landing pages', function () {
+    $this->actingAs(User::factory()->create());
+
+    $programA = Program::factory()->create(['name' => 'Program A']);
+    $programB = Program::factory()->create(['name' => 'Program B']);
+    Principal::factory()->for($programA)->create(['name' => 'Principal A']);
+    Principal::factory()->for($programB)->create(['name' => 'Principal B']);
+
+    $this->get(route('principal-management.index', ['program_id' => $programA->id]))
+        ->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('principal-management/index')
+            ->has('principals.data', 1)
+            ->where('principals.data.0.name', 'Principal A')
+            ->where('filters.program_id', $programA->id));
+
+    $this->get(route('principals.index', ['program_id' => $programB->id]))
+        ->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('principals/index-landing')
+            ->has('principals.data', 1)
+            ->where('principals.data.0.name', 'Principal B')
+            ->where('filters.program_id', $programB->id));
 });

@@ -1,8 +1,17 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Building2, Download, Eye, Loader2, Trash2, Users } from 'lucide-react';
+import {
+    Building2,
+    Download,
+    Eye,
+    Filter,
+    Loader2,
+    Trash2,
+    Users,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Combobox from '@/components/custom-components/Combobox';
 import CustomTable from '@/components/custom-components/CustomTable';
 import Pagination from '@/components/custom-components/Pagination';
 import ModalForm from '@/components/principal-management/ModalForm';
@@ -17,12 +26,19 @@ import resellersExport from '@/routes/resellers-export';
 import { Button } from '@/components/ui/button';
 import StatCard from '@/components/stat-card';
 
+interface Program {
+    id: number;
+    code: string;
+    name: string;
+    year: number;
+}
 interface Principal {
     id: number;
     name: string;
     notes: string | null;
     npwp_number: string | null;
     nib: string | null;
+    program: Program | null;
     resellers_count: number;
     documents_count: number;
     created_at: string | null;
@@ -37,6 +53,10 @@ interface Props {
     activeExport: ActiveExport | null;
     totalPrincipals: number | null;
     totalResellers: number | null;
+    programs: Program[];
+    filters: {
+        program_id: number | null;
+    };
     principals: {
         data: Principal[];
         current_page: number;
@@ -48,7 +68,14 @@ interface Props {
     };
 }
 
-export default function Index({ activeExport, totalPrincipals, totalResellers, principals }: Props) {
+export default function Index({
+    activeExport,
+    totalPrincipals,
+    totalResellers,
+    programs,
+    filters,
+    principals,
+}: Props) {
     const [onExporting, setOnExporting] = useState(false);
     const handledExportId = useRef<number | null>(null);
 
@@ -118,6 +145,14 @@ export default function Index({ activeExport, totalPrincipals, totalResellers, p
         });
     };
 
+    const filterByProgram = (programId: string) => {
+        router.get(
+            principalManagement.index.url(),
+            programId ? { program_id: programId } : {},
+            { preserveState: true, preserveScroll: true, replace: true },
+        );
+    };
+
     const destroy = (id: number) => {
         Swal.fire({
             title: 'Hapus Principal',
@@ -185,24 +220,46 @@ export default function Index({ activeExport, totalPrincipals, totalResellers, p
                                 )}
                                 {onExporting ? 'Menyiapkan...' : 'Unduh .xlsx'}
                             </Button>
-                            <ModalForm />
+                            <ModalForm programs={programs} />
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
                         <StatCard
                             title="Total Principal"
                             value={totalPrincipals || 0}
-                            icon={
-                                <Building2 size={24} />
-                            }
+                            icon={<Building2 size={24} />}
                         />
                         <StatCard
                             title="Total Reseller"
                             value={totalResellers || 0}
-                            icon={
-                                <Users size={24} />
-                            }
+                            icon={<Users size={24} />}
                         />
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="sm:w-80">
+                            <Combobox
+                                options={[
+                                    {
+                                        label: 'Semua Program / Banpem',
+                                        value: '',
+                                    },
+                                    ...programs.map((program) => ({
+                                        label: `${program.name} (${program.year})`,
+                                        value: program.id,
+                                    })),
+                                ]}
+                                value={
+                                    filters.program_id
+                                        ? String(filters.program_id)
+                                        : ''
+                                }
+                                onChange={filterByProgram}
+                                placeholder="Semua Program / Banpem"
+                                searchPlaceholder="Cari program..."
+                                emptyText="Program tidak ditemukan"
+                                icon={<Filter size={16} />}
+                            />
+                        </div>
                     </div>
                     <CustomTable
                         title="Daftar Principal"
@@ -212,8 +269,15 @@ export default function Index({ activeExport, totalPrincipals, totalResellers, p
                                 className="text-muted-foreground"
                             />
                         }
-                        header={['Principal', 'Reseller', 'Dokumen', 'Aksi']}
+                        header={[
+                            'Principal',
+                            'Program / Banpem',
+                            'Reseller',
+                            'Dokumen',
+                            'Aksi',
+                        ]}
                         headerAlign={[
+                            'text-left',
                             'text-left',
                             'text-center',
                             'text-center',
@@ -233,6 +297,23 @@ export default function Index({ activeExport, totalPrincipals, totalResellers, p
                                                     'NPWP belum diisi'}
                                             </p>
                                         </div>
+                                    </td>
+                                    <td className="max-w-56 px-4 py-1">
+                                        {principal.program ? (
+                                            <div className="flex flex-col gap-1">
+                                                <p className="text-sm font-medium text-gray-700">
+                                                    {principal.program.name}
+                                                </p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {principal.program.code} ·{' '}
+                                                    {principal.program.year}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <span className="text-sm text-muted-foreground">
+                                                -
+                                            </span>
+                                        )}
                                     </td>
                                     <td className="px-4 py-1 text-center text-sm font-medium text-gray-700">
                                         {principal.resellers_count}
@@ -267,6 +348,7 @@ export default function Index({ activeExport, totalPrincipals, totalResellers, p
                                                             principal={
                                                                 principal
                                                             }
+                                                            programs={programs}
                                                         />
                                                     </span>
                                                 </TooltipTrigger>
@@ -301,7 +383,7 @@ export default function Index({ activeExport, totalPrincipals, totalResellers, p
                         ) : (
                             <tr>
                                 <td
-                                    colSpan={4}
+                                    colSpan={5}
                                     className="py-16 text-center text-sm text-gray-700"
                                 >
                                     Tidak ada data

@@ -3,9 +3,17 @@ import { Building2, Check, Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import principalManagement from '@/routes/principal-management';
+import Combobox from '../custom-components/Combobox';
 import CustomModal from '../custom-components/CustomModal';
 import FormInput from '../custom-components/FormInput';
 import FormTextArea from '../custom-components/FormTextArea';
+
+interface Program {
+    id: number;
+    code: string;
+    name: string;
+    year: number;
+}
 
 interface Principal {
     id: number;
@@ -13,13 +21,15 @@ interface Principal {
     notes: string | null;
     npwp_number: string | null;
     nib: string | null;
+    program?: Program | null;
 }
 
 interface Props {
     principal?: Principal;
+    programs: Program[];
 }
 
-export default function ModalForm({ principal }: Props) {
+export default function ModalForm({ principal, programs }: Props) {
     const [open, setOpen] = useState(false);
     const isEdit = !!principal;
 
@@ -28,6 +38,7 @@ export default function ModalForm({ principal }: Props) {
         notes: principal?.notes ?? '',
         npwp_number: principal?.npwp_number ?? '',
         nib: principal?.nib ?? '',
+        program_id: principal?.program?.id ? String(principal.program.id) : '',
     });
 
     const handleOpen = () => {
@@ -37,6 +48,9 @@ export default function ModalForm({ principal }: Props) {
                 notes: principal.notes ?? '',
                 npwp_number: principal.npwp_number ?? '',
                 nib: principal.nib ?? '',
+                program_id: principal.program?.id
+                    ? String(principal.program.id)
+                    : '',
             });
         }
 
@@ -127,6 +141,25 @@ export default function ModalForm({ principal }: Props) {
                     <div className="max-h-[60vh] overflow-y-auto pr-1">
                         <div className="grid gap-5 md:grid-cols-2">
                             <div className="md:col-span-2">
+                                <Combobox
+                                    name="program_id"
+                                    label="Program / Banpem"
+                                    options={programs.map((program) => ({
+                                        label: `${program.name} (${program.year})`,
+                                        value: program.id,
+                                    }))}
+                                    value={form.data.program_id}
+                                    onChange={(value) =>
+                                        form.setData('program_id', value)
+                                    }
+                                    placeholder="Pilih Program / Banpem"
+                                    searchPlaceholder="Cari program..."
+                                    emptyText="Program tidak ditemukan"
+                                    error={form.errors.program_id}
+                                    required
+                                />
+                            </div>
+                            <div className="md:col-span-2">
                                 <FormInput
                                     name="name"
                                     label="Nama Principal"
@@ -149,10 +182,7 @@ export default function ModalForm({ principal }: Props) {
                                 onChange={(
                                     e: React.ChangeEvent<HTMLInputElement>,
                                 ) =>
-                                    form.setData(
-                                        'npwp_number',
-                                        e.target.value,
-                                    )
+                                    form.setData('npwp_number', e.target.value)
                                 }
                                 error={form.errors.npwp_number}
                                 info="Opsional"
@@ -165,12 +195,7 @@ export default function ModalForm({ principal }: Props) {
                                 value={form.data.nib}
                                 onChange={(
                                     e: React.ChangeEvent<HTMLInputElement>,
-                                ) =>
-                                    form.setData(
-                                        'nib',
-                                        e.target.value,
-                                    )
-                                }
+                                ) => form.setData('nib', e.target.value)}
                                 error={form.errors.nib}
                                 info="Opsional"
                             />

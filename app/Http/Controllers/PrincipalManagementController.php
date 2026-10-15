@@ -6,6 +6,7 @@ use App\Enums\PrincipalDocumentType;
 use App\Http\Requests\StorePrincipalRequest;
 use App\Http\Requests\UpdatePrincipalRequest;
 use App\Models\Principal;
+use App\Models\Program;
 use App\Models\Reseller;
 use App\Models\ResellerExport;
 use Illuminate\Http\RedirectResponse;
@@ -25,22 +26,39 @@ class PrincipalManagementController extends Controller
             'activeExport' => $export?->payload(),
             'totalPrincipals' => Principal::query()->count(),
             'totalResellers' => Reseller::query()->count(),
-            'principals' => Principal::query()->withCount(['resellers', 'documents'])->latest()->paginate(10)->through(fn (Principal $principal) => [
-                'id' => $principal->id,
-                'name' => $principal->name,
-                'notes' => $principal->notes,
-                'npwp_number' => $principal->npwp_number,
-                'nib' => $principal->nib,
-                'resellers_count' => $principal->resellers_count,
-                'documents_count' => $principal->documents_count,
-                'created_at' => $principal->created_at?->translatedFormat('d M Y H:i'),
-            ]),
+            'programs' => Program::query()->orderBy('name')->get(['id', 'code', 'name', 'year']),
+            'filters' => [
+                'program_id' => $request->integer('program_id') ?: null,
+            ],
+            'principals' => Principal::query()
+                ->with('program:id,name,code,year')
+                ->withCount(['resellers', 'documents'])
+                ->when($request->integer('program_id'), fn ($query, $programId) => $query->where('program_id', $programId))
+                ->latest()
+                ->paginate(10)
+                ->withQueryString()
+                ->through(fn (Principal $principal) => [
+                    'id' => $principal->id,
+                    'name' => $principal->name,
+                    'notes' => $principal->notes,
+                    'npwp_number' => $principal->npwp_number,
+                    'nib' => $principal->nib,
+                    'program' => $principal->program ? [
+                        'id' => $principal->program->id,
+                        'code' => $principal->program->code,
+                        'name' => $principal->program->name,
+                        'year' => $principal->program->year,
+                    ] : null,
+                    'resellers_count' => $principal->resellers_count,
+                    'documents_count' => $principal->documents_count,
+                    'created_at' => $principal->created_at?->translatedFormat('d M Y H:i'),
+                ]),
         ]);
     }
 
     public function show(Request $request, Principal $principal): Response
     {
-        $principal->load('documents');
+        $principal->load('documents', 'program');
 
         return Inertia::render('principal-management/show', [
             'principal' => $this->payload($principal, $request),
@@ -88,6 +106,12 @@ class PrincipalManagementController extends Controller
             'notes' => $principal->notes,
             'npwp_number' => $principal->npwp_number,
             'nib' => $principal->nib,
+            'program' => $principal->program ? [
+                'id' => $principal->program->id,
+                'code' => $principal->program->code,
+                'name' => $principal->program->name,
+                'year' => $principal->program->year,
+            ] : null,
             'resellers_total' => (int) $principal->resellers()->count(),
             'resellers' => [
                 'data' => collect($resellers->items())->map(fn (Reseller $reseller) => [

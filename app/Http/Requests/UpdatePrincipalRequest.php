@@ -27,6 +27,18 @@ class UpdatePrincipalRequest extends FormRequest
             'notes' => ['nullable', 'string'],
             'npwp_number' => ['nullable', 'string', 'max:255'],
             'nib' => ['nullable', 'string', 'max:255'],
+            'program_id' => ['required', 'integer', 'exists:programs,id'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'program_id.required' => 'Program wajib dipilih.',
+            'program_id.exists' => 'Program yang dipilih tidak valid.',
         ];
     }
 }
