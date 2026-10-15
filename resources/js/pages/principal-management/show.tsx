@@ -4,6 +4,7 @@ import {
     Building2,
     Download,
     Eye,
+    FileBadge,
     FileText,
     FileUp,
     Hash,
@@ -60,6 +61,12 @@ type Principal = {
     notes: string | null;
     npwp_number: string | null;
     nib: string | null;
+    program: {
+        id: number;
+        code: string;
+        name: string;
+        year: number;
+    } | null;
     resellers_total: number;
     resellers: Resellers;
     documents: PrincipalDocument[];
@@ -142,6 +149,13 @@ export default function Show({
 
     const infoItems = [
         {
+            icon: FileBadge,
+            label: 'Program / Banpem',
+            value: principal.program
+                ? `${principal.program.name} (${principal.program.year})`
+                : '-',
+        },
+        {
             icon: Hash,
             label: 'NPWP',
             value: principal.npwp_number || '-',
@@ -202,7 +216,7 @@ export default function Show({
                                 </div>
                             </div>
 
-                            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+                            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                                 {infoItems.map((item) => (
                                     <div
                                         key={item.label}
@@ -342,7 +356,7 @@ export default function Show({
                                     Daftar reseller terdaftar pada principal ini
                                 </p>
                             </div>
-                            <div className="flex flex-col md:flex-row md:flex-wrap md:items-center gap-2">
+                            <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
                                 <button
                                     onClick={() => {
                                         setEditingReseller(null);
@@ -355,7 +369,7 @@ export default function Show({
                                 </button>
                                 <Link
                                     href={resellers.import(principal.id)}
-                                    className="inline-flex items-center gap-2 rounded-lg border border-blue-500 px-4 py-[7px] text-sm text-blue-600 font-medium transition hover:bg-blue-600 hover:text-white"
+                                    className="inline-flex items-center gap-2 rounded-lg border border-blue-500 px-4 py-[7px] text-sm font-medium text-blue-600 transition hover:bg-blue-600 hover:text-white"
                                 >
                                     <FileUp size={16} />
                                     Bulk Import

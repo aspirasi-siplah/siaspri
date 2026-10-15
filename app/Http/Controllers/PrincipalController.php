@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Principal;
+use App\Models\Program;
 use App\Models\Reseller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -14,9 +15,31 @@ class PrincipalController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('principals/index-landing', [
-            'principals' => Principal::query()->withCount(['resellers', 'documents'])
+            'principals' => Principal::query()
+                ->with('program:id,name,code,year')
+                ->withCount(['resellers', 'documents'])
                 ->when($request->string('search')->value(), fn ($query, $search) => $query->where('name', 'ILIKE', '%'.$search.'%'))
-                ->latest()->paginate(12)->withQueryString(),
+                ->when($request->integer('program_id'), fn ($query, $programId) => $query->where('program_id', $programId))
+                ->latest()
+                ->paginate(12)
+                ->withQueryString()
+                ->through(fn (Principal $principal) => [
+                    'id' => $principal->id,
+                    'name' => $principal->name,
+                    'notes' => $principal->notes,
+                    'program' => $principal->program ? [
+                        'id' => $principal->program->id,
+                        'code' => $principal->program->code,
+                        'name' => $principal->program->name,
+                        'year' => $principal->program->year,
+                    ] : null,
+                    'resellers_count' => $principal->resellers_count,
+                    'documents_count' => $principal->documents_count,
+                ]),
+            'programs' => Program::query()->orderBy('name')->get(['id', 'code', 'name', 'year']),
+            'filters' => [
+                'program_id' => $request->integer('program_id') ?: null,
+            ],
             'template_documents' => $this->templateDocuments(),
         ]);
     }

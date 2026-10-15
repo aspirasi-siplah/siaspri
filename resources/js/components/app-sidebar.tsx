@@ -4,6 +4,7 @@ import {
     Ban,
     Building2,
     FileText,
+    HandCoins,
     House,
     LayoutGrid,
     Newspaper,
@@ -28,6 +29,7 @@ import blacklistMerchants from '@/routes/blacklist-merchants';
 import categories from '@/routes/categories';
 import newsManagement from '@/routes/news-management';
 import principalManagement from '@/routes/principal-management';
+import programsManagement from '@/routes/programs-management';
 import templateDocumentsManagement from '@/routes/template-documents-management';
 import userManagement from '@/routes/user-management';
 import type { NavItem } from '@/types';
@@ -69,6 +71,12 @@ const mainNavItems: ItemsProps = [
         title: 'Blacklist Merchant',
         href: blacklistMerchants.index(),
         icon: Ban,
+        activeKey: 'startsWith',
+    },
+    {
+        title: 'Program / Banpem',
+        href: programsManagement.index(),
+        icon: HandCoins,
         activeKey: 'startsWith',
     },
     {

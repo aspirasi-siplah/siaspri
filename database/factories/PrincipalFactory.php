@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Principal;
+use App\Models\Program;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,6 +23,7 @@ class PrincipalFactory extends Factory
             'notes' => fake()->optional()->sentence(),
             'npwp_number' => fake()->optional()->numerify('##.###.###.#-###.###'),
             'nib' => fake()->optional()->numerify('###############'),
+            'program_id' => Program::factory(),
         ];
     }
 }

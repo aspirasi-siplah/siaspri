@@ -13,6 +13,7 @@ use App\Http\Controllers\PrincipalDocumentManagementController;
 use App\Http\Controllers\PrincipalManagementController;
 use App\Http\Controllers\PrincipalReferenceDocumentController;
 use App\Http\Controllers\PrincipalReferenceDocumentManagementController;
+use App\Http\Controllers\ProgramManagementController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\ResellerExportController;
 use App\Http\Controllers\ResellerManagementController;
@@ -125,6 +126,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{principal}/documents', [PrincipalDocumentManagementController::class, 'store'])->name('principal-management.documents.store');
         Route::put('/{principal}/documents/{document}', [PrincipalDocumentManagementController::class, 'update'])->name('principal-management.documents.update');
         Route::delete('/{principal}/documents/{document}/delete', [PrincipalDocumentManagementController::class, 'destroy'])->name('principal-management.documents.destroy');
+    });
+
+    Route::prefix('programs-management')->group(function () {
+        Route::get('/', [ProgramManagementController::class, 'index'])->name('programs-management.index');
+        Route::post('/', [ProgramManagementController::class, 'store'])->name('programs-management.store');
+        Route::put('/{program}', [ProgramManagementController::class, 'update'])->name('programs-management.update');
+        Route::delete('/{program}/delete', [ProgramManagementController::class, 'destroy'])->name('programs-management.destroy');
     });
 
     Route::prefix('resellers-export')->group(function () {

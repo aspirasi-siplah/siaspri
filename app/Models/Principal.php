@@ -13,7 +13,12 @@ class Principal extends Model
     /** @use HasFactory<PrincipalFactory> */
     use HasFactory, LogsModelActivity, SoftDeletes;
 
-    protected $fillable = ['name', 'notes', 'npwp_number', 'nib'];
+    protected $fillable = ['name', 'notes', 'npwp_number', 'nib', 'program_id'];
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
+    }
 
     public function resellers()
     {

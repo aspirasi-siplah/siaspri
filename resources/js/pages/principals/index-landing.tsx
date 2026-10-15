@@ -4,19 +4,29 @@ import {
     Building2,
     Download,
     FileText,
+    Filter,
     Search,
     UsersRound,
 } from 'lucide-react';
 import { useState } from 'react';
+import Combobox from '@/components/custom-components/Combobox';
 import Pagination from '@/components/custom-components/Pagination';
 import LandingLayout from '@/layouts/landing-layout';
 import principals from '@/routes/principals';
 import templateDocuments from '@/routes/template-documents';
 
+type Program = {
+    id: number;
+    code: string;
+    name: string;
+    year: number;
+};
+
 type Principal = {
     id: number;
     name: string;
     notes: string | null;
+    program: Program | null;
     resellers_count: number;
     documents_count: number;
 };
@@ -31,6 +41,8 @@ type TemplateDocument = {
 
 export default function Index({
     principals: data,
+    programs,
+    filters,
     template_documents,
 }: {
     principals: {
@@ -40,14 +52,30 @@ export default function Index({
         next_page_url: string | null;
         prev_page_url: string | null;
     };
+    programs: Program[];
+    filters: {
+        program_id: number | null;
+    };
     template_documents: TemplateDocument[];
 }) {
     const [search, setSearch] = useState('');
+    const [programId, setProgramId] = useState(
+        filters.program_id ? String(filters.program_id) : '',
+    );
     const submit = (event: React.FormEvent) => {
         event.preventDefault();
         router.get(
             principals.index.url(),
-            { search },
+            programId ? { search, program_id: programId } : { search },
+            { preserveState: true, replace: true },
+        );
+    };
+
+    const applyProgramFilter = (value: string) => {
+        setProgramId(value);
+        router.get(
+            principals.index.url(),
+            value ? { search, program_id: value } : { search },
             { preserveState: true, replace: true },
         );
     };
@@ -98,6 +126,29 @@ export default function Index({
                                             className="w-full text-sm text-slate-800 outline-none placeholder:text-slate-400"
                                         />
                                     </div>
+                                    <label className="mt-4 block text-xs font-semibold tracking-wide text-slate-300 uppercase">
+                                        Filter Program
+                                    </label>
+                                    <div className="mt-3">
+                                        <Combobox
+                                            options={[
+                                                {
+                                                    label: 'Semua Program',
+                                                    value: '',
+                                                },
+                                                ...programs.map((program) => ({
+                                                    label: `${program.name} (${program.year})`,
+                                                    value: program.id,
+                                                })),
+                                            ]}
+                                            value={programId}
+                                            onChange={applyProgramFilter}
+                                            placeholder="Semua Program"
+                                            searchPlaceholder="Cari program..."
+                                            emptyText="Program tidak ditemukan"
+                                            icon={<Filter size={16} />}
+                                        />
+                                    </div>
                                 </form>
                             </div>
                         </header>
@@ -139,7 +190,7 @@ export default function Index({
                                                         ).url
                                                     }
                                                     title={`Unduh ${doc.label}`}
-                                                    className="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium hover:text-blue-600 text-gray-500"
+                                                    className="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-blue-600"
                                                 >
                                                     <Download size={13} />
                                                     Unduh
@@ -180,6 +231,11 @@ export default function Index({
                                                 <span className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-500 text-white shadow-lg shadow-blue-600/20">
                                                     <Building2 size={24} />
                                                 </span>
+                                                {principal.program && (
+                                                    <span className="inline-flex max-w-[60%] items-center gap-1.5 truncate rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                                                        {principal.program.name}
+                                                    </span>
+                                                )}
                                             </div>
                                             <h3 className="mt-5 text-xl font-bold text-slate-900">
                                                 {principal.name}
