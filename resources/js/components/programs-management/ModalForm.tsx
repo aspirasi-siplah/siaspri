@@ -135,7 +135,6 @@ export default function ModalForm({ program }: Props) {
                                     e: React.ChangeEvent<HTMLInputElement>,
                                 ) => form.setData('code', e.target.value)}
                                 error={form.errors.code}
-                                required
                             />
                             <FormInput
                                 name="year"
@@ -147,7 +146,6 @@ export default function ModalForm({ program }: Props) {
                                     e: React.ChangeEvent<HTMLInputElement>,
                                 ) => form.setData('year', e.target.value)}
                                 error={form.errors.year}
-                                required
                             />
                             <div className="md:col-span-2">
                                 <FormInput
@@ -160,7 +158,6 @@ export default function ModalForm({ program }: Props) {
                                         e: React.ChangeEvent<HTMLInputElement>,
                                     ) => form.setData('name', e.target.value)}
                                     error={form.errors.name}
-                                    required
                                 />
                             </div>
                             <div className="md:col-span-2">

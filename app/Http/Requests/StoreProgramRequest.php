@@ -23,9 +23,9 @@ class StoreProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => ['required', 'string', 'max:255', 'unique:programs,code'],
-            'name' => ['required', 'string', 'max:255'],
-            'year' => ['required', 'integer', 'min:1900', 'max:2100'],
+            'code' => ['nullable', 'string', 'max:255', 'unique:programs,code'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'year' => ['nullable', 'integer', 'min:1900', 'max:2100'],
             'id_fund' => ['nullable', 'string', 'max:255'],
         ];
     }
@@ -36,14 +36,11 @@ class StoreProgramRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'code.required' => 'Kode program wajib diisi.',
             'code.string' => 'Kode program harus berupa teks.',
             'code.max' => 'Kode program maksimal berukuran 255 karakter.',
             'code.unique' => 'Kode program sudah digunakan.',
-            'name.required' => 'Nama program wajib diisi.',
             'name.string' => 'Nama program harus berupa teks.',
             'name.max' => 'Nama program maksimal berukuran 255 karakter.',
-            'year.required' => 'Tahun wajib diisi.',
             'year.integer' => 'Tahun harus berupa angka.',
             'year.min' => 'Tahun tidak valid.',
             'year.max' => 'Tahun tidak valid.',
